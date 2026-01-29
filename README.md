@@ -33,7 +33,11 @@ Single Project - Pandora
       - EffectManager.cs
       
       - SpawnManager.cs
+
+      - PlayerManager.cs
       
 [추가] 제네릭 싱글 톤 추가
 
       - SingletonT.cs
+
+[추가] 씬 Main 추가
