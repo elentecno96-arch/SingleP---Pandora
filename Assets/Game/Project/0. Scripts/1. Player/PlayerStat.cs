@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Game.Project._0.Scripts._2.Struct.Stat;
+using Game.Project._2.Data.Stat;
 
 namespace Game.Project._0.Scripts._1.Player
 {

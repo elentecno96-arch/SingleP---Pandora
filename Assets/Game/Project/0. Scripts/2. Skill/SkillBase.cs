@@ -1,9 +1,9 @@
-using Game.Project._0.Scripts._3.Skill.Interface;
+using Game.Project._0.Scripts._2.Skill.Interface;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Project._0.Scripts._3.Skill
+namespace Game.Project._0.Scripts._2.Skill
 {
     public abstract class SkillBase : MonoBehaviour, ISkillable
     {

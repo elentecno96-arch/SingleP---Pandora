@@ -1,4 +1,4 @@
-using Game.Project._0.Scripts._3.Skill;
+using Game.Project._0.Scripts._2.Skill;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
