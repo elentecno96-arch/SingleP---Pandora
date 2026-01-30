@@ -9,14 +9,12 @@ namespace Game.Project._0.Scripts._1.Player
         private PlayerMovement movement;
         private PlayerStat stat;
         private PlayerCombat combat;
-        private PlayerCondition condition;
 
         private void Awake()
         {
             movement = GetComponent<PlayerMovement>();
             stat = GetComponent<PlayerStat>();
             combat = GetComponent<PlayerCombat>();
-            condition = GetComponent<PlayerCondition>();
 
             InitAll();
         }
@@ -29,7 +27,6 @@ namespace Game.Project._0.Scripts._1.Player
             stat.Init();
             movement.Init(stat.CurrentStat.maxMoveSpeed);
 
-            //condition.Init();
             combat.Init(stat.CurrentStat.atk);
         }
         void MoveInput()
