@@ -73,3 +73,17 @@ Single Project - Pandora
 [내용] 전투 ( Combat ) 공격 방식 구현
 
      - 스킬을 가질 수 있는 최대 갯수, 스킬 사용 가능 여부 체크, SkillBase의 Execute() 실행
+
+- 26.01.31 =========================
+
+[내용] Game, Player Manager 하위 관리자 System 추가
+
+     - Player를 관리하는 PlayerManager.cs (Singleton) 추가
+     
+     - GameManager 하위 관리자 Stat,Rune,Skill System 추가
+     
+     - PlayerManager 하위 관리자 State System 추가
+
+[삭제] Player Condition, Stat 제거
+
+     - 스탯과 상태는 하위 관리자인 Player State System이 관리 합니다
