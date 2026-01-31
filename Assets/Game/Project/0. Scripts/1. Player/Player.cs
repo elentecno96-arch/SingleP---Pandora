@@ -1,3 +1,4 @@
+using Game.Project._0.Scripts._0.Managers._0.Singleton;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,15 +8,15 @@ namespace Game.Project._0.Scripts._1.Player
     public class Player : MonoBehaviour
     {
         private PlayerMovement movement;
-        private PlayerStat stat;
         private PlayerCombat combat;
 
         private void Awake()
         {
             movement = GetComponent<PlayerMovement>();
-            stat = GetComponent<PlayerStat>();
-            combat = GetComponent<PlayerCombat>();
-
+            combat = GetComponent<PlayerCombat>(); 
+        }
+        private void Start()
+        {
             InitAll();
         }
         private void Update()
@@ -24,10 +25,9 @@ namespace Game.Project._0.Scripts._1.Player
         }
         private void InitAll()
         {
-            stat.Init();
-            movement.Init(stat.CurrentStat.maxMoveSpeed);
-
-            combat.Init(stat.CurrentStat.atk);
+            var currentStats = GameManager.Instance.Stat.CurrentStat;
+            movement.Init(currentStats.maxMoveSpeed);
+            //combat.Init(currentStats.atk);
         }
         void MoveInput()
         {

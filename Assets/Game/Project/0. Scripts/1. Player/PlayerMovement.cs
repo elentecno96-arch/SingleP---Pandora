@@ -13,11 +13,6 @@ namespace Game.Project._0.Scripts._1.Player
 
         [SerializeField]
         private float moveSpeed;
-        public float MoveSpeed
-        {
-            get => moveSpeed;
-            set => moveSpeed = value;
-        }
         private void FixedUpdate()
         {
             Move();
@@ -26,7 +21,7 @@ namespace Game.Project._0.Scripts._1.Player
         public void Init(float speed)
         {
             rb = GetComponent<Rigidbody>();
-            this.MoveSpeed = speed;
+            this.moveSpeed = speed;
         }
         public void SetInput(Vector2 direction)
         {
