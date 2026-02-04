@@ -6,6 +6,9 @@ using Game.Project.Utillity.Extension.Move;
 
 namespace Game.Project.Scripts.Player
 {
+    /// <summary>
+    /// 플레이어 이동
+    /// </summary>
     public class PlayerMovement : MonoBehaviour
     {
         private Rigidbody rb;
@@ -15,6 +18,8 @@ namespace Game.Project.Scripts.Player
         private float moveSpeed;
         private void FixedUpdate()
         {
+            if (rb == null) return;
+
             Move();
             VisualTilt();
         }
