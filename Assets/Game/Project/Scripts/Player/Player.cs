@@ -1,33 +1,50 @@
+using Game.Project.Scripts.Managers;
 using Game.Project.Scripts.Managers.Singleton;
+using Game.Project.Scripts.Managers.Systems;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Game.Project.Scripts.Core.Projectile.Rune.RuneStrategy;
 
 namespace Game.Project.Scripts.Player
 {
+    /// <summary>
+    /// 플레이어 객체
+    /// </summary>
     public class Player : MonoBehaviour
     {
         private PlayerMovement movement;
         private PlayerCombat combat;
+        private bool _isInitialized = false;
 
         private void Awake()
         {
             movement = GetComponent<PlayerMovement>();
-            combat = GetComponent<PlayerCombat>(); 
+            combat = GetComponent<PlayerCombat>();
         }
         private void Start()
         {
-            InitAll();
+            Init();
         }
         private void Update()
         {
             MoveInput();
+
+            //테스트
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                Debug.Log("화염 룬 장착!");
+                combat.AddRune(new FireRuneStrategy());
+            }
         }
-        private void InitAll()
+        private void Init()
         {
-            var currentStats = GameManager.Instance.Stat.CurrentStat;
+            if (_isInitialized) return;
+
+            var currentStats = PlayerManager.Instance.Stats.CurrentStat;
             movement.Init(currentStats.maxMoveSpeed);
-            //combat.Init(currentStats.atk);
+            _isInitialized = true;
+            Debug.Log("Player: 본체 및 하위 컴포넌트 초기화 완료");
         }
         void MoveInput()
         {
