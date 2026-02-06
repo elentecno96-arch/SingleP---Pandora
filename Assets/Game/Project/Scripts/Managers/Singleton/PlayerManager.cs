@@ -1,8 +1,9 @@
-using Game.Project.Utillity.Generic;
 using Game.Project.Scripts.Managers.Systems;
+using Game.Project.Utillity.Generic;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.VersionControl.Asset;
 
 namespace Game.Project.Scripts.Managers.Singleton
 {
@@ -21,8 +22,8 @@ namespace Game.Project.Scripts.Managers.Singleton
             Stats = GetComponentInChildren<StatSystem>();
             State = GetComponentInChildren<StateSystem>();
 
-            Stats?.Init();
-            State?.Init();
+            if (Stats) Stats.Init();
+            if (State) State.Init();
 
             _isInitialized = true;
             Debug.Log("PlayerManager: 초기화 완료");

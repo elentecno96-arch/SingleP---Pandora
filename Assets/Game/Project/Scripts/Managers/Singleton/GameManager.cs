@@ -23,10 +23,10 @@ namespace Game.Project.Scripts.Managers.Singleton
         {
             base.Awake();
             DontDestroyOnLoad(gameObject);
-            InitializeAllManagers();
+            InitAllManagers();
         }
 
-        private void InitializeAllManagers()
+        private void InitAllManagers()
         {
             if (_isInitialized) return;
 

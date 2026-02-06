@@ -1,10 +1,10 @@
+using Game.Project.Scripts.Core.Projectile.Rune;
 using Game.Project.Scripts.Managers;
 using Game.Project.Scripts.Managers.Singleton;
 using Game.Project.Scripts.Managers.Systems;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Game.Project.Scripts.Core.Projectile.Rune.RuneStrategy;
 
 namespace Game.Project.Scripts.Player
 {
@@ -15,6 +15,7 @@ namespace Game.Project.Scripts.Player
     {
         private PlayerMovement movement;
         private PlayerCombat combat;
+
         private bool _isInitialized = false;
 
         private void Awake()
@@ -29,13 +30,6 @@ namespace Game.Project.Scripts.Player
         private void Update()
         {
             MoveInput();
-
-            //테스트
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                Debug.Log("화염 룬 장착!");
-                combat.AddRune(new FireRuneStrategy());
-            }
         }
         private void Init()
         {
@@ -46,7 +40,7 @@ namespace Game.Project.Scripts.Player
             _isInitialized = true;
             Debug.Log("Player: 본체 및 하위 컴포넌트 초기화 완료");
         }
-        void MoveInput()
+        void MoveInput() //추후 인풋 매니저로 관리 예정
         {
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");

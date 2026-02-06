@@ -15,15 +15,22 @@ MonoBehaviour:
   skillName: ManaBolt
   projectilePrefab: {fileID: 923852718690510228, guid: cae6df2aadc771a49b13c4b43b160af9,
     type: 3}
+  movementType: 3
+  rarity: 4
+  equippedRunes:
+  - {fileID: 11400000, guid: 15988cf67a7685c42a5083e7c56246c6, type: 2}
+  - {fileID: 11400000, guid: 15988cf67a7685c42a5083e7c56246c6, type: 2}
   damage: 10
   speed: 12
   range: 20
-  cooldown: 0.5
+  lifeTime: 3
+  cooldown: 1
+  explosionRadius: 0
+  projectileCount: 3
   chargeTime: 0.1
   spawnEffect: {fileID: 5387813989776268400, guid: 3620b28f06cc1e04082dc29fe4d43827,
     type: 3}
-  chargeEffect: {fileID: 8277071434671841608, guid: b88eff7514dbb4c46ac094d69cab4242,
-    type: 3}
+  chargeEffect: {fileID: 0}
   flyEffect: {fileID: 1469066814320342559, guid: cbd2912d0ceb9ee4e83ee98c95c1f4c5,
     type: 3}
   impactEffect: {fileID: 5607308886996917622, guid: 78f0c2141db762e45a1950ea9ed2f6dd,
@@ -32,4 +39,3 @@ MonoBehaviour:
   chargeSfx: {fileID: 0}
   flySfx: {fileID: 0}
   impactSfx: {fileID: 0}
-  attribute: 0

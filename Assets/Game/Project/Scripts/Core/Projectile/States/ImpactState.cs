@@ -14,14 +14,9 @@ namespace Game.Project.Scripts.Core.Projectile.States
     {
         public void Enter(ProjectileContext context)
         {
-            if (context.Target != null && context.Target.TryGetComponent(out IDamageable dmg))
-            {
-                dmg.TakeDamage(context.Data.damage);
-            }
-            context.OnImpactEnter?.Invoke(context.Target);
-            context.Projectile.ReturnToPool();
+            context.projectile.ImpactStateCall(context.target);
+            context.projectile.ReturnToPool();
         }
-
         public void UpdateState(Projectile projectile) { }
         public void Exit(ProjectileContext context) { }
     }

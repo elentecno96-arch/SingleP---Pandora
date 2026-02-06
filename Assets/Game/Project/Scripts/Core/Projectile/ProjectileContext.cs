@@ -1,5 +1,10 @@
-using UnityEngine;
+using DG.Tweening;
+using Game.Project.Scripts.Core.Projectile.Interface;
+using Game.Project.Scripts.Core.Projectile.Rune;
 using Game.Project.Scripts.Core.Projectile.SO;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Game.Project.Scripts.Core.Projectile
 {
@@ -8,36 +13,33 @@ namespace Game.Project.Scripts.Core.Projectile
     /// </summary>
     public class ProjectileContext
     {
-        public SkillData Data;
-        public Vector3 Direction;
-        public GameObject Owner;
-        public GameObject Target;
-        public Projectile Projectile;
+        public SkillData data;
+        public Projectile projectile;
+        public GameObject owner;
+        public GameObject target;
 
-        public System.Action OnSpawnEnter;
-        public System.Action OnSpawnExit;
+        public List<IProjectileStrategy> strategies = new List<IProjectileStrategy>();
+        public SynergyData activeSynergy;
 
-        public System.Action OnChargeEnter;
-        public System.Action<float> OnChargeUpdate;
-        public System.Action OnChargeExit;
+        public float skillDamage;
+        public float skillSpeed;
+        public float skillLifeTime;
+        public float skillCooldown;
+        public float skillScale = 1f;
+        public float skillCritChance = 0.05f;
+        public float skillCritDamage = 1.5f;
+        public float skillAcceleration = 0f;
+        public float skillHomingForce = 0f;
 
-        public System.Action OnFlyEnter;
-        public System.Action<Projectile> OnFlyUpdate;
-        public System.Action OnFlyExit;
+        public bool isCritical; //农府 惯积 咯何 眉农
 
-        public System.Action<GameObject> OnImpactEnter;
+        public float synergyExplosionRadius = 3f;
+        public float synergySlowAmount = 0f;
+        public float synergyDefensePen = 0f;
 
-        public void ClearEvents()
-        {
-            OnSpawnEnter = null;
-            OnSpawnExit = null;
-            OnChargeEnter = null;
-            OnChargeUpdate = null;
-            OnChargeExit = null;
-            OnFlyEnter = null;
-            OnFlyUpdate = null;
-            OnFlyExit = null;
-            OnImpactEnter = null;
-        }
+        public Vector3 firePosition;
+        public Vector3 direction;
+        public Color primaryColor = Color.white;
+        public Color secondaryColor = Color.gray;
     }
 }
