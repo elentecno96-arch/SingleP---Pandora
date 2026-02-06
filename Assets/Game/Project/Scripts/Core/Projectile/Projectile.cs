@@ -15,78 +15,90 @@ namespace Game.Project.Scripts.Core.Projectile
     {
         private ProjectileContext _context;
         private IProjectileState _currentState;
+        private IProjectileMover _mover;
+        private bool _isReturned = false;
 
-        public ProjectileContext Context => _context;
+        [SerializeField] private LayerMask targetMask;
 
         public event Action OnSpawn;
         public event Action OnCharge;
         public event Action OnFly;
         public event Action<GameObject> OnImpact;
-
         public event Action OnChargeExit;
         public event Action OnFlyExit;
 
         public Action<Projectile> OnReturnToPool;
-        private bool _isReturned = false;
 
-        public void Init(GameObject owner, Vector3 dir, SkillData data, List<IProjectileStrategy> strategies)
+        public ProjectileContext Context => _context;
+        public IProjectileMover Mover => _mover;
+
+        public void Init(ProjectileContext context, IProjectileMover mover)
         {
             _isReturned = false;
-            _context = new ProjectileContext
+            ClearAllEvents();
+
+            _context = context;
+            _context.projectile = this;
+            _mover = mover;
+
+            if (_context.strategies != null)
             {
-                Owner = owner,
-                Direction = dir.normalized,
-                Data = data,
-                Projectile = this
-            };
-            GetComponent<ProjectileVisual>().Bind();
-            GetComponent<ProjectileAudio>().Bind();
-            if (strategies != null)
-            {
-                foreach (var strategy in strategies)
+                foreach (var strategy in _context.strategies)
                 {
                     strategy.Apply(_context);
                 }
             }
+            _mover.Init(_context);
+
+            if (TryGetComponent(out ProjectileVisual visual)) visual.Bind();
+            if (TryGetComponent(out ProjectileAudio audio)) audio.Bind();
+
+            transform.localScale = Vector3.one * _context.skillScale;
 
             ChangeState(ProjectileStates.Spawn);
         }
+
         public void ChangeState(IProjectileState newState)
         {
             if (_currentState != null)
             {
-                if (_currentState is FlyState) OnFlyExit?.Invoke();
-                else if (_currentState is ChargeState) OnChargeExit?.Invoke();
+                if (_currentState == ProjectileStates.Fly) OnFlyExit?.Invoke();
+                if (_currentState == ProjectileStates.Charge) OnChargeExit?.Invoke();
 
                 _currentState.Exit(_context);
             }
+
             _currentState = newState;
 
-            if (newState is SpawnState) OnSpawn?.Invoke();
-            else if (newState is ChargeState) OnCharge?.Invoke();
-            else if (newState is FlyState) OnFly?.Invoke();
-            else if (newState is ImpactState) OnImpact?.Invoke(_context.Target);
-            _currentState.Enter(_context);
+            if (_currentState != null)
+            {
+                if (_currentState == ProjectileStates.Spawn) OnSpawn?.Invoke();
+                else if (_currentState == ProjectileStates.Charge) OnCharge?.Invoke();
+                else if (_currentState == ProjectileStates.Fly) OnFly?.Invoke();
+                else if (_currentState == ProjectileStates.Impact) OnImpact?.Invoke(_context.target);
+
+                _currentState.Enter(_context);
+            }
         }
         private void Update() => _currentState?.UpdateState(this);
+        private void FixedUpdate()
+        {
+            if (_currentState is FlyState) _mover?.OnFixedUpdate(this);
+        }
         private void OnTriggerEnter(Collider other)
         {
             if (_context == null || _isReturned) return;
-            if (other.gameObject == _context.Owner) return;
+            if (other.gameObject == _context.owner) return;
 
-            string layerName = LayerMask.LayerToName(other.gameObject.layer);
-            if (layerName == "Ground")
+            if ((targetMask.value & (1 << other.gameObject.layer)) != 0)
             {
-                _context.Target = other.gameObject;
-                ChangeState(ProjectileStates.Impact);
-            }
-            else if (layerName == "Enemy")
-            {
-                if (other.TryGetComponent(out IDamageable dmg))
+                if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
-                    _context.Target = other.gameObject;
-                    ChangeState(ProjectileStates.Impact);
+                    if (!other.TryGetComponent(out IDamageable _)) return;
                 }
+
+                _context.target = other.gameObject;
+                ChangeState(ProjectileStates.Impact);
             }
         }
         public void ReturnToPool()
@@ -94,19 +106,54 @@ namespace Game.Project.Scripts.Core.Projectile
             if (_isReturned) return;
             _isReturned = true;
 
+            if (_mover is IDisposable disposable) disposable.Dispose();
+
+            ClearAllEvents();
+            OnReturnToPool?.Invoke(this);
+        }
+        private void ClearAllEvents()
+        {
             OnSpawn = null;
             OnCharge = null;
             OnFly = null;
             OnImpact = null;
             OnChargeExit = null;
             OnFlyExit = null;
+        }
+        public void ImpactStateCall(GameObject target)
+        {
+            OnImpact?.Invoke(target);
 
-            if (_context != null)
+            if (target != null && target.TryGetComponent(out IDamageable dmg))
             {
-                _context.ClearEvents();
-            }
+                float finalDmg = _context.skillDamage;
+                if (_context.isCritical) finalDmg *= _context.skillCritDamage;
 
-            OnReturnToPool?.Invoke(this);
+                dmg.TakeDamage(finalDmg);
+            }
+            SynergyLogic();
+        }
+
+        private void SynergyLogic()
+        {
+            if (_context.activeSynergy == null) return;
+
+            if (_context.activeSynergy.element == Rune.RuneElement.Fire && _context.synergyExplosionRadius > 0)
+            {
+                ApplyAreaDamage(transform.position, _context.synergyExplosionRadius);
+            }
+        }
+        private void ApplyAreaDamage(Vector3 center, float radius)
+        {
+            Collider[] hits = Physics.OverlapSphere(center, radius, targetMask);
+            foreach (var hit in hits)
+            {
+                if (hit.TryGetComponent(out IDamageable dmg))
+                {
+                    dmg.TakeDamage(_context.skillDamage * 0.5f);
+                }
+            }
         }
     }
 }
+

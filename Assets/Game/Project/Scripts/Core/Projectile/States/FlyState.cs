@@ -11,27 +11,31 @@ namespace Game.Project.Scripts.Core.Projectile.States
     public class FlyState : IProjectileState
     {
         private float _flyTimer = 0f;
-        private const float MAX_LIFETIME = 5f;
+
         public void Enter(ProjectileContext context)
         {
             _flyTimer = 0f;
-            context.OnFlyEnter?.Invoke();
+
+            if (context.projectile != null)
+            {
+                context.projectile.transform.localScale = Vector3.one * context.skillScale;
+            }
         }
+
         public void UpdateState(Projectile projectile)
         {
             _flyTimer += Time.deltaTime;
-            if (_flyTimer >= MAX_LIFETIME)
+
+            float maxLifeTime = projectile.Context.skillLifeTime > 0
+                ? projectile.Context.skillLifeTime : 4f;
+
+            if (_flyTimer >= maxLifeTime)
             {
                 projectile.ReturnToPool();
                 return;
             }
-
-            projectile.transform.position += projectile.Context.Direction * projectile.Context.Data.speed * Time.deltaTime;
-            projectile.Context.OnFlyUpdate?.Invoke(projectile);
+            projectile.Mover?.OnUpdate(projectile);
         }
-        public void Exit(ProjectileContext context)
-        {
-            context.OnFlyExit?.Invoke();
-        }
+        public void Exit(ProjectileContext context) { }
     }
 }

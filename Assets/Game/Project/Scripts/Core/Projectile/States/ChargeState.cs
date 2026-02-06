@@ -14,19 +14,14 @@ namespace Game.Project.Scripts.Core.Projectile.States
         public void Enter(ProjectileContext context)
         {
             _timer = 0;
-            context.OnChargeEnter?.Invoke();
         }
         public void UpdateState(Projectile projectile)
         {
             _timer += Time.deltaTime;
-            projectile.Context.OnChargeUpdate?.Invoke(_timer);
 
-            if (_timer >= projectile.Context.Data.chargeTime)
+            if (_timer >= projectile.Context.data.chargeTime)
                 projectile.ChangeState(ProjectileStates.Fly);
         }
-        public void Exit(ProjectileContext context)
-        {
-            context.OnChargeExit?.Invoke();
-        }
+        public void Exit(ProjectileContext context) { }
     }
 }

@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6235f083d15fcf5479d0194e220799b8, type: 3}
+  m_Name: Mana Accel
+  m_EditorClassIdentifier: 
+  skillName: Mana Accel
+  projectilePrefab: {fileID: 923852718690510228, guid: cae6df2aadc771a49b13c4b43b160af9,
+    type: 3}
+  movementType: 0
+  damage: 7
+  speed: 24
+  range: 20
+  cooldown: 1
+  explosionRadius: 0
+  projectileCount: 0
+  chargeTime: 0.2
+  spawnEffect: {fileID: 5387813989776268400, guid: 3620b28f06cc1e04082dc29fe4d43827,
+    type: 3}
+  chargeEffect: {fileID: 8277071434671841608, guid: b88eff7514dbb4c46ac094d69cab4242,
+    type: 3}
+  flyEffect: {fileID: 1469066814320342559, guid: cbd2912d0ceb9ee4e83ee98c95c1f4c5,
+    type: 3}
+  impactEffect: {fileID: 5607308886996917622, guid: 78f0c2141db762e45a1950ea9ed2f6dd,
+    type: 3}
+  spawnSfx: {fileID: 0}
+  chargeSfx: {fileID: 0}
+  flySfx: {fileID: 0}
+  impactSfx: {fileID: 0}
+  attribute: 0

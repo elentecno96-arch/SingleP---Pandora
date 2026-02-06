@@ -20,23 +20,24 @@ namespace Game.Project.Scripts.Managers.Singleton
 
             _isInitialized = true;
         }
-        public void PlayEffect(GameObject prefab, Vector3 pos, Quaternion rot, float duration = 3f, Transform parent = null)
+        public GameObject PlayEffect(GameObject prefab, Vector3 pos, Quaternion rot, float duration = 3f, Transform parent = null)
         {
-            if (!_isInitialized || prefab == null) return;
+            if (!_isInitialized || prefab == null) return null;
 
-            GameObject fx = PoolManager.Instance.GetGameObject(prefab, parent);
+            GameObject fx = PoolManager.Instance.GetObject(prefab, parent);
             fx.transform.SetPositionAndRotation(pos, rot);
 
             if (duration > 0)
-                StartCoroutine(CoReturn(fx, duration));
+                StartCoroutine(ReturnCo(fx, duration));
+            return fx;
         }
 
-        private IEnumerator CoReturn(GameObject fx, float time)
+        private IEnumerator ReturnCo(GameObject fx, float time)
         {
             yield return new WaitForSeconds(time);
             if (fx != null && fx.activeSelf)
             {
-                PoolManager.Instance.ReleaseGameObject(fx);
+                PoolManager.Instance.ReturnObject(fx);
             }
         }
     }

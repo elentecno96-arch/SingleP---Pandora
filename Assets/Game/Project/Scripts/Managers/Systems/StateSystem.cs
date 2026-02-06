@@ -1,3 +1,4 @@
+using Game.Project.Scripts.Managers.Singleton;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,11 +13,11 @@ namespace Game.Project.Scripts.Managers.Systems
     {
         public enum PlayerState { Alive, Dead, Invincible }
 
-        [SerializeField] private float maxHp = 100f;
         private float _currentHp;
+        private StatSystem _statSystem;
 
         public PlayerState CurrentState { get; private set; }
-        public float HpRatio => _currentHp / maxHp;
+        public float HpRatio => _currentHp / _statSystem.CurrentStat.maxHp;
 
         public event Action OnDead;
         public event Action<float> OnHpChanged;
@@ -27,7 +28,9 @@ namespace Game.Project.Scripts.Managers.Systems
         {
             if (_isInitialized) return;
 
-            _currentHp = maxHp;
+            _statSystem = GetComponent<StatSystem>();
+            _currentHp = _statSystem.CurrentStat.maxHp;
+
             CurrentState = PlayerState.Alive;
             _isInitialized = true;
             Debug.Log("StateSystem: 초기화 완료");
@@ -36,8 +39,9 @@ namespace Game.Project.Scripts.Managers.Systems
         public void TakeDamage(float damage)
         {
             if (CurrentState == PlayerState.Dead || CurrentState == PlayerState.Invincible) return;
+            float finalDamage = Mathf.Max(1, damage - _statSystem.CurrentStat.defense);
 
-            _currentHp = Mathf.Max(0, _currentHp - damage);
+            _currentHp = Mathf.Max(0, _currentHp - finalDamage);
             OnHpChanged?.Invoke(_currentHp);
 
             if (_currentHp <= 0)
