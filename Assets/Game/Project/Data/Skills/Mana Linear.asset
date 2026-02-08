@@ -10,21 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6235f083d15fcf5479d0194e220799b8, type: 3}
-  m_Name: Mana Rifle
+  m_Name: Mana Linear
   m_EditorClassIdentifier: 
-  skillName: Mana Rifle
+  skillName: Mana Linear
   projectilePrefab: {fileID: 923852718690510228, guid: cae6df2aadc771a49b13c4b43b160af9,
     type: 3}
-  movementType: 2
+  movementType: 0
   rarity: 2
-  description: "\uC5EC\uB7EC \uD22C\uC0AC\uCCB4\uB97C \uAC04\uACA9\uC5D0 \uB9DE\uCDB0
-    \uB098\uAC00\uB294 \uC2A4\uD0AC"
+  description: "\uC9C1\uC120\uC73C\uB85C \uB0A0\uC544\uAC00\uB294 \uC2A4\uD0AC"
   equippedRunes: []
-  damage: 5
-  speed: 16
+  damage: 7
+  speed: 24
   range: 20
   lifeTime: 3
-  cooldown: 0.4
+  cooldown: 1
   scale: 1
   critChance: 0.05
   critDamage: 1.5

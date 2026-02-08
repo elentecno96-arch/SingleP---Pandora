@@ -10,7 +10,8 @@ namespace Game.Project.Scripts.Core.Projectile.States
     /// </summary>
     public class SpawnState : IProjectileState
     {
-        public void Enter(ProjectileContext context) { }
+        public void Enter(ProjectileContext context, Projectile projectile) { }
+
         public void UpdateState(Projectile projectile)
         {
             projectile.ChangeState(ProjectileStates.Charge);

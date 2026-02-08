@@ -42,7 +42,7 @@ namespace Game.Project.Scripts.Managers.Systems
         /// </summary>
         public float GetFinalAttackInterval(float skillCooldown)
         {
-            float cdr = _cachedCurrentStat.cooldownReduction;
+            float cdr = _cachedCurrentStat.castingSpeed;
             float castSpeed = Mathf.Max(0.1f, 1.0f + _cachedCurrentStat.castingSpeed);
 
             float cooldownAfterCDR = skillCooldown * (1f - cdr);
@@ -81,9 +81,8 @@ namespace Game.Project.Scripts.Managers.Systems
         private Stat CalculateTotalStat(Stat a, Stat b)
         {
             Stat result = AddStats(a, b);
-            result.cooldownReduction = Mathf.Clamp(result.cooldownReduction, 0f, 0.8f);
-            result.evasionRate = Mathf.Clamp(result.evasionRate, 0f, 0.75f);
-            result.criticalRate = Mathf.Clamp(result.criticalRate, 0f, 1.0f);
+            result.castingSpeed = Mathf.Clamp(result.castingSpeed, 0f, 0.8f);
+            result.critChance = Mathf.Clamp(result.critChance, 0f, 1.0f);
 
             return result;
         }
@@ -101,20 +100,14 @@ namespace Game.Project.Scripts.Managers.Systems
 
                 //생존
                 maxHp = a.maxHp + b.maxHp,
-                maxMp = a.maxMp + b.maxMp,
                 maxMoveSpeed = a.maxMoveSpeed + b.maxMoveSpeed,
                 defense = a.defense + b.defense,
-                tenacity = a.tenacity + b.tenacity,
-                evasionRate = a.evasionRate + b.evasionRate,
 
                 //공격
-                atk = a.atk + b.atk,
-                criticalRate = a.criticalRate + b.criticalRate,
-                criticalDamage = a.criticalDamage + b.criticalDamage,
-                cooldownReduction = a.cooldownReduction + b.cooldownReduction,
+                damage = a.damage + b.damage,
+                critChance = a.critChance + b.critChance,
+                critDamage = a.critDamage + b.critDamage,
                 castingSpeed = a.castingSpeed + b.castingSpeed,
-
-                pickupRange = a.pickupRange + b.pickupRange
             };
         }
     }

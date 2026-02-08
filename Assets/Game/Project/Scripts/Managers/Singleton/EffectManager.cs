@@ -17,18 +17,17 @@ namespace Game.Project.Scripts.Managers.Singleton
             if (_isInitialized) return;
 
             Debug.Log("EffectManager: 초기화 완료");
-
             _isInitialized = true;
         }
+
         public GameObject PlayEffect(GameObject prefab, Vector3 pos, Quaternion rot, float duration = 3f, Transform parent = null)
         {
             if (!_isInitialized || prefab == null) return null;
-
-            GameObject fx = PoolManager.Instance.GetObject(prefab, parent);
-            fx.transform.SetPositionAndRotation(pos, rot);
+            GameObject fx = PoolManager.Instance.GetEffect(prefab, pos, rot, parent);
 
             if (duration > 0)
                 StartCoroutine(ReturnCo(fx, duration));
+
             return fx;
         }
 
@@ -37,7 +36,7 @@ namespace Game.Project.Scripts.Managers.Singleton
             yield return new WaitForSeconds(time);
             if (fx != null && fx.activeSelf)
             {
-                PoolManager.Instance.ReturnObject(fx);
+                PoolManager.Instance.ReturnEffect(fx);
             }
         }
     }

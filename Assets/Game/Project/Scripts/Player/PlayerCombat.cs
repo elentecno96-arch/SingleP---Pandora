@@ -1,11 +1,7 @@
-using Game.Project.Data.Stat;
 using Game.Project.Scripts.Core.Projectile;
-using Game.Project.Scripts.Core.Projectile.Interface;
 using Game.Project.Scripts.Core.Projectile.SO;
 using Game.Project.Scripts.Managers.Singleton;
 using Game.Project.Scripts.Player.Combat;
-using Game.Project.Scripts.Managers.Systems;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -56,6 +52,8 @@ namespace Game.Project.Scripts.Player
 
         private void AutoAttack(SkillData skill)
         {
+            if (_currentTarget == null) return;
+
             Vector3 attackDir = (_currentTarget.position - firePoint.position).normalized;
 
             ProjectileContext context = new ProjectileContext
@@ -64,9 +62,8 @@ namespace Game.Project.Scripts.Player
                 owner = gameObject,
                 firePosition = firePoint.position,
                 direction = attackDir,
-                target = _currentTarget.gameObject
             };
-            SkillManager.Instance.Fire(context);
+            SkillManager.Instance.ApplySkill(context);
         }
     }
 }
