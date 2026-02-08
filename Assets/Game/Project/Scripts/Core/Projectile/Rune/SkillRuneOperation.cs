@@ -7,27 +7,24 @@ namespace Game.Project.Scripts.Core.Projectile.Rune
 {
     public class SkillRuneOperation
     {
-        private readonly List<SynergyData> _synergyDatabase;
-
-        public SkillRuneOperation(List<SynergyData> synergyDatabase)
+        public void ApplyRunes(ProjectileContext context)
         {
-            _synergyDatabase = synergyDatabase;
-        }
+            if (context.data == null) return;
 
-        public void ApplyRunesAndSynergies(ProjectileContext context)
-        {
-            if (context.data.equippedRunes == null) return;
+            context.finalDamage = context.data.damage;
+            context.finalSpeed = context.data.speed;
+            context.finalLifeTime = context.data.lifeTime;
+            context.finalScale = 1f;
+            context.finalCritChance = 0.05f;
+            context.finalCritDamage = 1.5f;
 
-            context.skillDamage = context.data.damage;
-            context.skillSpeed = context.data.speed;
-            context.skillLifeTime = 4f;
-            context.skillCooldown = context.data.cooldown;
-            context.skillScale = 1f;
-            context.skillCritChance = 0.05f;
-            context.skillCritDamage = 1.5f;
+            context.finalProjectileCount = context.data.projectileCount;
 
-            ApplyRuneEffects(context);
-            ApplySynergies(context);
+            if (context.data.equippedRunes != null)
+            {
+                ApplyRuneEffects(context);
+            }
+            context.isCritical = UnityEngine.Random.value < context.finalCritChance;
         }
 
         private void ApplyRuneEffects(ProjectileContext context)
@@ -35,44 +32,26 @@ namespace Game.Project.Scripts.Core.Projectile.Rune
             foreach (var rune in context.data.equippedRunes)
             {
                 if (rune == null) continue;
-                context.skillDamage *= (1f + rune.damageMultiplier);
+
+                context.finalDamage *= (1f + rune.baseDamageModifier);
 
                 switch (rune.modifier)
                 {
-                    case ModifierType.Damage: context.skillDamage *= (1f + rune.specialValue); break;
-                    case ModifierType.Speed: context.skillSpeed *= (1f + rune.specialValue); break;
-                    case ModifierType.Duration: context.skillLifeTime *= (1f + rune.specialValue); break;
-                    case ModifierType.Cooldown: context.skillCooldown *= (1f - rune.specialValue); break;
-                    case ModifierType.Scale: context.skillScale *= (1f + rune.specialValue); break;
-                    case ModifierType.CritChance: context.skillCritChance += rune.specialValue; break;
-                    case ModifierType.CritDamage: context.skillCritDamage += rune.specialValue; break;
-                    case ModifierType.Acceleration: context.skillAcceleration += rune.specialValue; break;
-                    case ModifierType.Homing: context.skillHomingForce += rune.specialValue; break;
-
-                    case ModifierType.Radius: context.synergyExplosionRadius *= (1f + rune.specialValue); break;
+                    case ModifierType.Damage:
+                        context.finalDamage *= (1f + rune.specialValue); break;
+                    case ModifierType.Speed:
+                        context.finalSpeed *= (1f + rune.specialValue); break;
+                    case ModifierType.LifeTime:
+                        context.finalLifeTime *= (1f + rune.specialValue); break;
+                    case ModifierType.Scale:
+                        context.finalScale *= (1f + rune.specialValue); break;
+                    case ModifierType.CritChance:
+                        context.finalCritChance += rune.specialValue; break;
+                    case ModifierType.CritDamage:
+                        context.finalCritDamage += rune.specialValue; break;
+                    case ModifierType.ProjectileCount:
+                        context.finalProjectileCount += (int)rune.specialValue; break;
                 }
-            }
-            context.isCritical = UnityEngine.Random.value < context.skillCritChance;
-        }
-
-        private void ApplySynergies(ProjectileContext context)
-        {
-            var elementCounts = context.data.equippedRunes
-                .Where(r => r != null && r.element != RuneElement.None)
-                .GroupBy(r => r.element)
-                .ToDictionary(g => g.Key, g => g.Count());
-
-            var activeSynergy = _synergyDatabase
-                .OrderByDescending(s => s.requiredCount)
-                .FirstOrDefault(s => elementCounts.ContainsKey(s.element) && elementCounts[s.element] >= s.requiredCount);
-
-            if (activeSynergy != null)
-            {
-                context.skillDamage *= (1f + activeSynergy.damageMultiplierBonus);
-                context.activeSynergy = activeSynergy;
-
-                context.primaryColor = activeSynergy.flyPalette.primary;
-                context.secondaryColor = activeSynergy.flyPalette.secondary;
             }
         }
     }

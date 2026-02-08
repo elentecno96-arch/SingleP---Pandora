@@ -1,91 +1,97 @@
 using Game.Project.Scripts.Core.Projectile;
 using Game.Project.Scripts.Core.Projectile.Interface;
+using Game.Project.Scripts.Core.Projectile.SO;
 using Game.Project.Scripts.Core.Projectile.Strategys.Mover;
 using Game.Project.Scripts.Managers.Singleton;
-using Game.Project.Scripts.Core.Projectile.SO;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Game.Project.Scripts.Managers.Systems.SkillSystems
 {
     public class SpawnSystem : MonoBehaviour
     {
-        public void Spawn(ProjectileContext baseContext)
+        [SerializeField] private MoverFactory moverFactory;
+
+        private void Awake()
         {
-            int spawnCount = (baseContext.data.movementType == MovementType.Spread)
-                ? Mathf.Clamp(baseContext.data.projectileCount, 3, 6) : 1;
+            moverFactory = new MoverFactory();
+        }
+        public List<Projectile> CreateProjectiles(ProjectileContext prototype)
+        {
+            List<Projectile> spawnedProjectiles = new List<Projectile>();
+            int totalCount = prototype.finalProjectileCount;
 
-            float spreadAngle = 45f;
-            float startAngle = -(spreadAngle / 2f);
-            float angleStep = (spawnCount > 1) ? spreadAngle / (spawnCount - 1) : 0;
-
-            for (int i = 0; i < spawnCount; i++)
+            if (prototype.data.movementType == MovementType.Rifle)
             {
-                Vector3 finalDir = baseContext.direction;
-
-                if (baseContext.data.movementType == MovementType.Spread)
-                {
-                    float currentAngle = startAngle + (angleStep * i);
-                    finalDir = Quaternion.Euler(0, currentAngle, 0) * baseContext.direction;
-                }
-
-                SpawnIndividual(baseContext, finalDir);
+                StartCoroutine(FireRifleRoutine(prototype));
+                return spawnedProjectiles;
             }
+            int actualSpawnCount = (prototype.data.movementType == MovementType.Growing) ? 1 : totalCount;
+            for (int i = 0; i < actualSpawnCount; i++)
+            {
+                SpawnSingleProjectile(prototype, i, totalCount, spawnedProjectiles);
+            }
+            return spawnedProjectiles;
         }
 
-        private void SpawnIndividual(ProjectileContext baseContext, Vector3 direction)
+        private void ApplyDistribution(ProjectileContext ctx, ProjectileContext proto, int index, int total)
         {
-            IProjectileMover mover = CreateMover(baseContext.data.movementType);
-            Projectile proj = PoolManager.Instance.GetProjectile(baseContext.data.projectilePrefab);
+            float angleStep = 15f;
+            float startAngle = -(angleStep * (total - 1)) / 2f;
+            float finalAngle = startAngle + (angleStep * index);
 
+            switch (proto.data.movementType)
+            {
+                case MovementType.Linear:
+                case MovementType.Rifle:
+                case MovementType.Bounce:
+                    ctx.direction = Quaternion.Euler(0, finalAngle, 0) * proto.direction;
+                    break;
+
+                case MovementType.Spin:
+                    ctx.direction = Quaternion.Euler(0, finalAngle, 0) * proto.direction;
+                    ctx.direction.y = 0;
+                    ctx.direction.Normalize();
+                    break;
+
+                case MovementType.Arcane:
+                    ctx.direction = proto.direction;
+                    break;
+
+                case MovementType.Growing:
+                    float baseTargetScale = 1.5f;
+                    float scaleBonusPerCount = 0.7f;
+                    float calculatedScale = baseTargetScale + (total - 1) * scaleBonusPerCount;
+                    ctx.finalScale = Mathf.Min(calculatedScale * proto.finalScale, 5.0f);
+                    ctx.direction = proto.direction;
+                    break;
+            }
+        }
+        
+        private IEnumerator FireRifleRoutine(ProjectileContext prototype)
+        {
+            int totalCount = prototype.finalProjectileCount;
+            float interval = 0.08f;
+
+            for (int i = 0; i < totalCount; i++)
+            {
+                SpawnSingleProjectile(prototype, i, totalCount, null);
+                yield return new WaitForSeconds(interval);
+            }
+        }
+        private void SpawnSingleProjectile(ProjectileContext prototype, int index, int total, List<Projectile> list)
+        {
+            ProjectileContext individualContext = prototype.Clone();
+            ApplyDistribution(individualContext, prototype, index, total);
+
+            Projectile proj = PoolManager.Instance.GetProjectile(prototype.data.projectilePrefab);
             if (proj != null)
             {
-                ProjectileContext individualContext = CopyContext(baseContext, direction);
-                proj.transform.SetPositionAndRotation(baseContext.firePosition, Quaternion.LookRotation(direction));
-                proj.Init(individualContext, mover);
+                proj.Init(individualContext, moverFactory.Create(prototype.data.movementType));
+                list?.Add(proj);
             }
-        }
-
-        private IProjectileMover CreateMover(MovementType type) => type switch
-        {
-            MovementType.Growing => new Growing(),
-            MovementType.AreaFall => new AreaFall(),
-            MovementType.Spread => new Spread(),
-            _ => new Linear(),
-        };
-
-        private ProjectileContext CopyContext(ProjectileContext origin, Vector3 direction)
-        {
-            return new ProjectileContext
-            {
-                data = origin.data,
-                owner = origin.owner,
-                direction = direction,
-                firePosition = origin.firePosition,
-
-                skillDamage = origin.skillDamage,
-                skillSpeed = origin.skillSpeed,
-                skillLifeTime = origin.skillLifeTime,
-                skillCooldown = origin.skillCooldown,
-                skillScale = origin.skillScale,
-                skillCritChance = origin.skillCritChance,
-                skillCritDamage = origin.skillCritDamage,
-                skillAcceleration = origin.skillAcceleration,
-                skillHomingForce = origin.skillHomingForce,
-
-                isCritical = origin.isCritical,
-
-                synergyExplosionRadius = origin.synergyExplosionRadius,
-                synergySlowAmount = origin.synergySlowAmount,
-                synergyDefensePen = origin.synergyDefensePen,
-
-                primaryColor = origin.primaryColor,
-                secondaryColor = origin.secondaryColor,
-
-                strategies = new List<IProjectileStrategy>(origin.strategies),
-                activeSynergy = origin.activeSynergy
-            };
         }
     }
 }

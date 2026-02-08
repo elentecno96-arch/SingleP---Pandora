@@ -10,7 +10,7 @@ namespace Game.Project.Scripts.Core.Projectile.Interface
     /// </summary>
     public interface IProjectileState
     {
-        void Enter(ProjectileContext context);
+        void Enter(ProjectileContext context, Projectile projectile);
         void UpdateState(Projectile projectile);
         void Exit(ProjectileContext context);
     }

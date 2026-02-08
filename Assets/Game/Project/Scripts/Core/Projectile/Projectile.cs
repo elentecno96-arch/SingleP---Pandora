@@ -17,6 +17,7 @@ namespace Game.Project.Scripts.Core.Projectile
         private IProjectileState _currentState;
         private IProjectileMover _mover;
         private bool _isReturned = false;
+        private bool _hasImpacted = false;
 
         [SerializeField] private LayerMask targetMask;
 
@@ -35,25 +36,22 @@ namespace Game.Project.Scripts.Core.Projectile
         public void Init(ProjectileContext context, IProjectileMover mover)
         {
             _isReturned = false;
+            _hasImpacted = false;
             ClearAllEvents();
 
             _context = context;
-            _context.projectile = this;
             _mover = mover;
 
-            if (_context.strategies != null)
-            {
-                foreach (var strategy in _context.strategies)
-                {
-                    strategy.Apply(_context);
-                }
-            }
-            _mover.Init(_context);
+            transform.position = _context.firePosition;
+            if (_context.direction != Vector3.zero)
+                transform.rotation = Quaternion.LookRotation(_context.direction);
 
             if (TryGetComponent(out ProjectileVisual visual)) visual.Bind();
             if (TryGetComponent(out ProjectileAudio audio)) audio.Bind();
 
-            transform.localScale = Vector3.one * _context.skillScale;
+            _mover.Init(_context, this);
+
+            transform.localScale = Vector3.one * _context.finalScale;
 
             ChangeState(ProjectileStates.Spawn);
         }
@@ -75,19 +73,14 @@ namespace Game.Project.Scripts.Core.Projectile
                 if (_currentState == ProjectileStates.Spawn) OnSpawn?.Invoke();
                 else if (_currentState == ProjectileStates.Charge) OnCharge?.Invoke();
                 else if (_currentState == ProjectileStates.Fly) OnFly?.Invoke();
-                else if (_currentState == ProjectileStates.Impact) OnImpact?.Invoke(_context.target);
 
-                _currentState.Enter(_context);
+                _currentState.Enter(_context, this);
             }
         }
         private void Update() => _currentState?.UpdateState(this);
-        private void FixedUpdate()
-        {
-            if (_currentState is FlyState) _mover?.OnFixedUpdate(this);
-        }
         private void OnTriggerEnter(Collider other)
         {
-            if (_context == null || _isReturned) return;
+            if (_isReturned || _context == null) return;
             if (other.gameObject == _context.owner) return;
 
             if ((targetMask.value & (1 << other.gameObject.layer)) != 0)
@@ -97,8 +90,23 @@ namespace Game.Project.Scripts.Core.Projectile
                     if (!other.TryGetComponent(out IDamageable _)) return;
                 }
 
-                _context.target = other.gameObject;
-                ChangeState(ProjectileStates.Impact);
+                bool shouldImpact = true;
+
+                if (_mover is IProjectileHitable hitHandler)
+                {
+                    shouldImpact = hitHandler.OnHit(this, other);
+                }
+                if (shouldImpact)
+                {
+                    if (_hasImpacted) return;
+                    _hasImpacted = true;
+                    _context.target = other.gameObject;
+                    ChangeState(ProjectileStates.Impact);
+                }
+                else
+                {
+                    ImpactStateCall(other.gameObject);
+                }
             }
         }
         public void ReturnToPool()
@@ -106,7 +114,13 @@ namespace Game.Project.Scripts.Core.Projectile
             if (_isReturned) return;
             _isReturned = true;
 
+            StopAllCoroutines();
             if (_mover is IDisposable disposable) disposable.Dispose();
+            if (TryGetComponent(out ProjectileVisual visual)) visual.Unbind();
+
+            _context = null;
+            _mover = null;
+            _currentState = null;
 
             ClearAllEvents();
             OnReturnToPool?.Invoke(this);
@@ -126,32 +140,13 @@ namespace Game.Project.Scripts.Core.Projectile
 
             if (target != null && target.TryGetComponent(out IDamageable dmg))
             {
-                float finalDmg = _context.skillDamage;
-                if (_context.isCritical) finalDmg *= _context.skillCritDamage;
+                float damageValue = _context.finalDamage;
 
-                dmg.TakeDamage(finalDmg);
-            }
-            SynergyLogic();
-        }
-
-        private void SynergyLogic()
-        {
-            if (_context.activeSynergy == null) return;
-
-            if (_context.activeSynergy.element == Rune.RuneElement.Fire && _context.synergyExplosionRadius > 0)
-            {
-                ApplyAreaDamage(transform.position, _context.synergyExplosionRadius);
-            }
-        }
-        private void ApplyAreaDamage(Vector3 center, float radius)
-        {
-            Collider[] hits = Physics.OverlapSphere(center, radius, targetMask);
-            foreach (var hit in hits)
-            {
-                if (hit.TryGetComponent(out IDamageable dmg))
+                if (_context.isCritical)
                 {
-                    dmg.TakeDamage(_context.skillDamage * 0.5f);
+                    damageValue *= _context.finalCritDamage;
                 }
+                dmg.TakeDamage(damageValue);
             }
         }
     }

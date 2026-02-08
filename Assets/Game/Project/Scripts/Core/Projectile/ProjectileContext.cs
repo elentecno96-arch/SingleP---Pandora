@@ -14,32 +14,30 @@ namespace Game.Project.Scripts.Core.Projectile
     public class ProjectileContext
     {
         public SkillData data;
-        public Projectile projectile;
         public GameObject owner;
         public GameObject target;
 
-        public List<IProjectileStrategy> strategies = new List<IProjectileStrategy>();
-        public SynergyData activeSynergy;
+        public float finalDamage;
+        public float finalSpeed;
+        public float finalLifeTime;
+        public float finalRange;
+        public float finalScale = 1f; 
+        public float finalCritChance;
+        public float finalCritDamage;
+        public int finalProjectileCount;
 
-        public float skillDamage;
-        public float skillSpeed;
-        public float skillLifeTime;
-        public float skillCooldown;
-        public float skillScale = 1f;
-        public float skillCritChance = 0.05f;
-        public float skillCritDamage = 1.5f;
-        public float skillAcceleration = 0f;
-        public float skillHomingForce = 0f;
+        public bool isCritical;
 
-        public bool isCritical; //农府 惯积 咯何 眉农
-
-        public float synergyExplosionRadius = 3f;
-        public float synergySlowAmount = 0f;
-        public float synergyDefensePen = 0f;
+        public GameObject flyEffect;
+        public GameObject impactEffect;
+        public AudioClip impactSfx;
 
         public Vector3 firePosition;
         public Vector3 direction;
-        public Color primaryColor = Color.white;
-        public Color secondaryColor = Color.gray;
+
+        public ProjectileContext Clone()
+        {
+            return (ProjectileContext)this.MemberwiseClone();
+        }
     }
 }
