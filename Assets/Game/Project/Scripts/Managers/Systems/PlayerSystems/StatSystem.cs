@@ -1,10 +1,7 @@
 using Game.Project.Data.Stat;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Project.Scripts.Managers.Systems
+namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
 {
     /// <summary>
     /// 플레이어의 기본 스텟

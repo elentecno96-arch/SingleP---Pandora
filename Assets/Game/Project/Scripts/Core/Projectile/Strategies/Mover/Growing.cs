@@ -1,17 +1,20 @@
-using Game.Project.Scripts.Core.Projectile;
 using Game.Project.Scripts.Core.Projectile.Interface;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
+namespace Game.Project.Scripts.Core.Projectile.Strategies.Mover
 {
     /// <summary>
     /// 포물선 크기 증가 스킬
     /// </summary>
     public class Growing : IProjectileMover
     {
+        private const float MOVE_DURATION = 1.2f;
+        private const float START_SCALE_MULTIPLIER = 0.2f;
+        private const float LOOK_AHEAD_STEP = 0.01f;
+        private const float TARGET_SEARCH_RADIUS = 10f;
+        private const float ROTATION_THRESHOLD = 0.99f;
+
         private ProjectileContext _ctx;
         private Vector3 _startPos;
         private Vector3 _targetPos;
@@ -31,10 +34,10 @@ namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
             {
                 _targetPos = _startPos + (_ctx.direction * _ctx.finalRange);
             }
-            _duration = 1.2f;
+            _duration = MOVE_DURATION;
             _elapsedTime = 0f;
 
-            projectile.transform.localScale = Vector3.one * (_ctx.finalScale * 0.2f);
+            projectile.transform.localScale = Vector3.one * (_ctx.finalScale * START_SCALE_MULTIPLIER);
 
             var childParticles = projectile.GetComponentsInChildren<ParticleSystem>();
             foreach (var ps in childParticles)
@@ -56,13 +59,13 @@ namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
 
                 projectile.transform.position = currentPos;
 
-                float currentScale = Mathf.Lerp(_ctx.finalScale * 0.2f, _ctx.finalScale, t);
+                float currentScale = Mathf.Lerp(_ctx.finalScale * START_SCALE_MULTIPLIER, _ctx.finalScale, t);
                 projectile.transform.localScale = Vector3.one * currentScale;
 
-                if (t < 0.99f)
+                if (t < ROTATION_THRESHOLD)
                 {
-                    Vector3 nextPos = Vector3.Lerp(_startPos, _targetPos, t + 0.01f);
-                    nextPos.y += Mathf.Sin((t + 0.01f) * Mathf.PI) * _arcHeight;
+                    Vector3 nextPos = Vector3.Lerp(_startPos, _targetPos, t + LOOK_AHEAD_STEP);
+                    nextPos.y += Mathf.Sin((t + LOOK_AHEAD_STEP) * Mathf.PI) * _arcHeight;
                     projectile.transform.forward = (nextPos - currentPos).normalized;
                 }
             }
@@ -74,8 +77,7 @@ namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
 
         private Vector3 FindTarget(Vector3 currentPos)
         {
-            float searchRadius = 20f;
-            Collider[] colliders = Physics.OverlapSphere(currentPos, searchRadius, LayerMask.GetMask("Enemy"));
+            Collider[] colliders = Physics.OverlapSphere(currentPos, TARGET_SEARCH_RADIUS, LayerMask.GetMask("Enemy"));
 
             if (colliders.Length > 0)
             {

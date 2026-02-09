@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Game.Project.Scripts.Core.Projectile.Interface;
 
@@ -10,21 +8,19 @@ namespace Game.Project.Scripts.Core.Projectile.States
     /// </summary>
     public class FlyState : IProjectileState
     {
-        private float _flyTimer = 0f;
         public void Enter(ProjectileContext context, Projectile projectile)
         {
-            _flyTimer = 0f;
             projectile.transform.localScale = Vector3.one * context.finalScale;
         }
 
         public void UpdateState(Projectile projectile)
         {
-            _flyTimer += Time.deltaTime;
+            projectile.StateTimer += Time.deltaTime;
 
             float maxLifeTime = projectile.Context.finalLifeTime > 0
                 ? projectile.Context.finalLifeTime : 4f;
 
-            if (_flyTimer >= maxLifeTime)
+            if (projectile.StateTimer >= maxLifeTime)
             {
                 projectile.ReturnToPool();
                 return;

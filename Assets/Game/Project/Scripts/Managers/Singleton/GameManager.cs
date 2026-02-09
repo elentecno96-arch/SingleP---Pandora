@@ -1,7 +1,4 @@
-using Game.Project.Scripts.Managers.Systems;
-using Game.Project.Utillity.Generic;
-using System.Collections;
-using System.Collections.Generic;
+using Game.Project.Utility.Generic;
 using UnityEngine;
 
 namespace Game.Project.Scripts.Managers.Singleton

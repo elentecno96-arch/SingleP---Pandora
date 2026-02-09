@@ -1,16 +1,15 @@
-using Game.Project.Scripts.Core.Projectile;
 using Game.Project.Scripts.Core.Projectile.Interface;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
+namespace Game.Project.Scripts.Core.Projectile.Strategies.Mover
 {
     /// <summary>
     /// 직선 빠른 연사
     /// </summary>
     public class Rifle : IProjectileMover
     {
+        private const float SPREAD_INTENSITY = 0.03f;
+
         private ProjectileContext _ctx;
         private Vector3 _moveDirection;
 
@@ -21,11 +20,10 @@ namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
 
             Vector3 targetDir = _ctx.direction;
 
-            float intensity = 0.03f;
             Vector3 randomSpread = new Vector3(
-                Random.Range(-intensity, intensity),
-                Random.Range(-intensity, intensity),
-                Random.Range(-intensity, intensity)
+                Random.Range(-SPREAD_INTENSITY, SPREAD_INTENSITY),
+                Random.Range(-SPREAD_INTENSITY, SPREAD_INTENSITY),
+                Random.Range(-SPREAD_INTENSITY, SPREAD_INTENSITY)
             );
 
             _moveDirection = (targetDir + randomSpread).normalized;

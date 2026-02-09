@@ -1,7 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Game.Project.Utillity.Generic;
+using Game.Project.Utility.Generic;
 
 namespace Game.Project.Scripts.Managers.Singleton
 {

@@ -1,9 +1,7 @@
 using Game.Project.Data.Damage;
 using Game.Project.Scripts.Core.Projectile.Interface;
 using Game.Project.Scripts.Core.Projectile.States;
-using Game.Project.Scripts.Core.Projectile.SO;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Project.Scripts.Core.Projectile
@@ -18,6 +16,7 @@ namespace Game.Project.Scripts.Core.Projectile
         private IProjectileMover _mover;
         private bool _isReturned = false;
         private bool _hasImpacted = false;
+        public float StateTimer { get; set; }
 
         [SerializeField] private LayerMask targetMask;
 
@@ -28,6 +27,9 @@ namespace Game.Project.Scripts.Core.Projectile
         public event Action OnChargeExit;
         public event Action OnFlyExit;
 
+        /// <summary>
+        /// PoolManager에서 콜백하고 있음 (의도적)
+        /// </summary>
         public Action<Projectile> OnReturnToPool;
 
         public ProjectileContext Context => _context;
@@ -37,6 +39,7 @@ namespace Game.Project.Scripts.Core.Projectile
         {
             _isReturned = false;
             _hasImpacted = false;
+            StateTimer = 0;
             ClearAllEvents();
 
             _context = context;

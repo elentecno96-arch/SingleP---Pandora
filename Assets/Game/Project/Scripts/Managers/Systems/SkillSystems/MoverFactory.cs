@@ -1,6 +1,6 @@
 using Game.Project.Scripts.Core.Projectile.Interface;
 using Game.Project.Scripts.Core.Projectile.SO;
-using Game.Project.Scripts.Core.Projectile.Strategys.Mover;
+using Game.Project.Scripts.Core.Projectile.Strategies.Mover;
 
 namespace Game.Project.Scripts.Managers.Systems.SkillSystems
 {
