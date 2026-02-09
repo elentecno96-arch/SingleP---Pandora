@@ -35,23 +35,24 @@ namespace Game.Project.Scripts.Managers.Singleton
         {
             if (slot == null || slot.IsEmpty) return null;
 
-            ProjectileContext ctx = new ProjectileContext
+            return new ProjectileContext
             {
                 data = slot.skillData,
                 owner = owner
             };
-            return ctx;
         }
-        public float GetCooldown(SkillData data, Stat playerStat)
+        public float GetCooldown(SkillSlot slot, Stat playerStat)
         {
-            ProjectileContext c = new ProjectileContext { data = data };
-            _modifierSystem.ApplyModifiers(c, playerStat);
+            ProjectileContext c = new ProjectileContext { data = slot.skillData };
+            _modifierSystem.ApplyModifiers(c, slot.equippedRunes, playerStat);
             return c.finalCooldown;
         }
-        public void ApplySkill(ProjectileContext prototype)
+        public void ApplySkill(ProjectileContext prototype, SkillSlot slot)
         {
-            if (!_isInitialized) return;
-            _modifierSystem.ApplyModifiers(prototype, PlayerManager.Instance.Stats.CurrentStat);
+            if (!_isInitialized || slot == null) return;
+
+            _modifierSystem.ApplyModifiers(prototype, slot.equippedRunes, PlayerManager.Instance.Stats.CurrentStat);
+
             _spawnSystem.CreateProjectiles(prototype);
         }
     }

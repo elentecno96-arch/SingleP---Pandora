@@ -16,8 +16,8 @@ namespace Game.Project.Scripts.Player
 
         private PlayerManager playerManager;
 
-        private Dictionary<SkillData, float> _skillTimers = new Dictionary<SkillData, float>();
-        private Dictionary<SkillData, float> _cachedIntervals = new Dictionary<SkillData, float>();
+        private Dictionary<SkillSlot, float> _skillTimers = new Dictionary<SkillSlot, float>();
+        private Dictionary<SkillSlot, float> _cachedIntervals = new Dictionary<SkillSlot, float>();
 
         private TargetScanner _scanner;
         private Transform _currentTarget;
@@ -63,21 +63,15 @@ namespace Game.Project.Scripts.Player
         /// </summary>
         private void UpdateTimers()
         {
-            if (playerManager.skillEquip == null) return;
             var slots = playerManager.skillEquip.GetSkillSlots();
-            if (slots == null) return;
-
             foreach (var slot in slots)
             {
                 if (slot == null || slot.IsEmpty) continue;
 
-                SkillData skill = slot.skillData;
-                if (skill == null) continue;
+                if (!_skillTimers.ContainsKey(slot)) _skillTimers[slot] = 0f;
 
-                if (!_skillTimers.ContainsKey(skill)) _skillTimers[skill] = 0f;
-
-                float interval = _cachedIntervals.ContainsKey(skill) ? _cachedIntervals[skill] : 0.1f;
-                _skillTimers[skill] = Mathf.Min(_skillTimers[skill] + Time.deltaTime, interval);
+                float interval = _cachedIntervals.ContainsKey(slot) ? _cachedIntervals[slot] : 1.0f;
+                _skillTimers[slot] = Mathf.Min(_skillTimers[slot] + Time.deltaTime, interval);
             }
         }
         /// <summary>
@@ -89,24 +83,20 @@ namespace Game.Project.Scripts.Player
 
             foreach (var slot in playerManager.skillEquip.GetSkillSlots())
             {
-                if (slot.IsEmpty) continue;
+                if (slot.IsEmpty || !_cachedIntervals.ContainsKey(slot)) continue;
 
-                SkillData skill = slot.skillData;
+                float interval = _cachedIntervals[slot];
 
-                if (!_cachedIntervals.ContainsKey(skill)) continue;
-
-                float interval = _cachedIntervals[skill];
-
-                if (_skillTimers[skill] >= interval)
+                if (_skillTimers[slot] >= interval)
                 {
-                    _skillTimers[skill] -= interval;
-                    AutoAttack(slot); //ΩΩ∑‘¿ª ≥—∞‹¡‹
+                    _skillTimers[slot] = 0f;
+                    AutoAttack(slot);
                 }
             }
         }
         public void RefreshAllSkill()
         {
-            if (playerManager == null || playerManager.skillEquip == null) return;
+            if (playerManager?.skillEquip == null) return;
 
             _cachedIntervals.Clear();
 
@@ -114,15 +104,11 @@ namespace Game.Project.Scripts.Player
             {
                 if (slot.IsEmpty) continue;
 
-                SkillData skill = slot.skillData;
+                float interval = SkillManager.Instance.GetCooldown(slot, playerManager.Stats.CurrentStat);
+                _cachedIntervals[slot] = interval;
 
-                float interval = SkillManager.Instance.GetCooldown(skill, playerManager.Stats.CurrentStat);
-                _cachedIntervals[skill] = interval;
-
-                if (!_skillTimers.ContainsKey(skill))
-                {
-                    _skillTimers[skill] = 0f;
-                }
+                if (!_skillTimers.ContainsKey(slot))
+                    _skillTimers[slot] = 0f;
             }
         }
         private void AutoAttack(SkillSlot slot)
@@ -132,11 +118,11 @@ namespace Game.Project.Scripts.Player
             Vector3 attackDir = (_currentTarget.position - firePoint.position).normalized;
 
             ProjectileContext context = SkillManager.Instance.CreateContext(slot, gameObject);
-
             context.firePosition = firePoint.position;
             context.direction = attackDir;
+            context.target = _currentTarget.gameObject;
 
-            SkillManager.Instance.ApplySkill(context);
+            SkillManager.Instance.ApplySkill(context, slot);
         }
 
         /// <summary>

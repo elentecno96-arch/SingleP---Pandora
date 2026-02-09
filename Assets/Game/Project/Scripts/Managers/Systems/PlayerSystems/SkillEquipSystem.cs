@@ -1,4 +1,5 @@
 using Game.Project.Scripts.Core.Projectile.SO;
+using Game.Project.Scripts.Managers.Singleton;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,14 +36,13 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
 
             _skillSlots[index].skillData = data;
 
-            NotifyUpdate();
+            CallUpdate();
             OnSkillChanged?.Invoke();
         }
 
-        private void NotifyUpdate()
+        private void CallUpdate()
         {
-            // PlayerManager를 통해 Combat의 Refresh 호출 예정
-            Debug.Log("스킬 장착 정보가 변경되었습니다.");
+            PlayerManager.Instance.Combat.RefreshAllSkill();
         }
     }
 }

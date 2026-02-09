@@ -12,13 +12,12 @@ namespace Game.Project.Scripts.Core.Projectile.SO
     [CreateAssetMenu(fileName = "New Skill data",menuName = "Projectile/Skill Data")]
     public class SkillData : ScriptableObject
     {
+        public Sprite Icon;
         public string skillName;
         public GameObject projectilePrefab;
         public MovementType movementType;
         public SkillRarity rarity;
         [TextArea] public string description;
-
-        public List<RuneData> equippedRunes = new List<RuneData>();
 
         public float damage = 10f;
         public float speed = 15f;

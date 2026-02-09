@@ -1,10 +1,12 @@
+using Game.Project.Scripts.Core.Projectile.Rune;
 using Game.Project.Scripts.Core.Projectile.SO;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class SkillSlot
 {
     public SkillData skillData;
-
+    public List<RuneData> equippedRunes = new List<RuneData>();
     public bool IsEmpty => skillData == null;
 
     /// <summary>

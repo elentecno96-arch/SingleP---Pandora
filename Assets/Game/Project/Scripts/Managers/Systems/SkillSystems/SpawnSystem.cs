@@ -39,7 +39,7 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
             int actualSpawnCount = (prototype.data.movementType == MovementType.Growing) ? 1 : totalCount;
             for (int i = 0; i < actualSpawnCount; i++)
             {
-                SpawnSingleProjectile(prototype, i, totalCount, spawnedProjectiles);
+                SpawnCopyProjectile(prototype, i, totalCount, spawnedProjectiles);
             }
             return spawnedProjectiles;
         }
@@ -83,7 +83,7 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
 
             for (int i = 0; i < totalCount; i++)
             {
-                SpawnSingleProjectile(prototype, i, totalCount, null);
+                SpawnCopyProjectile(prototype, i, totalCount, null);
 
                 if (i < totalCount - 1)
                 {
@@ -91,7 +91,7 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
                 }
             }
         }
-        private void SpawnSingleProjectile(ProjectileContext prototype, int index, int total, List<Projectile> list)
+        private void SpawnCopyProjectile(ProjectileContext prototype, int index, int total, List<Projectile> list)
         {
             ProjectileContext individualContext = prototype.Clone();
             ApplyDistribution(individualContext, prototype, index, total);
