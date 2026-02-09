@@ -1,5 +1,6 @@
 using Game.Project.Utility.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Game.Project.Scripts.Managers.Singleton
 {
@@ -8,6 +9,7 @@ namespace Game.Project.Scripts.Managers.Singleton
         [Header("System Readiness")]
         [SerializeField] private bool _isInitialized = false;
 
+        private SceneManager _sceneManager;
         private PoolManager _pool;
         private EffectManager _effect;
         private SkillManager _skill;
@@ -28,8 +30,12 @@ namespace Game.Project.Scripts.Managers.Singleton
             if (_isInitialized) return;
 
             Debug.Log("=== 각 매니저 초기화 시작 ===");
+            _sceneManager = SceneManager.Instance;
+            _sceneManager.Init();
+
             _pool = PoolManager.Instance;
             _pool.Init();
+
             _effect = EffectManager.Instance;
             _effect.Init();
 
@@ -50,6 +56,10 @@ namespace Game.Project.Scripts.Managers.Singleton
 
             _isInitialized = true;
             Debug.Log("=== 각 매니저 초기화 완료 ===");
+        }
+        public void StartGame()
+        {
+            _sceneManager.LoadScene("6. Main");
         }
     }
 }
