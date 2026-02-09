@@ -10,12 +10,24 @@ namespace Game.Project.Scripts.Managers.Singleton
     {
         private bool _isInitialized = false;
 
+        [SerializeField] private GameObject staticRoot;
+        [SerializeField] private GameObject unstaticRoot;
+
+        [SerializeField] private GameObject mainMenuPanel;
+
         public void Init()
         {
             if (_isInitialized) return;
-            //추후 UI관련 초기화 내용 담당
+
+            if (staticRoot != null) staticRoot.SetActive(false);
+            if (unstaticRoot != null) unstaticRoot.SetActive(true);
+
             _isInitialized = true;
             Debug.Log("UiManager: 초기화 완료");
+        }
+        public void ShowMainMenu()
+        {
+
         }
     }
 }
