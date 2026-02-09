@@ -47,7 +47,7 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
                 case MovementType.Linear:
                 case MovementType.Rifle:
                 case MovementType.Bounce:
-                    ctx.direction = Quaternion.Euler(0, finalAngle, 0) * proto.direction;
+                    ctx.direction = proto.direction;
                     break;
 
                 case MovementType.Spin:
@@ -69,16 +69,22 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
                     break;
             }
         }
-        
+
         private IEnumerator FireRifleRoutine(ProjectileContext prototype)
         {
             int totalCount = prototype.finalProjectileCount;
-            float interval = 0.08f;
+
+            float baseInterval = 0.08f;
+            float dynamicInterval = baseInterval * totalCount;
 
             for (int i = 0; i < totalCount; i++)
             {
                 SpawnSingleProjectile(prototype, i, totalCount, null);
-                yield return new WaitForSeconds(interval);
+
+                if (i < totalCount - 1)
+                {
+                    yield return new WaitForSeconds(dynamicInterval);
+                }
             }
         }
         private void SpawnSingleProjectile(ProjectileContext prototype, int index, int total, List<Projectile> list)

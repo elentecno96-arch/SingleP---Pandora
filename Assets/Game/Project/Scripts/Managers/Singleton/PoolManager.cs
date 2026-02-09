@@ -56,7 +56,7 @@ namespace Game.Project.Scripts.Managers.Singleton
             }
 
             Projectile proj = pool.Get();
-            proj.OnReturnToPool = (item) => pool.Release(proj);
+            proj.OnReturnToPool = (item) => pool.Release(item);
             return proj;
         }
         public GameObject GetEffect(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null)

@@ -19,16 +19,16 @@ MonoBehaviour:
   rarity: 2
   description: "\uC9C1\uC120\uC73C\uB85C \uB0A0\uC544\uAC00\uB294 \uC2A4\uD0AC"
   equippedRunes: []
-  damage: 7
+  damage: 10
   speed: 24
   range: 20
   lifeTime: 3
-  cooldown: 1
+  cooldown: 3
   scale: 1
   critChance: 0.05
   critDamage: 1.5
   chargeTime: 0.2
-  projectileCount: 0
+  projectileCount: 1
   acceleration: 0
   homingStrength: 0
   areaRadius: 1

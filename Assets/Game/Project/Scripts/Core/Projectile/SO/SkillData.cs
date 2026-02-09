@@ -25,7 +25,7 @@ namespace Game.Project.Scripts.Core.Projectile.SO
         public float speed = 15f;
         public float range = 20f;
         public float lifeTime = 3f;
-        public float cooldown = 1.0f;
+        public float cooldown = 3.0f;
         public float scale = 1.0f;        //기본 크기 필드
         public float critChance = 0.05f;  //기본 치명타 확률
         public float critDamage = 1.5f;   //기본 치명타 배율

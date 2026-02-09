@@ -4,6 +4,7 @@ using Game.Project.Scripts.Core.Projectile.Rune;
 using Game.Project.Scripts.Core.Projectile.SO;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Game.Project.Scripts.Managers.Systems.StateSystem;
 
@@ -25,8 +26,11 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
             float skillFinalScale = so.scale; 
             float skillFinalCritChance = so.critChance;
             float skillFinalCritDamage = so.critDamage;
+            float SkillFinalCooldown = so.cooldown;
 
             int skillFinalCount = so.projectileCount;
+
+            float runeCDR = 0f;
 
             if (so.equippedRunes != null)
             {
@@ -58,6 +62,9 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
                         case ModifierType.ProjectileCount:
                             skillFinalCount += (int)rune.specialValue;
                             break;
+                        case ModifierType.Cooldown:
+                            runeCDR += rune.specialValue;
+                            break;
                     }
                 }
             }
@@ -65,6 +72,11 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
             context.finalSpeed = (playerStat.maxMoveSpeed * 0.1f) + skillFinalSpeed;
             context.finalCritChance = playerStat.critChance + skillFinalCritChance;
             context.finalCritDamage = playerStat.critDamage + skillFinalCritDamage;
+
+            float cdAfterRune = SkillFinalCooldown * (1f - runeCDR);
+            float finalCD = cdAfterRune / Mathf.Max(0.1f, 1.0f + playerStat.castingSpeed);
+
+            context.finalCooldown = Mathf.Max(0.05f, finalCD);
 
             context.finalLifeTime = skillFinalLifeTime;
             context.finalRange = so.range;
@@ -77,6 +89,8 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
             context.flyEffect = so.flyEffect;
             context.impactEffect = so.impactEffect;
             context.impactSfx = so.impactSfx;
+
+            Debug.Log($"[Modifier] Final CD: {context.finalCooldown} (Base:{SkillFinalCooldown}, Rune:{runeCDR}, Stat:{playerStat.castingSpeed})");
         }
     }
 }

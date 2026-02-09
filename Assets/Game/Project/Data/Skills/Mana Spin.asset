@@ -20,11 +20,11 @@ MonoBehaviour:
   description: "\uCDA9\uB3CC \uC9C0\uC810\uC5D0 \uC9C0\uC18D \uB300\uBBF8\uC9C0\uC8FC\uB294
     \uC2A4\uD0AC"
   equippedRunes: []
-  damage: 7
+  damage: 3
   speed: 12
-  range: 32
+  range: 7
   lifeTime: 3
-  cooldown: 1.5
+  cooldown: 3
   scale: 1
   critChance: 0.05
   critDamage: 1.5

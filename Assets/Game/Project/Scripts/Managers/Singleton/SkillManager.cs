@@ -1,3 +1,4 @@
+using Game.Project.Data.Stat;
 using Game.Project.Scripts.Core.Projectile;
 using Game.Project.Scripts.Core.Projectile.Interface;
 using Game.Project.Scripts.Core.Projectile.Rune;
@@ -37,7 +38,12 @@ namespace Game.Project.Scripts.Managers.Singleton
             _moverFactory = new MoverFactory();
             _isInitialized = true;
         }
-
+        public float GetCooldown(SkillData data, Stat playerStat)
+        {
+            ProjectileContext c = new ProjectileContext { data = data };
+            _modifierSystem.ApplyModifiers(c, playerStat);
+            return c.finalCooldown;
+        }
         public void ApplySkill(ProjectileContext prototype)
         {
             if (!_isInitialized) return;
