@@ -15,15 +15,15 @@ MonoBehaviour:
   skillName: ManaBolt
   projectilePrefab: {fileID: 923852718690510228, guid: cae6df2aadc771a49b13c4b43b160af9,
     type: 3}
-  movementType: 5
+  movementType: 1
   rarity: 6
   description: "\uD14C\uC2A4\uD2B8\uC6A9 "
   equippedRunes: []
   damage: 1
-  speed: 8
-  range: 7
+  speed: 16
+  range: 8
   lifeTime: 10
-  cooldown: 3
+  cooldown: 1
   scale: 1
   critChance: 0.05
   critDamage: 1.5

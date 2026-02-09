@@ -23,8 +23,8 @@ MonoBehaviour:
   damage: 15
   speed: 12
   range: 20
-  lifeTime: 3
-  cooldown: 1.5
+  lifeTime: 4
+  cooldown: 3
   scale: 1
   critChance: 0.05
   critDamage: 1.5

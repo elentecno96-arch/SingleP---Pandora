@@ -24,6 +24,7 @@ namespace Game.Project.Scripts.Core.Projectile
         public float finalScale = 1f; 
         public float finalCritChance;
         public float finalCritDamage;
+        public float finalCooldown;
         public int finalProjectileCount;
 
         public bool isCritical;

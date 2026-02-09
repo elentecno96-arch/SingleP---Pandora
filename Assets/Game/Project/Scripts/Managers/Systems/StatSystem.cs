@@ -17,6 +17,8 @@ namespace Game.Project.Scripts.Managers.Systems
 
         private Stat _cachedCurrentStat;
 
+        public event System.Action OnStatChanged;
+
         /// <summary>
         /// 최종 스탯 (Read-only)
         /// </summary>
@@ -36,25 +38,13 @@ namespace Game.Project.Scripts.Managers.Systems
             _isInitialized = true;
             Debug.Log("<color=green>StatSystem: 초기화 및 스탯 캐싱 완료</color>");
         }
-
-        /// <summary>
-        /// 스킬의 공격 간격
-        /// </summary>
-        public float GetFinalAttackInterval(float skillCooldown)
-        {
-            float cdr = _cachedCurrentStat.castingSpeed;
-            float castSpeed = Mathf.Max(0.1f, 1.0f + _cachedCurrentStat.castingSpeed);
-
-            float cooldownAfterCDR = skillCooldown * (1f - cdr);
-            return cooldownAfterCDR / castSpeed;
-        }
-
         /// <summary>
         /// 기본 스탯과 추가 스탯을 합산하여 저장
         /// </summary>
         public void RefreshStat()
         {
             _cachedCurrentStat = CalculateTotalStat(baseStat, additionalStat);
+            OnStatChanged?.Invoke();
         }
 
         /// <summary>
@@ -81,7 +71,7 @@ namespace Game.Project.Scripts.Managers.Systems
         private Stat CalculateTotalStat(Stat a, Stat b)
         {
             Stat result = AddStats(a, b);
-            result.castingSpeed = Mathf.Clamp(result.castingSpeed, 0f, 0.8f);
+            result.castingSpeed = Mathf.Max(0f, result.castingSpeed);
             result.critChance = Mathf.Clamp(result.critChance, 0f, 1.0f);
 
             return result;

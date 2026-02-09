@@ -20,16 +20,16 @@ MonoBehaviour:
   description: "\uC5EC\uB7EC \uD22C\uC0AC\uCCB4\uB97C \uAC04\uACA9\uC5D0 \uB9DE\uCDB0
     \uB098\uAC00\uB294 \uC2A4\uD0AC"
   equippedRunes: []
-  damage: 5
+  damage: 3
   speed: 16
-  range: 20
+  range: 8
   lifeTime: 3
-  cooldown: 0.4
+  cooldown: 1.5
   scale: 1
   critChance: 0.05
   critDamage: 1.5
-  chargeTime: 0.2
-  projectileCount: 0
+  chargeTime: 0.1
+  projectileCount: 3
   acceleration: 0
   homingStrength: 0
   areaRadius: 1

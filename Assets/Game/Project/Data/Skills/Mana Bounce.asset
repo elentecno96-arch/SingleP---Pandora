@@ -20,15 +20,15 @@ MonoBehaviour:
   description: "\uCDA9\uB3CC \uC2DC \uD22C\uC0AC\uCCB4\uAC00 \uD295\uAE30\uB294 \uC2A4\uD0AC"
   equippedRunes: []
   damage: 7
-  speed: 12
+  speed: 16
   range: 32
   lifeTime: 3
-  cooldown: 1.5
+  cooldown: 2
   scale: 1
   critChance: 0.05
   critDamage: 1.5
   chargeTime: 0.2
-  projectileCount: 3
+  projectileCount: 1
   acceleration: 0
   homingStrength: 0
   areaRadius: 1

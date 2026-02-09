@@ -19,11 +19,11 @@ MonoBehaviour:
   rarity: 2
   description: "\uBD80\uCC44\uAF34 \uBC29\uC2DD \uC2A4\uD0AC"
   equippedRunes: []
-  damage: 7
+  damage: 5
   speed: 12
   range: 32
   lifeTime: 3
-  cooldown: 1.5
+  cooldown: 3
   scale: 1
   critChance: 0.05
   critDamage: 1.5

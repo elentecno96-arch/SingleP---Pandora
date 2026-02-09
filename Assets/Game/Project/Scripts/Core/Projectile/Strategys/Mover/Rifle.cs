@@ -19,12 +19,16 @@ namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
             _ctx = context;
             projectile.transform.localScale = Vector3.one * _ctx.finalScale;
 
-            float rifleSpread = 3.5f;
-            float randomYaw = Random.Range(-rifleSpread, rifleSpread);
-            float randomPitch = Random.Range(-rifleSpread * 0.5f, rifleSpread * 0.5f);
+            Vector3 targetDir = _ctx.direction;
 
-            Quaternion spreadRotation = Quaternion.Euler(randomPitch, randomYaw, 0);
-            _moveDirection = spreadRotation * _ctx.direction;
+            float intensity = 0.03f;
+            Vector3 randomSpread = new Vector3(
+                Random.Range(-intensity, intensity),
+                Random.Range(-intensity, intensity),
+                Random.Range(-intensity, intensity)
+            );
+
+            _moveDirection = (targetDir + randomSpread).normalized;
 
             if (_moveDirection != Vector3.zero)
                 projectile.transform.rotation = Quaternion.LookRotation(_moveDirection);
