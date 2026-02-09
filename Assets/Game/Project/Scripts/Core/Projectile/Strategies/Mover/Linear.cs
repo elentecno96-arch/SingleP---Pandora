@@ -1,10 +1,7 @@
-using Game.Project.Scripts.Core.Projectile;
 using Game.Project.Scripts.Core.Projectile.Interface;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
+namespace Game.Project.Scripts.Core.Projectile.Strategies.Mover
 {
     /// <summary>
     /// 직선 이동 방식

@@ -1,11 +1,7 @@
-using Game.Project.Scripts.Core.Projectile;
 using Game.Project.Scripts.Core.Projectile.Interface;
-using Game.Project.Scripts.Core.Projectile.SO;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
+namespace Game.Project.Scripts.Core.Projectile.Strategies.Mover
 {
     /// <summary>
     /// 부채꼴 이동
@@ -15,7 +11,7 @@ namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
         private ProjectileContext _ctx;
         private Vector3 _moveDirection;
 
-        private float spreadIntensity = 10f;
+        private const float SPREAD_INTENSITY = 10f;
 
         public void Init(ProjectileContext context, Projectile projectile)
         {
@@ -23,7 +19,7 @@ namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
 
             projectile.transform.localScale = Vector3.one * _ctx.finalScale;
 
-            float randomAngle = Random.Range(-spreadIntensity, spreadIntensity);
+            float randomAngle = Random.Range(-SPREAD_INTENSITY, SPREAD_INTENSITY);
 
             Quaternion spreadRotation = Quaternion.Euler(0, randomAngle, 0);
             _moveDirection = spreadRotation * _ctx.direction;

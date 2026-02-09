@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Project.Utillity.Extension.Move
+namespace Game.Project.Utility.Extension.Move
 {
     public static class RigidbodyExtensions
     {

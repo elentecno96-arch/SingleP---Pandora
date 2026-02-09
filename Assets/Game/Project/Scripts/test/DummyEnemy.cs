@@ -3,56 +3,61 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game.Project.Data.Damage;
 
-public class DummyEnemy : MonoBehaviour,IDamageable
+namespace Game.Project.Scripts.Test
 {
-    [SerializeField] private float hp = 100f;
-    [SerializeField] private Color hitColor = Color.red;
-    private Color _originColor;
-    private MeshRenderer _renderer;
-    private bool _isDead = false; 
-
-    private void Awake()
+    public class DummyEnemy : MonoBehaviour, IDamageable
     {
-        _renderer = GetComponentInChildren<MeshRenderer>();
-        if (_renderer != null) _originColor = _renderer.material.color;
-    }
-    private void OnEnable()
-    {
-        _isDead = false;
-        if (_renderer != null) _renderer.material.color = _originColor;
-    }
+        [SerializeField] private float maxHp = 100f;
+        private float _currentHp;
+        [SerializeField] private Color hitColor = Color.red;
+        private Color _originColor;
+        private MeshRenderer _renderer;
+        private bool _isDead = false;
 
-    public void TakeDamage(float amount)
-    {
-        if (_isDead || !gameObject.activeInHierarchy) return;
-
-        hp -= amount;
-        Debug.Log($"[Dummy] µ¥¹ÌÁö ÀÔÀ½: {amount} | ³²Àº HP: {hp}");
-
-        if (hp <= 0)
+        private void Awake()
         {
-            _isDead = true;
-            Die();
+            _renderer = GetComponentInChildren<MeshRenderer>();
+            if (_renderer != null) _originColor = _renderer.material.color;
         }
-        else
+        private void OnEnable()
         {
-            StopAllCoroutines();
-            StartCoroutine(HitFeedback());
+            _isDead = false;
+            _currentHp = maxHp;
+            if (_renderer != null) _renderer.material.color = _originColor;
         }
-    }
 
-    private void Die()
-    {
-        Debug.Log("[Dummy] ÆÄ±«µÊ!");
-        gameObject.SetActive(false);
-    }
+        public void TakeDamage(float amount)
+        {
+            if (_isDead || !gameObject.activeInHierarchy) return;
 
-    private IEnumerator HitFeedback()
-    {
-        if (_renderer == null) yield break;
+            _currentHp -= amount;
+            Debug.Log($"[Dummy] µ¥¹ÌÁö ÀÔÀ½: {amount} | ³²Àº HP: {maxHp}");
 
-        _renderer.material.color = hitColor;
-        yield return new WaitForSeconds(0.1f);
-        _renderer.material.color = _originColor;
+            if (_currentHp <= 0)
+            {
+                _isDead = true;
+                Die();
+            }
+            else
+            {
+                StopAllCoroutines();
+                StartCoroutine(HitFeedback());
+            }
+        }
+
+        private void Die()
+        {
+            Debug.Log("[Dummy] ÆÄ±«µÊ!");
+            gameObject.SetActive(false);
+        }
+
+        private IEnumerator HitFeedback()
+        {
+            if (_renderer == null) yield break;
+
+            _renderer.material.color = hitColor;
+            yield return new WaitForSeconds(0.1f);
+            _renderer.material.color = _originColor;
+        }
     }
 }

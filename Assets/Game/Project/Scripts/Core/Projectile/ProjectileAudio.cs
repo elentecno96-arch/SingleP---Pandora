@@ -16,14 +16,29 @@ namespace Game.Project.Scripts.Core.Projectile
         }
         public void Bind()
         {
-            _projectile.OnSpawn += () => Play(_projectile.Context.data.spawnSfx);
-            _projectile.OnCharge += () => Play(_projectile.Context.data.chargeSfx);
-            _projectile.OnFly += () => Play(_projectile.Context.data.flySfx);
-            _projectile.OnImpact += (target) =>
-            {
-                if (_projectile.Context.data.impactSfx)
-                    AudioManager.Instance.PlaySfxAtPoint(_projectile.Context.data.impactSfx, transform.position);
-            };
+            Unbind();
+
+            _projectile.OnSpawn += PlaySpawnSfx;
+            _projectile.OnCharge += PlayChargeSfx;
+            _projectile.OnFly += PlayFlySfx;
+            _projectile.OnImpact += PlayImpactSfx;
+        }
+        public void Unbind()
+        {
+            if (_projectile == null) return;
+
+            _projectile.OnSpawn -= PlaySpawnSfx;
+            _projectile.OnCharge -= PlayChargeSfx;
+            _projectile.OnFly -= PlayFlySfx;
+            _projectile.OnImpact -= PlayImpactSfx;
+        }
+        private void PlaySpawnSfx() => Play(_projectile.Context.data.spawnSfx);
+        private void PlayChargeSfx() => Play(_projectile.Context.data.chargeSfx);
+        private void PlayFlySfx() => Play(_projectile.Context.data.flySfx);
+        private void PlayImpactSfx(GameObject target)
+        {
+            if (_projectile.Context.data.impactSfx)
+                AudioManager.Instance.PlaySfxAtPoint(_projectile.Context.data.impactSfx, transform.position);
         }
         private void Play(AudioClip clip)
         {

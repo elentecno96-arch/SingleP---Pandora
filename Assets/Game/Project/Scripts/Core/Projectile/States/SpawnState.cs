@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Game.Project.Scripts.Core.Projectile.Interface;
 
 namespace Game.Project.Scripts.Core.Projectile.States

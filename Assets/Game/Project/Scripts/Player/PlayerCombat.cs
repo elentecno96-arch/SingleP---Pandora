@@ -12,8 +12,9 @@ namespace Game.Project.Scripts.Player
     /// </summary>
     public class PlayerCombat : MonoBehaviour
     {
-        [SerializeField] private List<SkillData> equippedSkills = new List<SkillData>();
         [SerializeField] private Transform firePoint;
+
+        private PlayerManager playerManager;
 
         private Dictionary<SkillData, float> _skillTimers = new Dictionary<SkillData, float>();
         private Dictionary<SkillData, float> _cachedIntervals = new Dictionary<SkillData, float>();
@@ -21,21 +22,24 @@ namespace Game.Project.Scripts.Player
         private TargetScanner _scanner;
         private Transform _currentTarget;
 
-        private void Awake()
+        private bool _isInitialized = false;
+
+        public void Init(PlayerManager manager)
         {
-            _scanner = GetComponent<TargetScanner>();
-        }
-        private void Start()
-        {
-            if (PlayerManager.Instance.Stats != null)
-            {
-                PlayerManager.Instance.Stats.OnStatChanged += RefreshAllSkill;
-            }
+            playerManager = manager;
+            _scanner = GetComponent<TargetScanner>(); 
+
+            playerManager.Stats.OnStatChanged += RefreshAllSkill;
+            playerManager.skillEquip.OnSkillChanged += RefreshAllSkill;
+
             RefreshAllSkill();
+            _isInitialized = true;
         }
 
         private void Update()
         {
+            if (!_isInitialized) return;
+
             UpdateTimers(); //쿨타임 계속 업데이트
 
             if (!_scanner.IsTargetValid(_currentTarget))
@@ -54,43 +58,65 @@ namespace Game.Project.Scripts.Player
                 PlayerManager.Instance.Stats.OnStatChanged -= RefreshAllSkill;
             }
         }
+        /// <summary>
+        /// 슬롯에 장착된 스킬의 쿨타임 업데이트
+        /// </summary>
         private void UpdateTimers()
         {
-            foreach (var skill in equippedSkills)
+            if (playerManager.skillEquip == null) return;
+            var slots = playerManager.skillEquip.GetSkillSlots();
+            if (slots == null) return;
+
+            foreach (var slot in slots)
             {
+                if (slot == null || slot.IsEmpty) continue;
+
+                SkillData skill = slot.skillData;
                 if (skill == null) continue;
+
                 if (!_skillTimers.ContainsKey(skill)) _skillTimers[skill] = 0f;
 
                 float interval = _cachedIntervals.ContainsKey(skill) ? _cachedIntervals[skill] : 0.1f;
-
                 _skillTimers[skill] = Mathf.Min(_skillTimers[skill] + Time.deltaTime, interval);
             }
         }
+        /// <summary>
+        /// 장착 시스템을 통해 스킬 체크
+        /// </summary>
         private void CheckSkills()
         {
-            foreach (var skill in equippedSkills)
+            if (playerManager.skillEquip == null) return;
+
+            foreach (var slot in playerManager.skillEquip.GetSkillSlots())
             {
-                if (skill == null) continue;
+                if (slot.IsEmpty) continue;
+
+                SkillData skill = slot.skillData;
 
                 if (!_cachedIntervals.ContainsKey(skill)) continue;
+
                 float interval = _cachedIntervals[skill];
 
                 if (_skillTimers[skill] >= interval)
                 {
                     _skillTimers[skill] -= interval;
-                    AutoAttack(skill);
+                    AutoAttack(slot); //슬롯을 넘겨줌
                 }
             }
         }
         public void RefreshAllSkill()
         {
+            if (playerManager == null || playerManager.skillEquip == null) return;
+
             _cachedIntervals.Clear();
 
-            foreach (var skill in equippedSkills)
+            foreach (var slot in playerManager.skillEquip.GetSkillSlots())
             {
-                if (skill == null) continue;
+                if (slot.IsEmpty) continue;
 
-                float interval = SkillManager.Instance.GetCooldown(skill, PlayerManager.Instance.Stats.CurrentStat);
+                SkillData skill = slot.skillData;
+
+                float interval = SkillManager.Instance.GetCooldown(skill, playerManager.Stats.CurrentStat);
                 _cachedIntervals[skill] = interval;
 
                 if (!_skillTimers.ContainsKey(skill))
@@ -99,19 +125,17 @@ namespace Game.Project.Scripts.Player
                 }
             }
         }
-        private void AutoAttack(SkillData skill)
+        private void AutoAttack(SkillSlot slot)
         {
-            if (_currentTarget == null) return;
+            if (_currentTarget == null || slot.IsEmpty) return;
 
             Vector3 attackDir = (_currentTarget.position - firePoint.position).normalized;
 
-            ProjectileContext context = new ProjectileContext
-            {
-                data = skill,
-                owner = gameObject,
-                firePosition = firePoint.position,
-                direction = attackDir,
-            };
+            ProjectileContext context = SkillManager.Instance.CreateContext(slot, gameObject);
+
+            context.firePosition = firePoint.position;
+            context.direction = attackDir;
+
             SkillManager.Instance.ApplySkill(context);
         }
 
@@ -122,6 +146,11 @@ namespace Game.Project.Scripts.Player
         private void OnValidate()
         {
             if (!Application.isPlaying) return;
+
+            if (playerManager == null) playerManager = GetComponent<PlayerManager>();
+
+            if (playerManager == null || playerManager.skillEquip == null) return;
+
             RefreshAllSkill();
 
             Debug.Log("인스펙터 변경 감지: 스킬 캐시를 갱신했습니다.");

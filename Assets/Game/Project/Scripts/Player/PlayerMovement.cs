@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using Game.Project.Utillity.Extension.Move;
+using Game.Project.Utility.Extension.Move;
 
 namespace Game.Project.Scripts.Player
 {
@@ -13,15 +11,19 @@ namespace Game.Project.Scripts.Player
     {
         private Rigidbody rb;
         private Vector2 inputDir;
+        private Vector2 _prevInputDir;
 
         [SerializeField]
         private float moveSpeed;
+        private void Update()
+        {
+            VisualTilt(); //DOTween의 애니메이션은 프레임 기반이라 업데이트에 있는게 자연스러움
+        }
         private void FixedUpdate()
         {
             if (rb == null) return;
 
             Move();
-            VisualTilt();
         }
         public void Init(float speed)
         {
@@ -44,6 +46,9 @@ namespace Game.Project.Scripts.Player
         }
         private void VisualTilt()
         {
+            if (inputDir == _prevInputDir) return;
+            _prevInputDir = inputDir;
+
             transform.DOKill();
 
             if (inputDir.sqrMagnitude > 0.01f)

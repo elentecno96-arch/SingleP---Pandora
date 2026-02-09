@@ -1,10 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Game.Project.Utillity.Generic;
+using Game.Project.Utility.Generic;
 using Game.Project.Scripts.Core.Projectile;
-using Game.Project.Scripts.Core.Projectile.Interface;
-using Game.Project.Scripts.Core.Projectile.SO;
 
 namespace Game.Project.Scripts.Managers.Singleton
 {

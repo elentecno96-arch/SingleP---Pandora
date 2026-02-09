@@ -2,17 +2,19 @@ using Game.Project.Scripts.Core.Projectile.Interface;
 using System.Linq;
 using UnityEngine;
 
-namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
+namespace Game.Project.Scripts.Core.Projectile.Strategies.Mover
 {
     /// <summary>
     /// ≈ı∞°√º∞° ∆®±Ë
     /// </summary>
     public class Bounce : IProjectileMover, IProjectileHitable
     {
+        private const int DEFAULT_MAX_BOUNCE = 1;
+        private const float TARGET_SEARCH_RADIUS = 10f;
+
         private ProjectileContext _ctx;
         private Vector3 _moveDirection;
         private int _currentBounceCount = 0;
-        private int _maxBounceCount = 1;
 
         public void Init(ProjectileContext context, Projectile projectile)
         {
@@ -28,7 +30,7 @@ namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
 
         public bool OnHit(Projectile projectile, Collider other)
         {
-            if (_currentBounceCount < _maxBounceCount)
+            if (_currentBounceCount < DEFAULT_MAX_BOUNCE)
             {
                 _currentBounceCount++;
                 Vector3 nextTargetDir = FindNextTargetDirection(projectile.transform.position, other);
@@ -58,8 +60,7 @@ namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
 
         private Vector3 FindNextTargetDirection(Vector3 currentPos, Collider currentTarget)
         {
-            float searchRadius = 10f;
-            Collider[] targets = Physics.OverlapSphere(currentPos, searchRadius, LayerMask.GetMask("Enemy"));
+            Collider[] targets = Physics.OverlapSphere(currentPos, TARGET_SEARCH_RADIUS, LayerMask.GetMask("Enemy"));
 
             var nextTarget = targets
                 .Where(t => t != currentTarget)

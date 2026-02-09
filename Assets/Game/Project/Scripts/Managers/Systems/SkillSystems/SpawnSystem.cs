@@ -1,18 +1,26 @@
 using Game.Project.Scripts.Core.Projectile;
-using Game.Project.Scripts.Core.Projectile.Interface;
 using Game.Project.Scripts.Core.Projectile.SO;
-using Game.Project.Scripts.Core.Projectile.Strategys.Mover;
 using Game.Project.Scripts.Managers.Singleton;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Game.Project.Scripts.Managers.Systems.SkillSystems
 {
     public class SpawnSystem : MonoBehaviour
     {
-        [SerializeField] private MoverFactory moverFactory;
+        //Spin
+        private const float SPREAD_ANGLE_STEP = 15f;         // 발사체 사이의 각도 간격
+
+        //Growing
+        private const float GROWING_BASE_SCALE = 1.5f;       // 기본 목표 크기
+        private const float GROWING_BONUS_PER_STACK = 0.7f;  // 추가 발사체 개수당 크기 보너스
+        private const float GROWING_MAX_SCALE_LIMIT = 5.0f;  // 최대 확장 크기 제한
+
+        //Rifle
+        private const float RIFLE_BASE_INTERVAL = 0.08f;     //기본 연사
+
+        private MoverFactory moverFactory;
 
         private void Awake()
         {
@@ -38,9 +46,8 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
 
         private void ApplyDistribution(ProjectileContext ctx, ProjectileContext proto, int index, int total)
         {
-            float angleStep = 15f;
-            float startAngle = -(angleStep * (total - 1)) / 2f;
-            float finalAngle = startAngle + (angleStep * index);
+            float startAngle = -(SPREAD_ANGLE_STEP * (total - 1)) / 2f;
+            float finalAngle = startAngle + (SPREAD_ANGLE_STEP * index);
 
             switch (proto.data.movementType)
             {
@@ -61,10 +68,8 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
                     break;
 
                 case MovementType.Growing:
-                    float baseTargetScale = 1.5f;
-                    float scaleBonusPerCount = 0.7f;
-                    float calculatedScale = baseTargetScale + (total - 1) * scaleBonusPerCount;
-                    ctx.finalScale = Mathf.Min(calculatedScale * proto.finalScale, 5.0f);
+                    float calculatedScale = GROWING_BASE_SCALE + (total - 1) * GROWING_BONUS_PER_STACK;
+                    ctx.finalScale = Mathf.Min(calculatedScale * proto.finalScale, GROWING_MAX_SCALE_LIMIT);
                     ctx.direction = proto.direction;
                     break;
             }
@@ -74,8 +79,7 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
         {
             int totalCount = prototype.finalProjectileCount;
 
-            float baseInterval = 0.08f;
-            float dynamicInterval = baseInterval * totalCount;
+            float dynamicInterval = RIFLE_BASE_INTERVAL * totalCount;
 
             for (int i = 0; i < totalCount; i++)
             {

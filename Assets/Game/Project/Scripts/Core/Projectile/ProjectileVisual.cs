@@ -1,4 +1,3 @@
-using Game.Project.Scripts.Core.Projectile.Rune;
 using Game.Project.Scripts.Managers.Singleton;
 using UnityEngine;
 

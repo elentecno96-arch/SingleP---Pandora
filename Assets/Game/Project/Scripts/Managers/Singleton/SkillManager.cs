@@ -1,17 +1,10 @@
 using Game.Project.Data.Stat;
 using Game.Project.Scripts.Core.Projectile;
-using Game.Project.Scripts.Core.Projectile.Interface;
-using Game.Project.Scripts.Core.Projectile.Rune;
 using Game.Project.Scripts.Core.Projectile.SO;
-using Game.Project.Scripts.Core.Projectile.Strategys.Mover;
-using Game.Project.Scripts.Managers.Systems;
 using Game.Project.Scripts.Managers.Systems.SkillSystems;
-using Game.Project.Utillity.Generic;
-using System.Collections;
-using System.Collections.Generic;
+using Game.Project.Utility.Generic;
 using UnityEngine;
-using static Game.Project.Scripts.Managers.Systems.StateSystem;
-using static UnityEditor.MaterialProperty;
+using Game.Project.Scripts.Managers.Systems.PlayerSystems;
 
 namespace Game.Project.Scripts.Managers.Singleton
 {
@@ -38,6 +31,17 @@ namespace Game.Project.Scripts.Managers.Singleton
             _moverFactory = new MoverFactory();
             _isInitialized = true;
         }
+        public ProjectileContext CreateContext(SkillSlot slot, GameObject owner)
+        {
+            if (slot == null || slot.IsEmpty) return null;
+
+            ProjectileContext ctx = new ProjectileContext
+            {
+                data = slot.skillData,
+                owner = owner
+            };
+            return ctx;
+        }
         public float GetCooldown(SkillData data, Stat playerStat)
         {
             ProjectileContext c = new ProjectileContext { data = data };
@@ -48,7 +52,7 @@ namespace Game.Project.Scripts.Managers.Singleton
         {
             if (!_isInitialized) return;
             _modifierSystem.ApplyModifiers(prototype, PlayerManager.Instance.Stats.CurrentStat);
-            List<Projectile> projectiles = _spawnSystem.CreateProjectiles(prototype);
+            _spawnSystem.CreateProjectiles(prototype);
         }
     }
 }

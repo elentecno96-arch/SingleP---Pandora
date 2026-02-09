@@ -1,9 +1,4 @@
-using Game.Project.Scripts.Core.Projectile.Rune;
-using Game.Project.Scripts.Managers;
 using Game.Project.Scripts.Managers.Singleton;
-using Game.Project.Scripts.Managers.Systems;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Project.Scripts.Player

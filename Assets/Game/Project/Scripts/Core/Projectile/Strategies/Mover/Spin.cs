@@ -1,12 +1,17 @@
-using Game.Project.Scripts.Core.Projectile;
 using Game.Project.Scripts.Core.Projectile.Interface;
 using Game.Project.Scripts.Core.Projectile.States;
 using UnityEngine;
 
-namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
+namespace Game.Project.Scripts.Core.Projectile.Strategies.Mover
 {
     public class Spin : IProjectileMover, IProjectileHitable
     {
+        private const float ROTATION_SPEED = 1200f;
+        private const float LANDING_TARGET_Y = 1.5f;
+        private const float MAX_HEIGHT = 2.5f;
+        private const float DEFAULT_Y_OFFSET = 1.0f;
+        private const float DAMAGE_RADIUS = 2.0f;
+
         private ProjectileContext _ctx;
         private bool _isAnchored = false;
         private float _anchorTimer = 0f;
@@ -18,8 +23,6 @@ namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
         private float _currentHorizontalDist = 0f;
         private Transform _targetTransform;
         private Vector3 _attachOffset;
-
-        private const float MAX_HEIGHT = 2.5f;
 
         public void Init(ProjectileContext context, Projectile projectile)
         {
@@ -39,7 +42,7 @@ namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
 
         public void OnUpdate(Projectile projectile)
         {
-            projectile.transform.Rotate(Vector3.up, 1200f * Time.deltaTime, Space.World);
+            projectile.transform.Rotate(Vector3.up, ROTATION_SPEED * Time.deltaTime, Space.World);
 
             if (!_isAnchored)
             {
@@ -51,7 +54,7 @@ namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
 
                 float heightOffset = Mathf.Sin(progress * Mathf.PI) * MAX_HEIGHT;
 
-                nextPos.y = Mathf.Lerp(_startPos.y, 1.5f, progress) + heightOffset;
+                nextPos.y = Mathf.Lerp(_startPos.y, LANDING_TARGET_Y, progress) + heightOffset;
 
                 projectile.transform.position = nextPos;
                 if (progress >= 1.0f)
@@ -101,13 +104,13 @@ namespace Game.Project.Scripts.Core.Projectile.Strategys.Mover
             _isAnchored = true;
             _lastHitTime = Time.time;
             _targetTransform = other.transform;
-            _attachOffset = new Vector3(0, 1.0f, 0);
+            _attachOffset = new Vector3(0, DEFAULT_Y_OFFSET, 0);
             projectile.transform.position = _targetTransform.position + _attachOffset;
         }
 
         private void ApplyAreaDamage(Projectile projectile)
         {
-            float radius = 2.0f * _ctx.finalScale;
+            float radius = DAMAGE_RADIUS * _ctx.finalScale;
             Collider[] targets = Physics.OverlapSphere(projectile.transform.position, radius, LayerMask.GetMask("Enemy"));
             foreach (var target in targets)
             {

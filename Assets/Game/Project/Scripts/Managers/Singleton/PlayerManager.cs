@@ -1,9 +1,7 @@
-using Game.Project.Scripts.Managers.Systems;
-using Game.Project.Utillity.Generic;
-using System.Collections;
-using System.Collections.Generic;
+using Game.Project.Scripts.Managers.Systems.PlayerSystems;
+using Game.Project.Scripts.Player;
+using Game.Project.Utility.Generic;
 using UnityEngine;
-using static UnityEditor.VersionControl.Asset;
 
 namespace Game.Project.Scripts.Managers.Singleton
 {
@@ -14,6 +12,12 @@ namespace Game.Project.Scripts.Managers.Singleton
     {
         public StatSystem Stats { get; private set; }
         public StateSystem State { get; private set; }
+        public SkillEquipSystem skillEquip {  get; private set; }
+
+        public PlayerCombat Combat { get; private set; }
+
+        [SerializeField] private GameObject playerObject;
+
         private bool _isInitialized = false;
 
         public void Init()
@@ -21,10 +25,22 @@ namespace Game.Project.Scripts.Managers.Singleton
             if (_isInitialized) return;
             Stats = GetComponentInChildren<StatSystem>();
             State = GetComponentInChildren<StateSystem>();
+            skillEquip = GetComponentInChildren<SkillEquipSystem>();
 
+            if (playerObject != null)
+            {
+                Combat = playerObject.GetComponent<PlayerCombat>();
+            }
+
+            if (skillEquip) skillEquip.init();
             if (Stats) Stats.Init();
             if (State) State.Init();
 
+            if (Combat != null)
+            {
+                Combat.Init(this);
+            }
+               
             _isInitialized = true;
             Debug.Log("PlayerManager: 초기화 완료");
         }

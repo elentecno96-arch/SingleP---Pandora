@@ -1,5 +1,4 @@
 using Game.Project.Scripts.Core.Projectile.Rune;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ namespace Game.Project.Scripts.Core.Projectile.SO
     /// <summary>
     /// 스킬 기본 정보를 담은 SO
     /// </summary>
-    [CreateAssetMenu(fileName = "New Skill data")]
+    [CreateAssetMenu(fileName = "New Skill data",menuName = "Projectile/Skill Data")]
     public class SkillData : ScriptableObject
     {
         public string skillName;

@@ -1,9 +1,4 @@
-using DG.Tweening;
-using Game.Project.Scripts.Core.Projectile.Interface;
-using Game.Project.Scripts.Core.Projectile.Rune;
 using Game.Project.Scripts.Core.Projectile.SO;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Project.Scripts.Core.Projectile
@@ -36,6 +31,8 @@ namespace Game.Project.Scripts.Core.Projectile
         public Vector3 firePosition;
         public Vector3 direction;
 
+        //MemberwiseClone ¾åº¹
+        //.NetÀÇ ±â´É
         public ProjectileContext Clone()
         {
             return (ProjectileContext)this.MemberwiseClone();
