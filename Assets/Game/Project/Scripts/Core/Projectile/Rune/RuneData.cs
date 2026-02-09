@@ -24,6 +24,7 @@ namespace Game.Project.Scripts.Core.Projectile.Rune
     [CreateAssetMenu(fileName = "NewRune", menuName = "Projectile/Rune Data")]
     public class RuneData : ScriptableObject
     {
+        public Sprite icon;
         public string runeName;
         public ModifierType modifier;
 

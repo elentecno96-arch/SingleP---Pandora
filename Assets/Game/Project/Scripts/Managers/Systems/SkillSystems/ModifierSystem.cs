@@ -2,6 +2,7 @@ using Game.Project.Data.Stat;
 using Game.Project.Scripts.Core.Projectile;
 using Game.Project.Scripts.Core.Projectile.Rune;
 using Game.Project.Scripts.Core.Projectile.SO;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Project.Scripts.Managers.Systems.SkillSystems
@@ -11,7 +12,7 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
     /// </summary>
     public class ModifierSystem : MonoBehaviour
     {
-        public void ApplyModifiers(ProjectileContext context, Stat playerStat)
+        public void ApplyModifiers(ProjectileContext context, List<RuneData> runes, Stat playerStat)
         {
             SkillData so = context.data;
             if (so == null) return;
@@ -28,9 +29,9 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
 
             float runeCDR = 0f;
 
-            if (so.equippedRunes != null)
+            if (runes != null)
             {
-                foreach (var rune in so.equippedRunes)
+                foreach (var rune in runes)
                 {
                     if (rune == null) continue;
                     skillFinalDamage *= (1f + rune.baseDamageModifier);
