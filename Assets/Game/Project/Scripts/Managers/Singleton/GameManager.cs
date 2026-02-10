@@ -1,11 +1,23 @@
 using Game.Project.Utility.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using System.Collections;
 
 namespace Game.Project.Scripts.Managers.Singleton
 {
+    /// <summary>
+    /// 게임의 흐름을 관리하는 매니저
+    /// </summary>
     public class GameManager : Singleton<GameManager> 
     {
+        public enum GameState
+        {
+            None,
+            Intro,
+            Main,
+            Lobby,
+            Tutorial
+        }
+
         [Header("System Readiness")]
         [SerializeField] private bool _isInitialized = false;
 
@@ -13,10 +25,11 @@ namespace Game.Project.Scripts.Managers.Singleton
         private PoolManager _pool;
         private EffectManager _effect;
         private SkillManager _skill;
-        private AudioManager _audio;
         private UiManager _ui;
         private SpawnManager _spawn;
         private PlayerManager _player;
+
+        private GameState _currentState = GameState.None;
 
         protected override void Awake()
         {
@@ -24,7 +37,10 @@ namespace Game.Project.Scripts.Managers.Singleton
             DontDestroyOnLoad(gameObject);
             InitAllManagers();
         }
-
+        private void Start()
+        {
+            ChangeState(GameState.Intro);
+        }
         private void InitAllManagers()
         {
             if (_isInitialized) return;
@@ -39,8 +55,8 @@ namespace Game.Project.Scripts.Managers.Singleton
             _effect = EffectManager.Instance;
             _effect.Init();
 
-            _audio = AudioManager.Instance;
-            _audio.Init();
+            //_audio = AudioManager.Instance;
+            //_audio.Init();
 
             _skill = SkillManager.Instance;
             _skill.Init();
@@ -57,8 +73,30 @@ namespace Game.Project.Scripts.Managers.Singleton
             _isInitialized = true;
             Debug.Log("=== 각 매니저 초기화 완료 ===");
         }
+        public void ChangeState(GameState newState)
+        {
+            if (_currentState == newState) return;
+            _currentState = newState;
+
+            switch (_currentState)
+            {
+                case GameState.Intro:
+                    StartCoroutine(IntroBGMCo());
+                    break;
+                case GameState.Main:
+                    break;
+            }
+        }
+
+        private IEnumerator IntroBGMCo()
+        {
+            yield return new WaitForSeconds(1.0f);
+            AudioManager.Instance.PlayIntroBgm();
+        }
+
         public void StartGame()
         {
+            ChangeState(GameState.Main);
             _sceneManager.LoadScene("6. Main");
         }
     }

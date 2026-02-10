@@ -44,3 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 317c799e113915b44bfc6847e0af316b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainMixer: {fileID: 24100000, guid: 25f5e7f00f2f1f14c85ecd58086be1b7, type: 2}
+  bgmGroup: {fileID: 4653881577702741547, guid: 25f5e7f00f2f1f14c85ecd58086be1b7,
+    type: 2}
+  sfxGroup: {fileID: -1690828389396723532, guid: 25f5e7f00f2f1f14c85ecd58086be1b7,
+    type: 2}
+  introBgm: {fileID: 8300000, guid: 7dbfa4a41fca5a2459db32b3e71edbb0, type: 3}
+  mainMenuBgm: {fileID: 0}
+  tutorialBgm: {fileID: 0}
