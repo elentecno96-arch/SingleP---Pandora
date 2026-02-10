@@ -37,8 +37,13 @@ namespace Game.Project.Scripts.Core.Projectile
         private void PlayFlySfx() => Play(_projectile.Context.data.flySfx);
         private void PlayImpactSfx(GameObject target)
         {
-            if (_projectile.Context.data.impactSfx)
-                AudioManager.Instance.PlaySfxAtPoint(_projectile.Context.data.impactSfx, transform.position);
+            if (!_projectile.Context.data.impactSfx) return;
+            if (!AudioManager.HasInstance) return;
+
+            AudioManager.Instance.PlaySfxAtPoint(
+                _projectile.Context.data.impactSfx,
+                transform.position
+            );
         }
         private void Play(AudioClip clip)
         {
