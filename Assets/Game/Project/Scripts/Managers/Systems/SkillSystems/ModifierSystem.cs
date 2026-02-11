@@ -12,8 +12,9 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
     /// </summary>
     public class ModifierSystem : MonoBehaviour
     {
-        public void ApplyModifiers(ProjectileContext context, List<RuneData> runes, Stat playerStat)
+        public void ApplyModifiers(ProjectileContext context, List<RuneData> runes, IStatSourceable statSource)
         {
+            Stat playerStat = statSource.GetCurrentStat();
             SkillData so = context.data;
             if (so == null) return;
 

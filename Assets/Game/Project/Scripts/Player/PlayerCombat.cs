@@ -1,8 +1,10 @@
+using Game.Project.Data.Stat;
 using Game.Project.Scripts.Core.Projectile;
 using Game.Project.Scripts.Core.Projectile.SO;
 using Game.Project.Scripts.Managers.Singleton;
 using Game.Project.Scripts.Player.Combat;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 namespace Game.Project.Scripts.Player
@@ -21,13 +23,16 @@ namespace Game.Project.Scripts.Player
 
         private TargetScanner _scanner;
         private Transform _currentTarget;
+        private IStatSourceable _statSource;
 
         private bool _isInitialized = false;
 
         public void Init(PlayerManager manager)
         {
             playerManager = manager;
-            _scanner = GetComponent<TargetScanner>(); 
+            _scanner = GetComponent<TargetScanner>();
+
+            _statSource = new PlayerStatSource(manager.Stats);
 
             playerManager.Stats.OnStatChanged += RefreshAllSkill;
             playerManager.skillEquip.OnSkillChanged += RefreshAllSkill;
@@ -104,7 +109,7 @@ namespace Game.Project.Scripts.Player
             {
                 if (slot.IsEmpty) continue;
 
-                float interval = SkillManager.Instance.GetCooldown(slot, playerManager.Stats.CurrentStat);
+                float interval = SkillManager.Instance.GetCooldown(slot, _statSource);
                 _cachedIntervals[slot] = interval;
 
                 if (!_skillTimers.ContainsKey(slot))
@@ -114,7 +119,7 @@ namespace Game.Project.Scripts.Player
         private void AutoAttack(SkillSlot slot)
         {
             if (_currentTarget == null || slot.IsEmpty) return;
-
+            var statSource = new PlayerStatSource(PlayerManager.Instance.Stats);
             Vector3 attackDir = (_currentTarget.position - firePoint.position).normalized;
 
             ProjectileContext context = SkillManager.Instance.CreateContext(slot, gameObject);
@@ -122,7 +127,7 @@ namespace Game.Project.Scripts.Player
             context.direction = attackDir;
             context.target = _currentTarget.gameObject;
 
-            SkillManager.Instance.ApplySkill(context, slot);
+            SkillManager.Instance.ApplySkill(context, slot, statSource);
         }
 
         /// <summary>
