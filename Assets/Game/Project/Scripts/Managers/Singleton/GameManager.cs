@@ -37,10 +37,12 @@ namespace Game.Project.Scripts.Managers.Singleton
             DontDestroyOnLoad(gameObject);
             InitAllManagers();
         }
+
         private void Start()
         {
             ChangeState(GameState.Intro);
         }
+
         private void InitAllManagers()
         {
             if (_isInitialized) return;
@@ -73,6 +75,7 @@ namespace Game.Project.Scripts.Managers.Singleton
             _isInitialized = true;
             Debug.Log("=== 각 매니저 초기화 완료 ===");
         }
+
         public void ChangeState(GameState newState)
         {
             if (_currentState == newState) return;

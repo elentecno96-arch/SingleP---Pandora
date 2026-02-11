@@ -628,8 +628,8 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 736989198}
-  m_Follow: {fileID: 736989198}
+  m_LookAt: {fileID: 1483951009}
+  m_Follow: {fileID: 1483951009}
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 8
@@ -658,7 +658,7 @@ Transform:
   m_GameObject: {fileID: 137192862}
   serializedVersion: 2
   m_LocalRotation: {x: 0.4890738, y: 0.1800568, z: -0.10395584, w: 0.84710073}
-  m_LocalPosition: {x: -2.0336828, y: 10.160254, z: -12.647726}
+  m_LocalPosition: {x: -2.0336828, y: 10.1602545, z: -8.857728}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -976,7 +976,7 @@ Transform:
   m_GameObject: {fileID: 469915402}
   serializedVersion: 2
   m_LocalRotation: {x: 0.4890738, y: 0.1800568, z: -0.10395584, w: 0.84710073}
-  m_LocalPosition: {x: -2.0336828, y: 10.160254, z: -12.647726}
+  m_LocalPosition: {x: -2.0336828, y: 10.1602545, z: -8.857728}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1214,12 +1214,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 599713450}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &736989198 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8167147091380070215, guid: 14b5d1c4bbebef24fb08b4ea440ba44d,
-    type: 3}
-  m_PrefabInstance: {fileID: 2434375363355136123}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1118263252
 GameObject:
   m_ObjectHideFlags: 0
@@ -1631,6 +1625,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1483951009 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5804708877222268681, guid: 14b5d1c4bbebef24fb08b4ea440ba44d,
+    type: 3}
+  m_PrefabInstance: {fileID: 2434375363355136123}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1726810436
 GameObject:
   m_ObjectHideFlags: 0
@@ -2080,6 +2080,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4387540029784413873, guid: 14b5d1c4bbebef24fb08b4ea440ba44d,
+        type: 3}
+      propertyPath: playerObject
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5626923649584905107, guid: 14b5d1c4bbebef24fb08b4ea440ba44d,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 5909002775633973636, guid: 14b5d1c4bbebef24fb08b4ea440ba44d,
         type: 3}

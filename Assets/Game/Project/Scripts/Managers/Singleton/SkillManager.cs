@@ -41,17 +41,35 @@ namespace Game.Project.Scripts.Managers.Singleton
                 owner = owner
             };
         }
-        public float GetCooldown(SkillSlot slot, Stat playerStat)
+        public float GetCooldown(SkillSlot slot, IStatSourceable statSource)
         {
-            ProjectileContext c = new ProjectileContext { data = slot.skillData };
-            _modifierSystem.ApplyModifiers(c, slot.equippedRunes, playerStat);
+            if (slot == null || slot.IsEmpty || statSource == null)
+                return 0f;
+
+            ProjectileContext c = new ProjectileContext
+            {
+                data = slot.skillData
+            };
+
+            _modifierSystem.ApplyModifiers(
+                c,
+                slot.equippedRunes,
+                statSource);
+
             return c.finalCooldown;
         }
-        public void ApplySkill(ProjectileContext prototype, SkillSlot slot)
+
+        public void ApplySkill(ProjectileContext prototype, SkillSlot slot,IStatSourceable stat)
         {
             if (!_isInitialized || slot == null) return;
 
-            _modifierSystem.ApplyModifiers(prototype, slot.equippedRunes, PlayerManager.Instance.Stats.CurrentStat);
+            if (!_isInitialized || slot == null || stat == null)
+                return;
+
+            _modifierSystem.ApplyModifiers(
+                prototype,
+                slot.equippedRunes,
+                stat);
 
             _spawnSystem.CreateProjectiles(prototype);
         }

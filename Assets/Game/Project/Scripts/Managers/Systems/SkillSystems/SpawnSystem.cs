@@ -44,7 +44,7 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
             return spawnedProjectiles;
         }
 
-        private void ApplyDistribution(ProjectileContext ctx, ProjectileContext proto, int index, int total)
+        private void ApplyFirePattern(ProjectileContext ctx, ProjectileContext proto, int index, int total)
         {
             float startAngle = -(SPREAD_ANGLE_STEP * (total - 1)) / 2f;
             float finalAngle = startAngle + (SPREAD_ANGLE_STEP * index);
@@ -94,7 +94,7 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
         private void SpawnCopyProjectile(ProjectileContext prototype, int index, int total, List<Projectile> list)
         {
             ProjectileContext individualContext = prototype.Clone();
-            ApplyDistribution(individualContext, prototype, index, total);
+            ApplyFirePattern(individualContext, prototype, index, total);
 
             Projectile proj = PoolManager.Instance.GetProjectile(prototype.data.projectilePrefab);
             if (proj != null)
