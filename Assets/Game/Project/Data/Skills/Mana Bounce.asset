@@ -12,18 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6235f083d15fcf5479d0194e220799b8, type: 3}
   m_Name: Mana Bounce
   m_EditorClassIdentifier: 
+  Icon: {fileID: 0}
   skillName: Mana Bounce
   projectilePrefab: {fileID: 923852718690510228, guid: cae6df2aadc771a49b13c4b43b160af9,
     type: 3}
   movementType: 5
   rarity: 2
   description: "\uCDA9\uB3CC \uC2DC \uD22C\uC0AC\uCCB4\uAC00 \uD295\uAE30\uB294 \uC2A4\uD0AC"
-  equippedRunes: []
   damage: 7
   speed: 16
-  range: 32
+  range: 12
   lifeTime: 3
-  cooldown: 2
+  cooldown: 1.5
   scale: 1
   critChance: 0.05
   critDamage: 1.5

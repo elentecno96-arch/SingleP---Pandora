@@ -28,7 +28,7 @@ namespace Game.Project.Scripts.Core.Projectile.Strategies.Mover
             _ctx = context;
             _startPos = projectile.transform.position;
 
-            _targetPos = FindTarget(projectile.transform.position);
+            _targetPos = FindTarget(projectile.transform.position, projectile);
 
             if (_targetPos == Vector3.zero)
             {
@@ -75,17 +75,18 @@ namespace Game.Project.Scripts.Core.Projectile.Strategies.Mover
             }
         }
 
-        private Vector3 FindTarget(Vector3 currentPos)
+        private Vector3 FindTarget(Vector3 currentPos, Projectile projectile)
         {
-            Collider[] colliders = Physics.OverlapSphere(currentPos, TARGET_SEARCH_RADIUS, LayerMask.GetMask("Enemy"));
+            Collider[] colliders = Physics.OverlapSphere(currentPos, TARGET_SEARCH_RADIUS, _ctx.targetMask);
 
             if (colliders.Length > 0)
             {
                 var nearest = colliders
+                    .Where(c => c.gameObject != _ctx.owner)
                     .OrderBy(c => Vector3.Distance(currentPos, c.transform.position))
-                    .First();
+                    .FirstOrDefault();
 
-                return nearest.transform.position;
+                return nearest != null ? nearest.transform.position : Vector3.zero;
             }
 
             return Vector3.zero;

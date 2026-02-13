@@ -11,6 +11,7 @@ namespace Game.Project.Scripts.Core.Projectile
         public SkillData data;
         public GameObject owner;
         public GameObject target;
+        public LayerMask targetMask;
 
         public float finalDamage;
         public float finalSpeed;

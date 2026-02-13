@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6235f083d15fcf5479d0194e220799b8, type: 3}
   m_Name: Mana Spin
   m_EditorClassIdentifier: 
+  Icon: {fileID: 0}
   skillName: Mana Spin
   projectilePrefab: {fileID: 923852718690510228, guid: cae6df2aadc771a49b13c4b43b160af9,
     type: 3}
@@ -19,17 +20,16 @@ MonoBehaviour:
   rarity: 2
   description: "\uCDA9\uB3CC \uC9C0\uC810\uC5D0 \uC9C0\uC18D \uB300\uBBF8\uC9C0\uC8FC\uB294
     \uC2A4\uD0AC"
-  equippedRunes: []
   damage: 3
   speed: 12
   range: 7
   lifeTime: 3
-  cooldown: 3
-  scale: 1
+  cooldown: 2
+  scale: 2
   critChance: 0.05
   critDamage: 1.5
   chargeTime: 0.2
-  projectileCount: 3
+  projectileCount: 1
   acceleration: 0
   homingStrength: 0
   areaRadius: 1

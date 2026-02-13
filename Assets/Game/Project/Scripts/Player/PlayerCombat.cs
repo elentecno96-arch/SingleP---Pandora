@@ -84,18 +84,16 @@ namespace Game.Project.Scripts.Player
         /// </summary>
         private void CheckSkills()
         {
-            if (playerManager.skillEquip == null) return;
-
             foreach (var slot in playerManager.skillEquip.GetSkillSlots())
             {
                 if (slot.IsEmpty || !_cachedIntervals.ContainsKey(slot)) continue;
 
-                float interval = _cachedIntervals[slot];
-
-                if (_skillTimers[slot] >= interval)
+                if (_skillTimers[slot] >= _cachedIntervals[slot])
                 {
-                    _skillTimers[slot] = 0f;
                     AutoAttack(slot);
+                    _skillTimers[slot] = 0f;
+
+                    _cachedIntervals[slot] = SkillManager.Instance.GetCooldown(slot, _statSource);
                 }
             }
         }
@@ -119,13 +117,17 @@ namespace Game.Project.Scripts.Player
         private void AutoAttack(SkillSlot slot)
         {
             if (_currentTarget == null || slot.IsEmpty) return;
+            Vector3 targetAimPoint = _currentTarget.position + Vector3.up * 1.0f;
+
             var statSource = new PlayerStatSource(PlayerManager.Instance.Stats);
-            Vector3 attackDir = (_currentTarget.position - firePoint.position).normalized;
+            Vector3 attackDir = (targetAimPoint - firePoint.position).normalized;
 
             ProjectileContext context = SkillManager.Instance.CreateContext(slot, gameObject);
             context.firePosition = firePoint.position;
             context.direction = attackDir;
             context.target = _currentTarget.gameObject;
+
+            context.targetMask = LayerMask.GetMask("Enemy");
 
             SkillManager.Instance.ApplySkill(context, slot, statSource);
         }

@@ -13,11 +13,13 @@ namespace Game.Project.Scripts.Player
         private Vector2 inputDir;
         private Vector2 _prevInputDir;
 
+        //[SerializeField] private Transform visualChild;
+
         [SerializeField]
         private float moveSpeed;
         private void Update()
         {
-            VisualTilt(); //DOTween의 애니메이션은 프레임 기반이라 업데이트에 있는게 자연스러움
+            //VisualTilt(); //DOTween의 애니메이션은 프레임 기반이라 업데이트에 있는게 자연스러움
         }
         private void FixedUpdate()
         {
@@ -42,29 +44,39 @@ namespace Game.Project.Scripts.Player
                 rb.velocity = new Vector3(0, rb.velocity.y, 0);
                 return;
             }
+
             rb.Move3D(inputDir, moveSpeed);
-        }
-        private void VisualTilt()
-        {
-            if (inputDir == _prevInputDir) return;
-            _prevInputDir = inputDir;
 
-            transform.DOKill();
-
-            if (inputDir.sqrMagnitude > 0.01f)
+            Vector3 moveDir = new Vector3(inputDir.x, 0, inputDir.y);
+            if (moveDir != Vector3.zero)
             {
-                float tiltZ = inputDir.x > 0 ? -10f : 10f;
-                if (inputDir.x == 0) tiltZ = 0;
+                Quaternion targetRotation = Quaternion.LookRotation(moveDir);
 
-                float tiltX = inputDir.y > 0 ? 10f : -10f;
-                if (inputDir.y == 0) tiltX = 0;
-
-                transform.DORotate(new Vector3(tiltX, 0, tiltZ), 0.15f);
-            }
-            else
-            {
-                transform.DORotate(Vector3.zero, 0.15f);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 15f);
             }
         }
+        //private void VisualTilt()
+        //{
+        //    if (visualChild == null) return;
+        //    if (inputDir == _prevInputDir) return;
+        //    _prevInputDir = inputDir;
+
+        //    visualChild.DOKill();
+
+        //    if (inputDir.sqrMagnitude > 0.01f)
+        //    {
+        //        float tiltZ = inputDir.x > 0 ? -12f : 12f;
+        //        if (inputDir.x == 0) tiltZ = 0;
+
+        //        float tiltX = inputDir.y > 0 ? 12f : -12f;
+        //        if (inputDir.y == 0) tiltX = 0;
+
+        //        visualChild.DOLocalRotate(new Vector3(tiltX, 0, tiltZ), 0.15f).SetEase(Ease.OutQuad);
+        //    }
+        //    else
+        //    {
+        //        visualChild.DOLocalRotate(Vector3.zero, 0.15f).SetEase(Ease.OutQuad);
+        //    }
+        //}
     }
 }

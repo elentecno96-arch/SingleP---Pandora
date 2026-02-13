@@ -33,7 +33,7 @@ namespace Game.Project.Scripts.Managers.Singleton
         }
         public ProjectileContext CreateContext(SkillSlot slot, GameObject owner)
         {
-            if (slot == null || slot.IsEmpty) return null;
+            ////if (slot == null || slot.IsEmpty) return null;
 
             return new ProjectileContext
             {
