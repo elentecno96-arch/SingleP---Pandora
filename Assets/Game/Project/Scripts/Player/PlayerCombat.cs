@@ -45,17 +45,24 @@ namespace Game.Project.Scripts.Player
         {
             if (!_isInitialized) return;
 
-            UpdateTimers(); //쿨타임 계속 업데이트
+            UpdateTimers();
 
             if (!_scanner.IsTargetValid(_currentTarget))
             {
                 _currentTarget = _scanner.GetClosestTarget();
             }
+
             if (_currentTarget != null)
             {
-                CheckSkills();
+                float distance = Vector3.Distance(transform.position, _currentTarget.position);
+
+                if (distance <= 15.0f) 
+                {
+                    CheckSkills();
+                }
             }
         }
+
         private void OnDestroy()
         {
             if (PlayerManager.HasInstance && PlayerManager.Instance.Stats != null)
