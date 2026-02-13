@@ -1,5 +1,3 @@
-using Game.Project.Scripts.Core.Projectile.Rune;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Project.Scripts.Core.Projectile.SO

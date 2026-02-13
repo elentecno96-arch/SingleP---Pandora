@@ -14,27 +14,29 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
     {
         public void ApplyModifiers(ProjectileContext context, List<RuneData> runes, IStatSourceable statSource)
         {
-            Stat playerStat = statSource.GetCurrentStat();
+            if (context == null || context.data == null || statSource == null) return;
+
+            Stat sourceStat = statSource.GetCurrentStat();
             SkillData so = context.data;
-            if (so == null) return;
 
             float skillFinalDamage = so.damage;
             float skillFinalSpeed = so.speed;
             float skillFinalLifeTime = so.lifeTime;
-            float skillFinalScale = so.scale; 
+            float skillFinalScale = so.scale;
             float skillFinalCritChance = so.critChance;
             float skillFinalCritDamage = so.critDamage;
-            float SkillFinalCooldown = so.cooldown;
-
+            float skillFinalCooldown = so.cooldown;
             int skillFinalCount = so.projectileCount;
 
             float runeCDR = 0f;
 
-            if (runes != null)
+            // 몬스터는 룬이 없기 떄문에 (룬이 있을 경우에만 순회)
+            if (runes != null && runes.Count > 0)
             {
                 foreach (var rune in runes)
                 {
                     if (rune == null) continue;
+
                     skillFinalDamage *= (1f + rune.baseDamageModifier);
 
                     switch (rune.modifier)
@@ -58,7 +60,7 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
                             skillFinalCritDamage += rune.specialValue;
                             break;
                         case ModifierType.ProjectileCount:
-                            skillFinalCount += (int)rune.specialValue;
+                            skillFinalCount += Mathf.RoundToInt(rune.specialValue);
                             break;
                         case ModifierType.Cooldown:
                             runeCDR += rune.specialValue;
@@ -66,20 +68,22 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
                     }
                 }
             }
-            context.finalDamage = playerStat.damage + skillFinalDamage;
-            context.finalSpeed = (playerStat.maxMoveSpeed * 0.1f) + skillFinalSpeed;
-            context.finalCritChance = playerStat.critChance + skillFinalCritChance;
-            context.finalCritDamage = playerStat.critDamage + skillFinalCritDamage;
+            context.finalDamage = sourceStat.damage + skillFinalDamage;
 
-            float cdAfterRune = SkillFinalCooldown * (1f - runeCDR);
-            float finalCD = cdAfterRune / Mathf.Max(0.1f, 1.0f + playerStat.castingSpeed);
+            context.finalSpeed = (sourceStat.maxMoveSpeed * 0.1f) + skillFinalSpeed;
+
+            context.finalCritChance = sourceStat.critChance + skillFinalCritChance;
+            context.finalCritDamage = sourceStat.critDamage + skillFinalCritDamage;
+
+            float cdAfterRune = skillFinalCooldown * (1f - runeCDR);
+            float castingSpeedMod = Mathf.Max(0.1f, 1.0f + sourceStat.castingSpeed);
+            float finalCD = cdAfterRune / castingSpeedMod;
 
             context.finalCooldown = Mathf.Max(0.05f, finalCD);
 
             context.finalLifeTime = skillFinalLifeTime;
             context.finalRange = so.range;
             context.finalScale = skillFinalScale;
-
             context.finalProjectileCount = Mathf.Max(1, skillFinalCount);
 
             context.isCritical = Random.value < context.finalCritChance;
@@ -87,8 +91,6 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
             context.flyEffect = so.flyEffect;
             context.impactEffect = so.impactEffect;
             context.impactSfx = so.impactSfx;
-
-            Debug.Log($"[Modifier] Final CD: {context.finalCooldown} (Base:{SkillFinalCooldown}, Rune:{runeCDR}, Stat:{playerStat.castingSpeed})");
         }
     }
 }

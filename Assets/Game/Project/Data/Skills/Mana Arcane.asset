@@ -12,23 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6235f083d15fcf5479d0194e220799b8, type: 3}
   m_Name: Mana Arcane
   m_EditorClassIdentifier: 
+  Icon: {fileID: 0}
   skillName: Mana Arcane
   projectilePrefab: {fileID: 923852718690510228, guid: cae6df2aadc771a49b13c4b43b160af9,
     type: 3}
   movementType: 3
   rarity: 2
   description: "\uBD80\uCC44\uAF34 \uBC29\uC2DD \uC2A4\uD0AC"
-  equippedRunes: []
   damage: 5
   speed: 12
-  range: 32
+  range: 12
   lifeTime: 3
-  cooldown: 3
+  cooldown: 1
   scale: 1
   critChance: 0.05
   critDamage: 1.5
   chargeTime: 0.2
-  projectileCount: 3
+  projectileCount: 1
   acceleration: 0
   homingStrength: 0
   areaRadius: 1

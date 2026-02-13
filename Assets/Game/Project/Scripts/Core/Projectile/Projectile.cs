@@ -1,6 +1,7 @@
 using Game.Project.Data.Damage;
 using Game.Project.Scripts.Core.Projectile.Interface;
 using Game.Project.Scripts.Core.Projectile.States;
+using Game.Project.Scripts.Managers.Singleton;
 using System;
 using UnityEngine;
 
@@ -19,6 +20,7 @@ namespace Game.Project.Scripts.Core.Projectile
         public float StateTimer { get; set; }
 
         [SerializeField] private LayerMask targetMask;
+        public LayerMask TargetMask => targetMask;
 
         public event Action OnSpawn;
         public event Action OnCharge;
@@ -45,6 +47,8 @@ namespace Game.Project.Scripts.Core.Projectile
             _context = context;
             _mover = mover;
 
+            this.targetMask = _context.targetMask | LayerMask.GetMask("Ground");
+
             transform.position = _context.firePosition;
             if (_context.direction != Vector3.zero)
                 transform.rotation = Quaternion.LookRotation(_context.direction);
@@ -59,6 +63,14 @@ namespace Game.Project.Scripts.Core.Projectile
             ChangeState(ProjectileStates.Spawn);
         }
 
+        /// <summary>
+        /// 투사체 마스크 설정
+        /// </summary>
+        /// <param name="newMask"></param>
+        public void SetTargetMask(LayerMask newMask)
+        {
+            targetMask = newMask;
+        }
         public void ChangeState(IProjectileState newState)
         {
             if (_currentState != null)
@@ -83,35 +95,45 @@ namespace Game.Project.Scripts.Core.Projectile
         private void Update() => _currentState?.UpdateState(this);
         private void OnTriggerEnter(Collider other)
         {
-            if (_isReturned || _context == null) return;
+            if (_isReturned || _context == null || _hasImpacted) return;
             if (other.gameObject == _context.owner) return;
 
-            if ((targetMask.value & (1 << other.gameObject.layer)) != 0)
+            int otherLayerMask = 1 << other.gameObject.layer;
+            if ((targetMask.value & otherLayerMask) != 0)
             {
-                if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
-                {
-                    if (!other.TryGetComponent(out IDamageable _)) return;
-                }
+                bool isDamageable = other.TryGetComponent(out IDamageable targetInterface);
 
-                bool shouldImpact = true;
+                if (isDamageable)
+                {
+                    bool shouldImpact = true;
+                    if (_mover is IProjectileHitable hitHandler)
+                    {
+                        shouldImpact = hitHandler.OnHit(this, other);
+                    }
 
-                if (_mover is IProjectileHitable hitHandler)
-                {
-                    shouldImpact = hitHandler.OnHit(this, other);
-                }
-                if (shouldImpact)
-                {
-                    if (_hasImpacted) return;
-                    _hasImpacted = true;
-                    _context.target = other.gameObject;
-                    ChangeState(ProjectileStates.Impact);
+                    if (shouldImpact)
+                    {
+                        ExecuteImpact(other.gameObject);
+                    }
+                    else
+                    {
+                        ImpactStateCall(other.gameObject);
+                    }
                 }
                 else
                 {
-                    ImpactStateCall(other.gameObject);
+                    ExecuteImpact(other.gameObject);
                 }
             }
         }
+
+        private void ExecuteImpact(GameObject target)
+        {
+            _hasImpacted = true;
+            _context.target = target;
+            ChangeState(ProjectileStates.Impact);
+        }
+
         public void ReturnToPool()
         {
             if (_isReturned) return;
@@ -139,17 +161,24 @@ namespace Game.Project.Scripts.Core.Projectile
         }
         public void ImpactStateCall(GameObject target)
         {
+            Debug.Log($"<color=cyan>[ImpactCall]</color> 호출됨! 대상: {target.name}, 프레임: {Time.frameCount}");
+            if (_isReturned || _context == null) return;
+
             OnImpact?.Invoke(target);
 
             if (target != null && target.TryGetComponent(out IDamageable dmg))
             {
-                float damageValue = _context.finalDamage;
-
                 if (_context.isCritical)
                 {
-                    damageValue *= _context.finalCritDamage;
+                    var dispatchContext = _context.Clone();
+                    dispatchContext.finalDamage *= _context.finalCritDamage;
+                    dmg.TakeDamage(dispatchContext);
                 }
-                dmg.TakeDamage(damageValue);
+                else
+                {
+                    dmg.TakeDamage(_context);
+
+                }
             }
         }
     }

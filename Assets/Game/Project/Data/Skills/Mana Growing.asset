@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6235f083d15fcf5479d0194e220799b8, type: 3}
   m_Name: Mana Growing
   m_EditorClassIdentifier: 
+  Icon: {fileID: 0}
   skillName: Mana Growing
   projectilePrefab: {fileID: 923852718690510228, guid: cae6df2aadc771a49b13c4b43b160af9,
     type: 3}
@@ -19,12 +20,11 @@ MonoBehaviour:
   rarity: 2
   description: "\uD3EC\uBB3C\uC120\uC73C\uB85C \uC774\uB3D9, \uC774\uB3D9 \uAC70\uB9AC\uC5D0
     \uB530\uB77C \uD06C\uAE30\uAC00 \uCEE4\uC9C0\uB294 \uC2A4\uD0AC"
-  equippedRunes: []
   damage: 15
   speed: 12
-  range: 20
+  range: 12
   lifeTime: 4
-  cooldown: 3
+  cooldown: 2
   scale: 1
   critChance: 0.05
   critDamage: 1.5
@@ -32,7 +32,7 @@ MonoBehaviour:
   projectileCount: 0
   acceleration: 0
   homingStrength: 0
-  areaRadius: 1
+  areaRadius: 3
   spawnEffect: {fileID: 5387813989776268400, guid: 3620b28f06cc1e04082dc29fe4d43827,
     type: 3}
   chargeEffect: {fileID: 8277071434671841608, guid: b88eff7514dbb4c46ac094d69cab4242,

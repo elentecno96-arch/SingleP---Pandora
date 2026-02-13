@@ -12,18 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6235f083d15fcf5479d0194e220799b8, type: 3}
   m_Name: Mana Linear
   m_EditorClassIdentifier: 
+  Icon: {fileID: 0}
   skillName: Mana Linear
   projectilePrefab: {fileID: 923852718690510228, guid: cae6df2aadc771a49b13c4b43b160af9,
     type: 3}
   movementType: 0
   rarity: 2
   description: "\uC9C1\uC120\uC73C\uB85C \uB0A0\uC544\uAC00\uB294 \uC2A4\uD0AC"
-  equippedRunes: []
   damage: 10
   speed: 24
   range: 20
   lifeTime: 3
-  cooldown: 3
+  cooldown: 2
   scale: 1
   critChance: 0.05
   critDamage: 1.5

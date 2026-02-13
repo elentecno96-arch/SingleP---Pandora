@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c83c434b41aed28459de28eafd73a10a, type: 3}
   m_Name: CooldownRune
   m_EditorClassIdentifier: 
+  icon: {fileID: 0}
   runeName: "\uCFE8\uD0C0\uC784 \uB8EC"
   modifier: 4
   baseDamageModifier: 0.02
-  specialValue: -0.15
+  specialValue: 0.05
   isPercent: 0
   description: "\uC2A4\uD0AC\uC758 \uCFE8\uD0C0\uC784\uC744 \uAC10\uC18C \uC2DC\uCF1C
     \uC2A4\uD0AC \uC0AC\uC6A9 \uBE48\uB3C4\uB97C \uC62C\uB824\uC90D\uB2C8\uB2E4"

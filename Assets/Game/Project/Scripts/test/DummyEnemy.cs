@@ -1,7 +1,9 @@
+using Game.Project.Data.Damage;
+using Game.Project.Scripts.Core.Projectile;
+using Game.Project.Scripts.Managers.Singleton;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Game.Project.Data.Damage;
 
 namespace Game.Project.Scripts.Test
 {
@@ -26,12 +28,15 @@ namespace Game.Project.Scripts.Test
             if (_renderer != null) _renderer.material.color = _originColor;
         }
 
-        public void TakeDamage(float amount)
+        public void TakeDamage(ProjectileContext context)
         {
+            Debug.Log($"[Dummy] {gameObject.name} 대미지 받음: {context.finalDamage}, 크리티컬: {context.isCritical}");
             if (_isDead || !gameObject.activeInHierarchy) return;
 
-            _currentHp -= amount;
-            Debug.Log($"[Dummy] 데미지 입음: {amount} | 남은 HP: {maxHp}");
+            float damage = context.finalDamage;
+            bool isCritical = context.isCritical;
+
+            _currentHp -= damage;
 
             if (_currentHp <= 0)
             {
@@ -41,7 +46,7 @@ namespace Game.Project.Scripts.Test
             else
             {
                 StopAllCoroutines();
-                StartCoroutine(HitFeedback());
+                StartCoroutine(HitFeedback(isCritical));
             }
         }
 
@@ -51,7 +56,7 @@ namespace Game.Project.Scripts.Test
             gameObject.SetActive(false);
         }
 
-        private IEnumerator HitFeedback()
+        private IEnumerator HitFeedback(bool isCritical)
         {
             if (_renderer == null) yield break;
 
