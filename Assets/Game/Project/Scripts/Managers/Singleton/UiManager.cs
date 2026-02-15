@@ -19,6 +19,13 @@ namespace Game.Project.Scripts.Managers.Singleton
         [SerializeField] private BlackScreenView blackScreen;
         public BlackScreenView BlackScreen => blackScreen;
 
+        //=====================================================
+
+        [SerializeField] private CombatHUD combatHUD; 
+
+        public CombatHUD GetCombatHUD() => combatHUD;
+
+
         public void Init()
         {
             if (_isInitialized) return;

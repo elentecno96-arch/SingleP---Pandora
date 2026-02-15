@@ -47,7 +47,9 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
                 damage *= context.finalCritDamage;
             }
 
-            float finalDamage = Mathf.Max(1, damage - _statSystem.CurrentStat.defense);
+            //2吝 农府萍拿 啊瓷己 力芭(林籍 贸府)
+            //float finalDamage = Mathf.Max(1, damage - _statSystem.CurrentStat.defense);
+            float finalDamage = Mathf.Max(1, context.finalDamage - _statSystem.CurrentStat.defense);
 
             _currentHp = Mathf.Max(0, _currentHp - finalDamage);
             OnHpChanged?.Invoke(_currentHp);
