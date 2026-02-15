@@ -82,6 +82,8 @@ namespace Game.Project.Scripts.Core.Projectile
             }
 
             _currentState = newState;
+            // 타이머 초기화는 상태가 변경될 때마다 수행
+            StateTimer = 0f;
 
             if (_currentState != null)
             {
@@ -93,6 +95,11 @@ namespace Game.Project.Scripts.Core.Projectile
             }
         }
         private void Update() => _currentState?.UpdateState(this);
+
+        /// <summary>
+        /// 투사체가 충돌했을 때의 처리(IDamageable 인터페이스가 있는 경우)
+        /// </summary>
+        /// <param name="other"></param>
         private void OnTriggerEnter(Collider other)
         {
             if (_isReturned || _context == null || _hasImpacted) return;

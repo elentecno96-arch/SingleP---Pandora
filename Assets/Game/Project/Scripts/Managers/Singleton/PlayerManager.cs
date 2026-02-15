@@ -16,33 +16,79 @@ namespace Game.Project.Scripts.Managers.Singleton
 
         public PlayerCombat Combat { get; private set; }
 
-        [SerializeField] private GameObject playerObject;
+        [SerializeField] private GameObject playerPrefab;
+        public GameObject CurrentPlayer { get; private set; }
 
         private bool _isInitialized = false;
 
         public void Init()
         {
             if (_isInitialized) return;
-            Stats = GetComponentInChildren<StatSystem>();
-            State = GetComponentInChildren<StateSystem>();
-            skillEquip = GetComponentInChildren<SkillEquipSystem>();
 
-            if (playerObject != null)
+            Stats = GetComponentInChildren<StatSystem>(true);
+            State = GetComponentInChildren<StateSystem>(true);
+            skillEquip = GetComponentInChildren<SkillEquipSystem>(true);
+
+            if (Stats == null || State == null || skillEquip == null)
             {
-                Combat = playerObject.GetComponent<PlayerCombat>();
+                Debug.LogError("PlayerManager: 하위 시스템 누락");
+                return;
             }
 
-            if (skillEquip) skillEquip.init();
-            if (Stats) Stats.Init();
-            if (State) State.Init();
+            Stats.Init();
+            State.Init();
+            skillEquip.init();
 
-            if (Combat != null)
-            {
-                Combat.Init(this);
-            }
-               
             _isInitialized = true;
-            Debug.Log("PlayerManager: 초기화 완료");
+
+            Debug.Log("PlayerManager: 시스템 초기화 완료");
+        }
+
+        public GameObject SpawnPlayer(Vector3 position)
+        {
+            if (!_isInitialized)
+            {
+                Debug.LogError("PlayerManager: Init 안됨");
+                return null;
+            }
+
+            DestroyPlayer(); 
+
+            var player = Instantiate(playerPrefab, position, Quaternion.identity);
+
+            RegisterPlayer(player);
+
+            player.GetComponent<Game.Project.Scripts.Player.Player>()?.Init();
+
+            return player;
+        }
+
+        private void RegisterPlayer(GameObject player)
+        {
+            CurrentPlayer = player;
+
+            Combat = player.GetComponent<PlayerCombat>();
+            Combat?.Init(this);
+
+            Debug.Log("PlayerManager: Player Avatar 연결 완료");
+        }
+
+        public void UnregisterPlayer(GameObject player)
+        {
+            if (CurrentPlayer != player) return;
+
+            CurrentPlayer = null;
+            Combat = null;
+
+            Debug.Log("PlayerManager: Player Avatar 해제");
+        }
+
+        public void DestroyPlayer()
+        {
+            if (CurrentPlayer == null) return;
+
+            Destroy(CurrentPlayer);
+            UnregisterPlayer(CurrentPlayer);
         }
     }
 }

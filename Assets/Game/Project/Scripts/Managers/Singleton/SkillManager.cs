@@ -24,16 +24,18 @@ namespace Game.Project.Scripts.Managers.Singleton
         public void Init()
         {
             if (_isInitialized) return;
+
             _modifierSystem = GetComponentInChildren<ModifierSystem>();
             _spawnSystem = GetComponentInChildren<SpawnSystem>();
-            _statSystem = FindFirstObjectByType<StatSystem>();
-
             _moverFactory = new MoverFactory();
+
             _isInitialized = true;
+            Debug.Log("<color=cyan>SkillManager: 하위 시스템(Modifier, Spawn) 준비 완료</color>");
         }
         public ProjectileContext CreateContext(SkillSlot slot, GameObject owner)
         {
-            ////if (slot == null || slot.IsEmpty) return null;
+            //테스트하다가 주석처리한 부분 까먹었습니다 ㅠ
+            if (slot == null || slot.IsEmpty) return null;
 
             return new ProjectileContext
             {
@@ -43,8 +45,15 @@ namespace Game.Project.Scripts.Managers.Singleton
         }
         public float GetCooldown(SkillSlot slot, IStatSourceable statSource)
         {
-            if (slot == null || slot.IsEmpty || statSource == null)
-                return 0f;
+            if (slot == null || slot.IsEmpty || statSource == null) return 0f;
+
+            if (!_isInitialized) Init();
+
+            if (_modifierSystem == null)
+            {
+                Debug.LogError("ModifierSystem missing in SkillManager children!");
+                return slot.skillData.cooldown;
+            }
 
             ProjectileContext c = new ProjectileContext
             {
@@ -61,7 +70,8 @@ namespace Game.Project.Scripts.Managers.Singleton
 
         public void ApplySkill(ProjectileContext prototype, SkillSlot slot,IStatSourceable stat)
         {
-            if (!_isInitialized || slot == null) return;
+            //중복 예외처리 주석 처리
+            //if (!_isInitialized || slot == null) return;
 
             if (!_isInitialized || slot == null || stat == null)
                 return;

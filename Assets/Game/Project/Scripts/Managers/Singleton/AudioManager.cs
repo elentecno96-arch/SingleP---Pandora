@@ -1,6 +1,7 @@
 using Game.Project.Utility.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using System.Collections;
 
 namespace Game.Project.Scripts.Managers.Singleton
 {
@@ -21,6 +22,8 @@ namespace Game.Project.Scripts.Managers.Singleton
         [SerializeField] private AudioClip mainMenuBgm;
         [SerializeField] private AudioClip tutorialBgm;
 
+        private Coroutine _bgmFadeCoroutine;
+        private bool _bgmLocked = false;
         protected override void Awake()
         {
             base.Awake();
@@ -66,6 +69,7 @@ namespace Game.Project.Scripts.Managers.Singleton
 
         private void PlayBgm(AudioClip clip)
         {
+            if (_bgmLocked) return;
             if (!_isInitialized || clip == null) return;
             if (_bgmSource.clip == clip && _bgmSource.isPlaying) return;
 
@@ -93,5 +97,54 @@ namespace Game.Project.Scripts.Managers.Singleton
 
             Destroy(go, clip.length);
         }
+        public void FadeInBgm(AudioClip clip, float duration = 1.5f)
+        {
+            if (!_isInitialized || clip == null) return;
+
+            if (_bgmFadeCoroutine != null)
+                StopCoroutine(_bgmFadeCoroutine);
+
+            _bgmFadeCoroutine = StartCoroutine(CoFadeIn(clip, duration));
+        }
+
+        private IEnumerator CoFadeIn(AudioClip clip, float duration)
+        {
+            _bgmSource.clip = clip;
+            _bgmSource.volume = 0f;
+            _bgmSource.Play();
+
+            float time = 0f;
+
+            while (time < duration)
+            {
+                time += Time.deltaTime;
+                _bgmSource.volume = Mathf.Lerp(0f, 1f, time / duration);
+                yield return null;
+            }
+
+            _bgmSource.volume = 1f;
+        }
+
+        public IEnumerator FadeOutBgmCo(float duration = 1.5f)
+        {
+            _bgmLocked = true;
+
+            if (!_isInitialized || !_bgmSource.isPlaying)
+                yield break;
+
+            float startVolume = _bgmSource.volume;
+            float time = 0f;
+
+            while (time < duration)
+            {
+                time += Time.deltaTime;
+                _bgmSource.volume = Mathf.Lerp(startVolume, 0f, time / duration);
+                yield return null;
+            }
+
+            _bgmSource.Stop();
+            _bgmSource.volume = startVolume;
+        }
+
     }
 }

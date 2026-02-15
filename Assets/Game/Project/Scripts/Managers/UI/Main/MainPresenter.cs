@@ -102,11 +102,13 @@ namespace Game.Project.Scripts.Managers.UI.Main
 
             if (UiManager.HasInstance && UiManager.Instance.BlackScreen != null)
             {
-                yield return StartCoroutine(UiManager.Instance.BlackScreen.Group.FadeCo(1f, 0f, 1.5f));
+                yield return StartCoroutine(
+                    UiManager.Instance.BlackScreen.Group.FadeCo(1f, 0f, 1.5f)
+                );
             }
 
             ResetProjectileData();
-            // SceneManager.Instance.LoadScene("TutorialScene");
+            GameManager.Instance.StartTutorial();
         }
 
         private void ResetProjectileData()

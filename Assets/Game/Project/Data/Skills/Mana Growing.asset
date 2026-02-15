@@ -28,7 +28,7 @@ MonoBehaviour:
   scale: 1
   critChance: 0.05
   critDamage: 1.5
-  chargeTime: 0.2
+  chargeTime: 1
   projectileCount: 0
   acceleration: 0
   homingStrength: 0

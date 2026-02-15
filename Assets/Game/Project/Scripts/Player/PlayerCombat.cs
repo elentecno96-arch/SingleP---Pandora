@@ -25,10 +25,18 @@ namespace Game.Project.Scripts.Player
         private Transform _currentTarget;
         private IStatSourceable _statSource;
 
+        private const float SKILL_ACTIVATION_RANGE = 15.0f;
+
         private bool _isInitialized = false;
 
         public void Init(PlayerManager manager)
         {
+            if (manager == null || manager.Stats == null || manager.skillEquip == null)
+            {
+                Debug.LogError("PlayerCombat: 필수 시스템 누락");
+                return;
+            }
+
             playerManager = manager;
             _scanner = GetComponent<TargetScanner>();
 
@@ -56,7 +64,7 @@ namespace Game.Project.Scripts.Player
             {
                 float distance = Vector3.Distance(transform.position, _currentTarget.position);
 
-                if (distance <= 15.0f) 
+                if (distance <= SKILL_ACTIVATION_RANGE) 
                 {
                     CheckSkills();
                 }
@@ -67,7 +75,10 @@ namespace Game.Project.Scripts.Player
         {
             if (PlayerManager.HasInstance && PlayerManager.Instance.Stats != null)
             {
-                PlayerManager.Instance.Stats.OnStatChanged -= RefreshAllSkill;
+                if (PlayerManager.Instance.Stats != null)
+                    PlayerManager.Instance.Stats.OnStatChanged -= RefreshAllSkill;
+                if (PlayerManager.Instance.skillEquip != null)
+                    PlayerManager.Instance.skillEquip.OnSkillChanged -= RefreshAllSkill;
             }
         }
         /// <summary>
@@ -126,7 +137,8 @@ namespace Game.Project.Scripts.Player
             if (_currentTarget == null || slot.IsEmpty) return;
             Vector3 targetAimPoint = _currentTarget.position + Vector3.up * 1.0f;
 
-            var statSource = new PlayerStatSource(PlayerManager.Instance.Stats);
+            //캐싱 되어있는 플레이어 스탯 소스 사용
+            //var statSource = new PlayerStatSource(PlayerManager.Instance.Stats);
             Vector3 attackDir = (targetAimPoint - firePoint.position).normalized;
 
             ProjectileContext context = SkillManager.Instance.CreateContext(slot, gameObject);
@@ -136,7 +148,7 @@ namespace Game.Project.Scripts.Player
 
             context.targetMask = LayerMask.GetMask("Enemy");
 
-            SkillManager.Instance.ApplySkill(context, slot, statSource);
+            SkillManager.Instance.ApplySkill(context, slot, _statSource);
         }
 
         /// <summary>

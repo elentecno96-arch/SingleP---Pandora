@@ -24,7 +24,7 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
 
         private void Awake()
         {
-            moverFactory = new MoverFactory();
+            if (moverFactory == null) moverFactory = new MoverFactory();
         }
         public List<Projectile> CreateProjectiles(ProjectileContext prototype)
         {
@@ -99,6 +99,8 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
             Projectile proj = PoolManager.Instance.GetProjectile(prototype.data.projectilePrefab);
             if (proj != null)
             {
+                if (moverFactory == null) moverFactory = new MoverFactory();
+
                 proj.Init(individualContext, moverFactory.Create(prototype.data.movementType));
                 list?.Add(proj);
             }

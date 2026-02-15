@@ -25,24 +25,35 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
             {
                 _skillSlots[0].skillData = defaultSkill;
                 Debug.Log($"기본 스킬 장착 완료: {defaultSkill.name}");
+                OnSkillChanged?.Invoke();
             }
         }
         /// <summary>
         /// 특정 슬롯에 스킬을 장착합니다.
         /// </summary>
-        public void EquipSkill(int index, SkillData data)
-        {
-            if (index < 0 || index >= _skillSlots.Count) return;
+        //public void EquipSkill(int index, SkillData data)
+        //{
+        //    if (index < 0 || index >= _skillSlots.Count) return;
 
-            _skillSlots[index].skillData = data;
+        //    _skillSlots[index].skillData = data;
 
-            CallUpdate();
-            OnSkillChanged?.Invoke();
-        }
+        //    var player = PlayerManager.Instance;
+        //    if (player != null)
+        //    {
+        //        _skillSlots[index].context = SkillManager.Instance.CreateContext(_skillSlots[index], player.gameObject);
+        //        SkillManager.Instance.ApplySkill(_skillSlots[index].context, _skillSlots[index], player.Stats);
+        //    }
+
+        //    CallUpdate();
+        //    OnSkillChanged?.Invoke();
+        //}
 
         private void CallUpdate()
         {
-            PlayerManager.Instance.Combat.RefreshAllSkill();
+            if (PlayerManager.Instance?.Combat != null)
+            {
+                PlayerManager.Instance.Combat.RefreshAllSkill();
+            }
         }
     }
 }

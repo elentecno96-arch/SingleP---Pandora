@@ -55,6 +55,10 @@ namespace Game.Project.Scripts.Enemy
         /// </summary>
         public virtual void Init(EnemyContext ctx)
         {
+            //구독 초기화
+            OnStateChanged = null;
+            OnEnemyDead = null;
+
             context = ctx;
             context.owner = gameObject;
             currentHp = context.currentStat.maxHp;

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6235f083d15fcf5479d0194e220799b8, type: 3}
   m_Name: Mana Rifle
   m_EditorClassIdentifier: 
+  Icon: {fileID: 0}
   skillName: Mana Rifle
   projectilePrefab: {fileID: 923852718690510228, guid: cae6df2aadc771a49b13c4b43b160af9,
     type: 3}
@@ -19,7 +20,6 @@ MonoBehaviour:
   rarity: 2
   description: "\uC5EC\uB7EC \uD22C\uC0AC\uCCB4\uB97C \uAC04\uACA9\uC5D0 \uB9DE\uCDB0
     \uB098\uAC00\uB294 \uC2A4\uD0AC"
-  equippedRunes: []
   damage: 3
   speed: 16
   range: 8
