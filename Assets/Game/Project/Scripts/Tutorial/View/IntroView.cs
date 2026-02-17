@@ -1,119 +1,125 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class IntroView : MonoBehaviour
+namespace Game.Project.Scripts.Tutorial.View
 {
-    [SerializeField] private Image backgroundImage;
-    [SerializeField] private GameObject dialoguePanel;
-    [SerializeField] private TextMeshProUGUI speakerNameText;
-    [SerializeField] private TextMeshProUGUI dialogueText;
-
-    [SerializeField] private float typeSpeed = 0.03f;
-
-    private StoryData _data;
-    private int _index;
-    private bool _isTyping;
-    private Coroutine typingCo;
-
-    public bool IsPlaying { get; private set; }
-
-    public void Play(StoryData data)
+    /// <summary>
+    /// 인트로 대사와 배경을 보여주는 View
+    /// </summary>
+    public class IntroView : MonoBehaviour
     {
-        if (data == null || data.lines.Count == 0) return;
+        [SerializeField] private Image backgroundImage;
+        [SerializeField] private GameObject dialoguePanel;
+        [SerializeField] private TextMeshProUGUI speakerNameText;
+        [SerializeField] private TextMeshProUGUI dialogueText;
 
-        _data = data;
-        _index = 0;
-        IsPlaying = true;
+        [SerializeField] private const float TYPESPEED = 0.03f;
 
-        dialoguePanel.SetActive(true);
-        backgroundImage.gameObject.SetActive(true);
-        Time.timeScale = 0f;
+        private StoryData _data;
+        private int _index;
+        private bool _isTyping;
+        private Coroutine typingCo;
 
-        ShowLine();
-    }
+        public bool IsPlaying { get; private set; }
 
-    private void Update()
-    {
-        if (!IsPlaying) return;
-        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
+        public void Play(StoryData data)
         {
-            if (_isTyping)
-                FinishTyping();
-            else
-                NextLine();
-        }
-    }
+            if (data == null || data.lines.Count == 0) return;
 
-    private void ShowLine()
-    {
-        var line = _data.lines[_index];
-        backgroundImage.sprite = line.background;
-        speakerNameText.text = line.speakerName;
+            _data = data;
+            _index = 0;
+            IsPlaying = true;
 
-        if (typingCo != null) StopCoroutine(typingCo);
-        typingCo = StartCoroutine(TypeText(line.dialogue));
-    }
+            dialoguePanel.SetActive(true);
+            backgroundImage.gameObject.SetActive(true);
+            Time.timeScale = 0f;
 
-    private IEnumerator TypeText(string text)
-    {
-        _isTyping = true;
-        dialogueText.text = "";
-
-        foreach (char c in text)
-        {
-            dialogueText.text += c;
-            yield return new WaitForSecondsRealtime(typeSpeed);
+            ShowLine();
         }
 
-        _isTyping = false;
-    }
-
-    private void FinishTyping()
-    {
-        if (typingCo != null) StopCoroutine(typingCo);
-        dialogueText.text = _data.lines[_index].dialogue;
-        _isTyping = false;
-    }
-
-    private void NextLine()
-    {
-        _index++;
-        if (_index >= _data.lines.Count)
+        private void Update()
         {
-            EndStory();
-            return;
+            if (!IsPlaying) return;
+            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
+            {
+                if (_isTyping)
+                    FinishTyping();
+                else
+                    NextLine();
+            }
         }
 
-        ShowLine();
-    }
-
-    private IEnumerator FadeOutBackground(float duration)
-    {
-        Color c = backgroundImage.color;
-        float startAlpha = c.a;
-        float t = 0f;
-
-        while (t < duration)
+        private void ShowLine()
         {
-            t += Time.deltaTime;
-            c.a = Mathf.Lerp(startAlpha, 0f, t / duration);
+            var line = _data.lines[_index];
+            backgroundImage.sprite = line.background;
+            speakerNameText.text = line.speakerName;
+
+            if (typingCo != null) StopCoroutine(typingCo);
+            typingCo = StartCoroutine(TypeText(line.dialogue));
+        }
+
+        private IEnumerator TypeText(string text)
+        {
+            _isTyping = true;
+            dialogueText.text = "";
+
+            foreach (char c in text)
+            {
+                dialogueText.text += c;
+                yield return new WaitForSecondsRealtime(TYPESPEED);
+            }
+
+            _isTyping = false;
+        }
+
+        private void FinishTyping()
+        {
+            if (typingCo != null) StopCoroutine(typingCo);
+            dialogueText.text = _data.lines[_index].dialogue;
+            _isTyping = false;
+        }
+
+        private void NextLine()
+        {
+            _index++;
+            if (_index >= _data.lines.Count)
+            {
+                EndStory();
+                return;
+            }
+
+            ShowLine();
+        }
+
+        // 배경 페이드 아웃 코루틴
+        private IEnumerator FadeOutBackground(float duration)
+        {
+            Color c = backgroundImage.color;
+            float startAlpha = c.a;
+            float t = 0f;
+
+            while (t < duration)
+            {
+                t += Time.deltaTime;
+                c.a = Mathf.Lerp(startAlpha, 0f, t / duration);
+                backgroundImage.color = c;
+                yield return null;
+            }
+
+            c.a = 0f;
             backgroundImage.color = c;
-            yield return null;
+            backgroundImage.gameObject.SetActive(false);
         }
 
-        c.a = 0f;
-        backgroundImage.color = c;
-        backgroundImage.gameObject.SetActive(false);
-    }
-
-    private void EndStory()
-    {
-        IsPlaying = false;
-        StartCoroutine(FadeOutBackground(1.5f));
-        dialoguePanel.SetActive(false);
-        Time.timeScale = 1f;
+        private void EndStory()
+        {
+            IsPlaying = false;
+            StartCoroutine(FadeOutBackground(1.5f));
+            dialoguePanel.SetActive(false);
+            Time.timeScale = 1f;
+        }
     }
 }

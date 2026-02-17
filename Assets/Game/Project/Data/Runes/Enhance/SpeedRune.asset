@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c83c434b41aed28459de28eafd73a10a, type: 3}
   m_Name: SpeedRune
   m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: 36042918c174dca4c91e330cad9f6c06, type: 3}
   runeName: "\uC18D\uB3C4\uC758 \uB8EC"
   modifier: 1
   baseDamageModifier: 0.05

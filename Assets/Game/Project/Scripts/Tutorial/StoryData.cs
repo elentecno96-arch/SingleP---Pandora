@@ -17,4 +17,9 @@ public class StoryLine
 
     [TextArea(3, 6)]
     public string dialogue;
+
+    //NPC ´ëÈ­¿ë
+    public Sprite leftPortrait;  
+    public Sprite rightPortrait;
+    public bool isLeftSpeaking = true;
 }

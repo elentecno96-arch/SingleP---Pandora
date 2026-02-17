@@ -1,10 +1,13 @@
 using Game.Project.Data.Stat;
 using Game.Project.Scripts.Core.Projectile;
-using Game.Project.Scripts.Core.Projectile.SO;
+using Game.Project.Scripts.Core.Projectile.Rune;
+using Game.Project.Scripts.Player.Equip;
+using Game.Project.Scripts.Managers.Systems.PlayerSystems;
 using Game.Project.Scripts.Managers.Systems.SkillSystems;
 using Game.Project.Utility.Generic;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using Game.Project.Scripts.Managers.Systems.PlayerSystems;
 
 namespace Game.Project.Scripts.Managers.Singleton
 {
@@ -43,42 +46,39 @@ namespace Game.Project.Scripts.Managers.Singleton
                 owner = owner
             };
         }
+        private List<RuneData> ExtractRunes(SkillSlot slot)
+        {
+            if (slot == null || slot.equippedRunes == null) return new List<RuneData>();
+
+            return slot.equippedRunes
+                .Where(item => item != null && item.runeData != null)
+                .Select(item => item.runeData)
+                .ToList();
+        }
+
         public float GetCooldown(SkillSlot slot, IStatSourceable statSource)
         {
             if (slot == null || slot.IsEmpty || statSource == null) return 0f;
-
             if (!_isInitialized) Init();
 
-            if (_modifierSystem == null)
-            {
-                Debug.LogError("ModifierSystem missing in SkillManager children!");
-                return slot.skillData.cooldown;
-            }
-
-            ProjectileContext c = new ProjectileContext
-            {
-                data = slot.skillData
-            };
+            ProjectileContext tempContext = new ProjectileContext { data = slot.skillData };
 
             _modifierSystem.ApplyModifiers(
-                c,
-                slot.equippedRunes,
+                tempContext,
+                ExtractRunes(slot), 
                 statSource);
 
-            return c.finalCooldown;
+            return tempContext.finalCooldown;
         }
 
-        public void ApplySkill(ProjectileContext prototype, SkillSlot slot,IStatSourceable stat)
+        public void ApplySkill(ProjectileContext prototype, List<RuneData> runes, IStatSourceable stat)
         {
-            //吝汗 抗寇贸府 林籍 贸府
-            //if (!_isInitialized || slot == null) return;
-
-            if (!_isInitialized || slot == null || stat == null)
+            if (!_isInitialized || prototype == null || stat == null)
                 return;
 
             _modifierSystem.ApplyModifiers(
                 prototype,
-                slot.equippedRunes,
+                runes,
                 stat);
 
             _spawnSystem.CreateProjectiles(prototype);

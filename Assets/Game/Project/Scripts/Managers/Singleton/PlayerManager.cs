@@ -13,8 +13,11 @@ namespace Game.Project.Scripts.Managers.Singleton
         public StatSystem Stats { get; private set; }
         public StateSystem State { get; private set; }
         public SkillEquipSystem skillEquip {  get; private set; }
+        public InventorySystem Inventory { get; private set; }
 
         public PlayerCombat Combat { get; private set; }
+
+        public PlayerStatSource StatSource { get; private set; }
 
         [SerializeField] private GameObject playerPrefab;
         public GameObject CurrentPlayer { get; private set; }
@@ -28,6 +31,8 @@ namespace Game.Project.Scripts.Managers.Singleton
             Stats = GetComponentInChildren<StatSystem>(true);
             State = GetComponentInChildren<StateSystem>(true);
             skillEquip = GetComponentInChildren<SkillEquipSystem>(true);
+            Inventory = GetComponentInChildren<InventorySystem>(true);
+            StatSource = new PlayerStatSource(Stats);
 
             if (Stats == null || State == null || skillEquip == null)
             {
@@ -38,6 +43,7 @@ namespace Game.Project.Scripts.Managers.Singleton
             Stats.Init();
             State.Init();
             skillEquip.init();
+            Inventory.Init();
 
             _isInitialized = true;
 

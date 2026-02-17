@@ -1,6 +1,7 @@
 using UnityEngine;
 using Game.Project.Utility.Generic;
 using Game.Project.Scripts.Managers.UI.Intro;
+using Game.Project.Scripts.Managers.UI.SkillBulid;
 
 namespace Game.Project.Scripts.Managers.Singleton
 {
@@ -19,9 +20,12 @@ namespace Game.Project.Scripts.Managers.Singleton
         [SerializeField] private BlackScreenView blackScreen;
         public BlackScreenView BlackScreen => blackScreen;
 
-        //=====================================================
+        //===================================================== //위의 내용은 추후 분리될 예정
 
-        [SerializeField] private CombatHUD combatHUD; 
+        [SerializeField] private CombatHUD combatHUD;
+
+        [SerializeField] private SkillBuilderMediator skillBuildMediator;
+        public SkillBuilderMediator SkillBuild => skillBuildMediator;
 
         public CombatHUD GetCombatHUD() => combatHUD;
 
@@ -41,6 +45,13 @@ namespace Game.Project.Scripts.Managers.Singleton
         public void ShowMainMenu()
         {
 
+        }
+        public void ToggleSkillBuild()
+        {
+            if (skillBuildMediator != null)
+            {
+                skillBuildMediator.ToggleSkillBuild();
+            }
         }
     }
 }

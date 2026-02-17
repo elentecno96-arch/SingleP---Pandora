@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c83c434b41aed28459de28eafd73a10a, type: 3}
   m_Name: CountRune
   m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: cfd1c695d5a9c034d85a0b70a42ce563, type: 3}
   runeName: "\uD22C\uC0AC\uCCB4 \uB8EC"
   modifier: 8
   baseDamageModifier: 0.05

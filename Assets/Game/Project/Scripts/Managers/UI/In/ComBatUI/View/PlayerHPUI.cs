@@ -1,15 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHPUI : MonoBehaviour
+namespace Game.Project.Scripts.Managers.UI.In.ComBatUI.View
 {
-    [SerializeField] private Slider hpSlider;
-
-    public void SetHealth(float ratio)
+    /// <summary>
+    /// 플레이어 Hp UI
+    /// </summary>
+    public class PlayerHPUI : MonoBehaviour
     {
-        if (hpSlider != null)
-            hpSlider.value = ratio;
+        [SerializeField] private Slider hpSlider;
+
+        public void SetHealth(float ratio)
+        {
+            if (hpSlider != null)
+                hpSlider.value = ratio;
+        }
     }
 }

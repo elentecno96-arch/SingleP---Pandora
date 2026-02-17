@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c83c434b41aed28459de28eafd73a10a, type: 3}
   m_Name: CooldownRune
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: be21239a9d20f7b41a62777c3415d1da, type: 3}
   runeName: "\uCFE8\uD0C0\uC784 \uB8EC"
   modifier: 4
   baseDamageModifier: 0.02
