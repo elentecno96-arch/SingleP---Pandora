@@ -2,13 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class SelfDialogueView : MonoBehaviour
+public class InteractionDialogueView : MonoBehaviour
 {
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TextMeshProUGUI speakerNameText;
-    [SerializeField] private TextMeshProUGUI selfDialogueText;
+    [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private float typeSpeed = 0.03f;
+
+    [SerializeField] private Image leftPortrait;
+    [SerializeField] private Image rightPortrait;
 
     private StoryData _data;
     private int _index;
@@ -43,24 +47,42 @@ public class SelfDialogueView : MonoBehaviour
                 NextLine();
         }
     }
-
     private void ShowLine()
     {
         var line = _data.lines[_index];
         speakerNameText.text = line.speakerName;
 
+        // 초상화 설정
+        SetupPortrait(leftPortrait, line.leftPortrait, line.isLeftSpeaking);
+        SetupPortrait(rightPortrait, line.rightPortrait, !line.isLeftSpeaking);
+
         if (typingCo != null) StopCoroutine(typingCo);
         typingCo = StartCoroutine(TypeText(line.dialogue));
+    }
+
+    private void SetupPortrait(Image img, Sprite sprite, bool isSpeaking)
+    {
+        if (sprite == null)
+        {
+            img.gameObject.SetActive(false);
+            return;
+        }
+
+        img.gameObject.SetActive(true);
+        img.sprite = sprite;
+
+        img.color = isSpeaking ? Color.white : new Color(0.5f, 0.5f, 0.5f);
+        img.transform.localScale = isSpeaking ? Vector3.one * 1.1f : Vector3.one;
     }
 
     private IEnumerator TypeText(string text)
     {
         _isTyping = true;
-        selfDialogueText.text = "";
+        dialogueText.text = "";
 
         foreach (char c in text)
         {
-            selfDialogueText.text += c;
+            dialogueText.text += c;
             yield return new WaitForSecondsRealtime(typeSpeed);
         }
 
@@ -70,7 +92,7 @@ public class SelfDialogueView : MonoBehaviour
     private void FinishTyping()
     {
         if (typingCo != null) StopCoroutine(typingCo);
-        selfDialogueText.text = _data.lines[_index].dialogue;
+        dialogueText.text = _data.lines[_index].dialogue;
         _isTyping = false;
     }
 

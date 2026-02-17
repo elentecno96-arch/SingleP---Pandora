@@ -86,7 +86,8 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
             context.finalScale = skillFinalScale;
             context.finalProjectileCount = Mathf.Max(1, skillFinalCount);
 
-            context.isCritical = Random.value < context.finalCritChance;
+            //위치 변동 계산만 진행
+            //context.isCritical = Random.value < context.finalCritChance;
 
             context.flyEffect = so.flyEffect;
             context.impactEffect = so.impactEffect;

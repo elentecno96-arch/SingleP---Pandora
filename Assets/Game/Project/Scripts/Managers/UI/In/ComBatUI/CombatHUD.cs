@@ -1,8 +1,12 @@
 using Game.Project.Scripts.Managers.Systems.PlayerSystems;
 using UnityEngine;
+using Game.Project.Scripts.Managers.UI.In.ComBatUI.View;
 
 public class CombatHUD : MonoBehaviour
 {
+    /// <summary>
+    /// 인게임 화면에 플레이어 세부 정보 UI
+    /// </summary>
     [SerializeField] private PlayerHPUI playerHPView;
     [SerializeField] private SkillSlotUI[] skillSlotViews;
 

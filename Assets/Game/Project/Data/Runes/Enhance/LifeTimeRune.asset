@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c83c434b41aed28459de28eafd73a10a, type: 3}
   m_Name: LifeTimeRune
   m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: ec5e4773d059f174196e8568ff5effe6, type: 3}
   runeName: "\uC720\uC9C0 \uC2DC\uAC04 \uC99D\uAC00 \uB8EC"
   modifier: 3
   baseDamageModifier: 0.03

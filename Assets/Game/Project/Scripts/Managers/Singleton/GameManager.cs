@@ -121,25 +121,14 @@ namespace Game.Project.Scripts.Managers.Singleton
             );
 
             _sceneManager.LoadScene("1. Tutorial");
-
-            yield return null;
-
-            StartCoroutine(SpawnPlayerAfterSceneLoad());
         }
 
-        private IEnumerator SpawnPlayerAfterSceneLoad()
+        public void HandlePlayerSpawn(Vector3 position)
         {
-            yield return null;
+            if (_player == null) _player = PlayerManager.Instance;
 
-            var point = FindFirstObjectByType<PlayerSpawnPoint>();
+            _player.SpawnPlayer(position);
 
-            if (point == null)
-            {
-                Debug.LogError("SpawnPoint 없음");
-                yield break;
-            }
-
-            PlayerManager.Instance.SpawnPlayer(point.transform.position);
             BindHUD();
         }
 
@@ -147,29 +136,17 @@ namespace Game.Project.Scripts.Managers.Singleton
         {
             if (!UiManager.HasInstance || !PlayerManager.HasInstance)
             {
-                Debug.LogWarning("HUD 바인딩 실패: 매니저 없음");
                 return;
             }
 
             var hud = UiManager.Instance.GetCombatHUD();
             var pm = PlayerManager.Instance;
 
-            if (hud == null)
+            if (hud != null && pm.State != null && pm.skillEquip != null)
             {
-                Debug.LogWarning("CombatHUD 없음");
-                return;
+                hud.Bind(pm.State);
+                hud.BindSkills(pm.skillEquip);
             }
-
-            if (pm.State == null || pm.skillEquip == null)
-            {
-                Debug.LogWarning("Player 시스템 준비 안됨");
-                return;
-            }
-
-            hud.Bind(pm.State);
-            hud.BindSkills(pm.skillEquip);
-
-            Debug.Log("HUD 바인딩 완료");
         }
     }
 }

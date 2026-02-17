@@ -1,10 +1,10 @@
 using Game.Project.Data.Stat;
 using Game.Project.Scripts.Core.Projectile;
-using Game.Project.Scripts.Core.Projectile.SO;
+using Game.Project.Scripts.Core.Projectile.Rune;
 using Game.Project.Scripts.Managers.Singleton;
 using Game.Project.Scripts.Player.Combat;
+using Game.Project.Scripts.Player.Equip;
 using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 namespace Game.Project.Scripts.Player
@@ -55,6 +55,8 @@ namespace Game.Project.Scripts.Player
 
             UpdateTimers();
 
+            if (UiManager.Instance.SkillBuild.IsViewOpen()) return;
+
             if (!_scanner.IsTargetValid(_currentTarget))
             {
                 _currentTarget = _scanner.GetClosestTarget();
@@ -102,6 +104,9 @@ namespace Game.Project.Scripts.Player
         /// </summary>
         private void CheckSkills()
         {
+            //UI가 열릴 때 공격 방지
+            if (UiManager.Instance.SkillBuild.IsViewOpen()) return;
+
             foreach (var slot in playerManager.skillEquip.GetSkillSlots())
             {
                 if (slot.IsEmpty || !_cachedIntervals.ContainsKey(slot)) continue;
@@ -135,20 +140,28 @@ namespace Game.Project.Scripts.Player
         private void AutoAttack(SkillSlot slot)
         {
             if (_currentTarget == null || slot.IsEmpty) return;
-            Vector3 targetAimPoint = _currentTarget.position + Vector3.up * 1.0f;
 
-            //캐싱 되어있는 플레이어 스탯 소스 사용
-            //var statSource = new PlayerStatSource(PlayerManager.Instance.Stats);
+            Vector3 targetAimPoint = _currentTarget.position + Vector3.up * 1.0f;
             Vector3 attackDir = (targetAimPoint - firePoint.position).normalized;
 
             ProjectileContext context = SkillManager.Instance.CreateContext(slot, gameObject);
             context.firePosition = firePoint.position;
             context.direction = attackDir;
             context.target = _currentTarget.gameObject;
-
             context.targetMask = LayerMask.GetMask("Enemy");
 
-            SkillManager.Instance.ApplySkill(context, slot, _statSource);
+            List<RuneData> extractedRunes = new List<RuneData>();
+            if (slot.equippedRunes != null)
+            {
+                foreach (var item in slot.equippedRunes)
+                {
+                    if (item != null && item.runeData != null)
+                    {
+                        extractedRunes.Add(item.runeData);
+                    }
+                }
+            }
+            SkillManager.Instance.ApplySkill(context, extractedRunes, _statSource);
         }
 
         /// <summary>

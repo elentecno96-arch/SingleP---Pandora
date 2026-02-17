@@ -1,6 +1,9 @@
 using Game.Project.Data.Damage;
 using Game.Project.Scripts.Core.Projectile;
+using Game.Project.Scripts.Core.Projectile.Rune;
 using Game.Project.Scripts.Managers.Singleton;
+using System.Collections.Generic;
+using Game.Project.Scripts.Player.Equip;
 using UnityEngine;
 
 namespace Game.Project.Scripts.Enemy
@@ -51,7 +54,7 @@ namespace Game.Project.Scripts.Enemy
             // 추후 추가 될 스테이지 매니저 또는 스테이지 난이도를 관리하는 시스템을 만들 예정
             // 그때 재연결 할 예정입니다 지금은 임시값으로 1.1f, 0.2f로 넣어둔 상태입니다
             EnemyStatSource statSource = new EnemyStatSource(data, 1.1f, 0.2f);
-            SkillManager.Instance.ApplySkill(context, virtualSlot, statSource);
+            SkillManager.Instance.ApplySkill(context, new List<RuneData>(), statSource);
 
             if (data.attackSfx != null)
                 AudioManager.Instance.PlaySfxAtPoint(data.attackSfx, _owner.transform.position);
