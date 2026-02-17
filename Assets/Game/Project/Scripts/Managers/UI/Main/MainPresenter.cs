@@ -107,12 +107,18 @@ namespace Game.Project.Scripts.Managers.UI.Main
                 );
             }
 
+            if (PlayerManager.HasInstance)
+            {
+                PlayerManager.Instance.ResetForNewGame();
+            }
+
             ResetProjectileData();
             GameManager.Instance.StartTutorial();
         }
 
         private void ResetProjectileData()
         {
+            //추후 플레이어가 죽으면서 초기화가 필요한 데이터는 여기서
             Debug.Log("ProjectileContext 데이터 초기화 완료");
         }
 

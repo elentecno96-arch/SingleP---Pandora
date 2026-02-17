@@ -88,6 +88,19 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
             itemSlots[endIdx] = startSlot;
         }
 
+        /// <summary>
+        /// 인벤토리 초기화
+        /// </summary>
+        public void ClearInventory()
+        {
+            if (itemSlots == null) return;
+
+            for (int i = 0; i < itemSlots.Length; i++)
+            {
+                itemSlots[i] = null;
+            }
+        }
+
         public ItemSlot[] GetInventorySlots() => itemSlots;
     }
 }

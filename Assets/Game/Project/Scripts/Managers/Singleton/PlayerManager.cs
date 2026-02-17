@@ -69,14 +69,23 @@ namespace Game.Project.Scripts.Managers.Singleton
             return player;
         }
 
+        public void ResetForNewGame()
+        {
+            if (!_isInitialized) Init();
+
+            Stats.ResetStats();
+            Inventory.ClearInventory();
+            skillEquip.ClearAllSlots();
+
+            Debug.Log("플레이어 데이터 초기화 완료");
+        }
+
         private void RegisterPlayer(GameObject player)
         {
             CurrentPlayer = player;
 
             Combat = player.GetComponent<PlayerCombat>();
             Combat?.Init(this);
-
-            Debug.Log("PlayerManager: Player Avatar 연결 완료");
         }
 
         public void UnregisterPlayer(GameObject player)
@@ -85,8 +94,6 @@ namespace Game.Project.Scripts.Managers.Singleton
 
             CurrentPlayer = null;
             Combat = null;
-
-            Debug.Log("PlayerManager: Player Avatar 해제");
         }
 
         public void DestroyPlayer()

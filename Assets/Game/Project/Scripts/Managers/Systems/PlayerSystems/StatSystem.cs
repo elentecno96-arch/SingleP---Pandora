@@ -12,6 +12,7 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
         [SerializeField] private Stat baseStat;
         [SerializeField] private Stat additionalStat;  //룬 스탯
 
+        private Stat _originBaseStat;
         private Stat _cachedCurrentStat;
 
         public event System.Action OnStatChanged;
@@ -25,6 +26,7 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
 
         private void Awake()
         {
+            _originBaseStat = baseStat;
             RefreshStat();
         }
 
@@ -58,6 +60,16 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
         /// </summary>
         public void ResetAdditionalStat()
         {
+            additionalStat = new Stat();
+            RefreshStat();
+        }
+
+        /// <summary>
+        /// 새 게임 시 기본 스탯으로 초기화
+        /// </summary>
+        public void ResetStats()
+        {
+            baseStat = _originBaseStat;
             additionalStat = new Stat();
             RefreshStat();
         }
@@ -97,5 +109,7 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
                 castingSpeed = a.castingSpeed + b.castingSpeed,
             };
         }
+        public float GetMaxExp() => _cachedCurrentStat.maxExp;
+        public int GetMaxLevel() => _cachedCurrentStat.maxLevel;
     }
 }
