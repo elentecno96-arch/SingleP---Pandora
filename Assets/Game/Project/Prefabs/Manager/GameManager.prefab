@@ -966,7 +966,7 @@ PrefabInstance:
         type: 3}
       propertyPath: skillBuildMediator
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2527886345193321400}
     - target: {fileID: 711750083329260833, guid: 827b6f93602fd694a9c53c0781755c9c,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -4299,6 +4299,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9040026814545177165, guid: 14b5d1c4bbebef24fb08b4ea440ba44d,
+        type: 3}
+      propertyPath: baseStat.defense
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9040026814545177165, guid: 14b5d1c4bbebef24fb08b4ea440ba44d,
+        type: 3}
+      propertyPath: baseStat.critChance
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 9040026814545177165, guid: 14b5d1c4bbebef24fb08b4ea440ba44d,
+        type: 3}
+      propertyPath: baseStat.critDamage
+      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

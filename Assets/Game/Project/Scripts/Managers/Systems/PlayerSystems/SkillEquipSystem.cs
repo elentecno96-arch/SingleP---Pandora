@@ -106,5 +106,27 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
                 PlayerManager.Instance.Combat.RefreshAllSkill();
             }
         }
+
+        /// <summary>
+        /// 장비 슬롯 초기화
+        /// </summary>
+        public void ClearAllSlots()
+        {
+            if (_skillSlots == null) return;
+
+            for (int i = 0; i < _skillSlots.Count; i++)
+            {
+                _skillSlots[i].skillData = null;
+                _skillSlots[i].equippedRunes.Clear();
+                _skillSlots[i].context = null;
+            }
+            if (defaultSkill != null)
+            {
+                EquipSkill(0, defaultSkill);
+            }
+
+            CallUpdate();
+            OnSkillChanged?.Invoke();
+        }
     }
 }

@@ -32,8 +32,6 @@ namespace Game.Project.Scripts.Tutorial
         [SerializeField] private StoryData selfDialogueData;
         [SerializeField] private StoryData npcDialogueData;
         [SerializeField] private StoryData skillBookData;  // NPC가 마법서 줄 때 대사
-        [SerializeField] private StoryData enemyFoundData; // 적 발견 시 자기 대사
-        [SerializeField] private StoryData enemyDeadData;
 
         [SerializeField] private Cinemachine.CinemachineVirtualCamera focusCamera;
         [SerializeField] private Cinemachine.CinemachineVirtualCamera npcCamera;
