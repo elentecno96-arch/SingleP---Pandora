@@ -1,6 +1,8 @@
-using UnityEngine;
 using DG.Tweening;
+using Game.Project.Scripts.Managers.Systems.PlayerSystems;
 using Game.Project.Utility.Extension.Move;
+using UnityEngine;
+using Game.Project.Scripts.Managers.Singleton;
 
 namespace Game.Project.Scripts.Player
 {
@@ -12,6 +14,8 @@ namespace Game.Project.Scripts.Player
         private Rigidbody rb;
         private Vector2 inputDir;
         private Vector2 _prevInputDir;
+
+        StatSystem _statSystem;
 
         //[SerializeField] private Transform visualChild;
 
@@ -27,11 +31,34 @@ namespace Game.Project.Scripts.Player
 
             Move();
         }
+        private void OnDestroy()
+        {
+            if (_statSystem != null)
+            {
+                _statSystem.OnStatChanged -= UpdateSpeed;
+            }
+        }
+
         public void Init(float speed)
         {
             rb = GetComponent<Rigidbody>();
             this.moveSpeed = speed;
+
+            _statSystem = PlayerManager.Instance.Stats;
+            if (_statSystem != null)
+            {
+                _statSystem.OnStatChanged += UpdateSpeed;
+            }
         }
+
+        private void UpdateSpeed()
+        {
+            if (_statSystem != null)
+            {
+                this.moveSpeed = _statSystem.CurrentStat.maxMoveSpeed;
+            }
+        }
+
         public void SetInput(Vector2 direction)
         {
             //대각선 보정을 위해 normalized

@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ed88292d29f1454d893822308ab152a, type: 3}
+  m_Name: Root
+  m_EditorClassIdentifier: 
+  nodeName: "\uC18D\uB3C4 1\uB2E8\uACC4"
+  icon: {fileID: 21300000, guid: 62ebfa4ff20c87447960ec7edbbce5a2, type: 3}
+  abilityNode: {fileID: 0}
+  description: "\uD50C\uB808\uC774\uC5B4\uC758 \uC774\uB3D9 \uC18D\uB3C4\uB97C 1
+    \uC99D\uAC00\uD569\uB2C8\uB2E4"
+  bonusStat:
+    maxLevel: 0
+    maxExp: 0
+    maxHp: 0
+    maxMoveSpeed: 1
+    defense: 0
+    damage: 0
+    castingSpeed: 0
+    critDamage: 0
+    critChance: 0
+  requiredLevel: 0
+  isUnlocked: 1
+  nodePosition: {x: -660, y: -100}

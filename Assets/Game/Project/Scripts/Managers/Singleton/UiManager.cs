@@ -26,6 +26,7 @@ namespace Game.Project.Scripts.Managers.Singleton
 
         [SerializeField] private SkillBuilderMediator skillBuildMediator;
         public SkillBuilderMediator SkillBuild => skillBuildMediator;
+        [SerializeField] private AbilityPresenter abilityPresenter;
 
         public CombatHUD GetCombatHUD() => combatHUD;
 
