@@ -123,7 +123,7 @@ namespace Game.Project.Scripts.Managers.Singleton
             _sceneManager.LoadScene("1. Tutorial");
         }
 
-        public void HandlePlayerSpawn(Vector3 position)
+        public void PlayerSpawn(Vector3 position)
         {
             if (_player == null) _player = PlayerManager.Instance;
 
@@ -134,18 +134,20 @@ namespace Game.Project.Scripts.Managers.Singleton
 
         private void BindHUD()
         {
-            if (!UiManager.HasInstance || !PlayerManager.HasInstance)
-            {
-                return;
-            }
+            if (!UiManager.HasInstance || !PlayerManager.HasInstance) return;
 
             var hud = UiManager.Instance.GetCombatHUD();
             var pm = PlayerManager.Instance;
 
-            if (hud != null && pm.State != null && pm.skillEquip != null)
+            if (hud != null)
             {
-                hud.Bind(pm.State);
-                hud.BindSkills(pm.skillEquip);
+                if (pm.State != null) hud.Bind(pm.State);
+                if (pm.skillEquip != null) hud.BindSkills(pm.skillEquip);
+
+                if (pm.levelSystem != null)
+                {
+                    hud.BindLevel(pm.levelSystem);
+                }
             }
         }
     }

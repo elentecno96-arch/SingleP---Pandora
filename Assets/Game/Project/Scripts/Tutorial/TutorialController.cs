@@ -1,4 +1,6 @@
 using Game.Project.Scripts.Managers.Singleton;
+using Game.Project.Scripts.Managers.UI.AbilityTree;
+using Game.Project.Scripts.Managers.UI.StatInfo;
 using Game.Project.Scripts.Player;
 using Game.Project.Scripts.Tutorial.View;
 using System.Collections;
@@ -19,10 +21,10 @@ namespace Game.Project.Scripts.Tutorial
             MoveTutorial,
             MeetNPC,
             SkillHelp,
+            LevelUpTutorial,
             CombatEnemy
         }
 
-        [Header("Views")]
         [SerializeField] private Game.Project.Scripts.Tutorial.View.IntroView introView;
         [SerializeField] private SelfTalkView selfDialogueView;
         [SerializeField] private PopUpView introPopUpView;
@@ -35,7 +37,6 @@ namespace Game.Project.Scripts.Tutorial
 
         [SerializeField] private Cinemachine.CinemachineVirtualCamera focusCamera;
         [SerializeField] private Cinemachine.CinemachineVirtualCamera npcCamera;
-        [SerializeField] private float focusDuration = 3f;
 
         private bool _isNpcTalking = false;     // NPC 대화 완료 여부
         private bool _onNpcTrigger = false;     // NPC 트리거 진입 여부
@@ -52,6 +53,8 @@ namespace Game.Project.Scripts.Tutorial
             //스킬 UI 잠금
             if (UiManager.Instance.SkillBuild != null)
                 UiManager.Instance.SkillBuild.IsLocked = true;
+
+            SetSystemsLocked(true);
 
             _phase = TutorialPhase.PlayerAwake;
             EnablePlayerMovement(false);
@@ -83,7 +86,12 @@ namespace Game.Project.Scripts.Tutorial
 
             EnablePlayerCombat(true);
 
-            introPopUpView.ShowPopup("이제 준비가 끝났습니다. 앞으로 나아가세요!", 4f);
+            var levelSystem = PlayerManager.Instance.levelSystem;
+            yield return new WaitUntil(() => levelSystem.CurrentLevel >= 2);
+            SetSystemsLocked(false);
+            yield return new WaitForSeconds(1.5f);
+
+            introPopUpView.ShowPopup("(P)키로 정보창을, (U)키로 특성창을 열 수 있습니다.", 0f);
 
             Debug.Log("TutorialController: 시퀀스 가이드 종료. 이제 트리거 기반으로 동작합니다.");
             _phase = TutorialPhase.None;
@@ -109,14 +117,16 @@ namespace Game.Project.Scripts.Tutorial
                 if (movement != null) movement.enabled = enable;
             }
         }
-
-        private IEnumerator CameraFocusSequence()
+        private void SetSystemsLocked(bool lockState)
         {
-            focusCamera.Priority = 20;
-            yield return new WaitForSeconds(focusDuration);
-            focusCamera.Priority = 5;
-            yield return new WaitForSeconds(1f);
+            if (UiManager.Instance.AbilityTree != null)
+                UiManager.Instance.AbilityTree.SetLocked(lockState);
+
+            // PlayerStatPresenter 접근 및 잠금
+            if (UiManager.Instance.PlayerStat != null)
+                UiManager.Instance.PlayerStat.SetLocked(lockState);
         }
+
         private void OnEnable()
         {
             NPCInteraction.OnNPCInteract += HandleNPCInteraction;

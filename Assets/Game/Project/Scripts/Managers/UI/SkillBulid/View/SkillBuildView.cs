@@ -1,7 +1,8 @@
 using Game.Project.Scripts.Managers.Singleton;
 using Game.Project.Scripts.Managers.UI.Inven;
-using UnityEngine;
 using Game.Project.Scripts.Player.Equip;  
+using UnityEngine;
+using TMPro;
 
 namespace Game.Project.Scripts.Managers.UI.SkillBulid.View
 {
@@ -14,7 +15,25 @@ namespace Game.Project.Scripts.Managers.UI.SkillBulid.View
 
         [SerializeField] private SkillBuildSlot[] skillSlotsUI;
         [SerializeField] private InventorySlot[] inventorySlotsUI;
+        [SerializeField] private TextMeshProUGUI goldText;
+
         public bool IsOpen => panelRoot != null && panelRoot.activeSelf;
+
+        private void Start()
+        {
+            if (PlayerManager.Instance != null && PlayerManager.Instance.Inventory != null)
+            {
+                PlayerManager.Instance.Inventory.OnGoldChanged += UpdateGoldText;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (PlayerManager.Instance != null && PlayerManager.Instance.Inventory != null)
+            {
+                PlayerManager.Instance.Inventory.OnGoldChanged -= UpdateGoldText;
+            }
+        }
 
         //보여주기
         public void Show()
@@ -35,6 +54,19 @@ namespace Game.Project.Scripts.Managers.UI.SkillBulid.View
         {
             RefreshSkills();
             RefreshInventory();
+
+            if (PlayerManager.Instance != null && PlayerManager.Instance.Inventory != null)
+            {
+                UpdateGoldText(PlayerManager.Instance.Inventory.Gold);
+            }
+        }
+
+        private void UpdateGoldText(int currentGold)
+        {
+            if (goldText != null)
+            {
+                goldText.text = currentGold.ToString("N0");
+            }
         }
 
         // 스킬 슬롯 새로고침

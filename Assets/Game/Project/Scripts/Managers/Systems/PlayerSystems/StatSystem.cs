@@ -35,8 +35,17 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
             if (_isInitialized) return;
             RefreshStat();
             _isInitialized = true;
-            Debug.Log("<color=green>StatSystem: 초기화 및 스탯 캐싱 완료</color>");
         }
+
+        public void ApplyLevelUp(int newLevel)
+        {
+            //e
+            baseStat.damage += 2;
+            baseStat.maxHp += 10;
+            baseStat.maxExp = Mathf.FloorToInt(100f * Mathf.Pow(newLevel, 1.8f));
+            RefreshStat();
+        }
+
         /// <summary>
         /// 기본 스탯과 추가 스탯을 합산하여 저장
         /// </summary>

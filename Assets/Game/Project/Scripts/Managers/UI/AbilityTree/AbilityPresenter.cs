@@ -21,6 +21,8 @@ namespace Game.Project.Scripts.Managers.UI.AbilityTree
 
         [SerializeField] private GameObject _abilityPanel;
         private bool _isOpened = false;
+        private bool _isLocked = false;
+        public void SetLocked(bool lockState) => _isLocked = lockState;
 
         [SerializeField] private AbilityTooltip _tooltip;
 
@@ -62,6 +64,8 @@ namespace Game.Project.Scripts.Managers.UI.AbilityTree
 
         private void Update()
         {
+            if (_isLocked) return;
+
             if (Input.GetKeyDown(KeyCode.U))
             {
                 if (_isOpened) ClosePanel();

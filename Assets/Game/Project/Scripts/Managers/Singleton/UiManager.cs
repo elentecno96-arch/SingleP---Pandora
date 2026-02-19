@@ -1,8 +1,9 @@
-using UnityEngine;
-using Game.Project.Utility.Generic;
+using Game.Project.Scripts.Managers.UI.AbilityTree;
 using Game.Project.Scripts.Managers.UI.Intro;
 using Game.Project.Scripts.Managers.UI.SkillBulid;
-using Game.Project.Scripts.Managers.UI.AbilityTree;
+using Game.Project.Scripts.Managers.UI.StatInfo;
+using Game.Project.Utility.Generic;
+using UnityEngine;
 
 namespace Game.Project.Scripts.Managers.Singleton
 {
@@ -28,6 +29,9 @@ namespace Game.Project.Scripts.Managers.Singleton
         [SerializeField] private SkillBuilderMediator skillBuildMediator;
         public SkillBuilderMediator SkillBuild => skillBuildMediator;
         [SerializeField] private AbilityPresenter abilityPresenter;
+        public AbilityPresenter AbilityTree => abilityPresenter;
+        [SerializeField] public PlayerStatPresenter playerStatPresenter;
+        public PlayerStatPresenter PlayerStat => playerStatPresenter;
 
         public CombatHUD GetCombatHUD() => combatHUD;
 

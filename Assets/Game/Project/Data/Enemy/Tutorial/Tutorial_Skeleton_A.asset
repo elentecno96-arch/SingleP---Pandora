@@ -17,7 +17,7 @@ MonoBehaviour:
   baseStat:
     maxLevel: 0
     maxExp: 0
-    maxHp: 20
+    maxHp: 30
     maxMoveSpeed: 3
     defense: 1
     damage: 5

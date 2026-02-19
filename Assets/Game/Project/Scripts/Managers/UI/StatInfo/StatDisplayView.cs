@@ -18,17 +18,18 @@ namespace Game.Project.Scripts.Managers.UI.StatInfo
         [SerializeField] private TextMeshProUGUI _critDamageText;
 
         //업데이트 스탯
-        public void UpdateAllStats(Stat stat)
+        public void UpdateAllStats(int currentLevel, Stat stat)
         {
             Debug.Log($"[StatView] 데이터 수신 - HP: {stat.maxHp}, DMG: {stat.damage}");
 
-            _Lv.text = stat.maxLevel.ToString();
-            _hpText.text = stat.maxHp.ToString();
-            _damageText.text = stat.damage.ToString();
-            _defenseText.text = stat.defense.ToString();
-            _moveSpeedText.text = stat.maxMoveSpeed.ToString();
-            _critChanceText.text = $"{stat.critChance}%";
-            _critDamageText.text = $"{stat.critDamage}%";
+            if (_Lv != null) _Lv.text = currentLevel.ToString();
+
+            if (_hpText != null) _hpText.text = stat.maxHp.ToString();
+            if (_damageText != null) _damageText.text = stat.damage.ToString();
+            if (_defenseText != null) _defenseText.text = stat.defense.ToString();
+            if (_moveSpeedText != null) _moveSpeedText.text = stat.maxMoveSpeed.ToString();
+            if (_critChanceText != null) _critChanceText.text = $"{stat.critChance}%";
+            if (_critDamageText != null) _critDamageText.text = $"{stat.critDamage}%";
         }
     }
 }

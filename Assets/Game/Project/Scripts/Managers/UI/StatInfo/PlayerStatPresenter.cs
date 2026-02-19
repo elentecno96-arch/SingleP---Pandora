@@ -1,4 +1,5 @@
 using Game.Project.Scripts.Managers.Singleton;
+using Game.Project.Scripts.Managers.Systems.PlayerSystems;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,27 +16,35 @@ namespace Game.Project.Scripts.Managers.UI.StatInfo
         [SerializeField] private StatDisplayView _statView;
 
         private Game.Project.Scripts.Managers.Systems.PlayerSystems.StatSystem _statSystem;
+        private Game.Project.Scripts.Managers.Systems.PlayerSystems.LevelSystem _levelSystem;
+
         private bool _isOpened = false;
+        private bool _isLocked = false;
+        public void SetLocked(bool lockState) => _isLocked = lockState;
 
         private IEnumerator Start()
         {
-            while (PlayerManager.Instance == null || PlayerManager.Instance.Stats == null)
+            while (PlayerManager.Instance == null ||
+                   PlayerManager.Instance.Stats == null ||
+                   PlayerManager.Instance.levelSystem == null)
             {
                 yield return null;
             }
 
             _statSystem = PlayerManager.Instance.Stats;
+            _levelSystem = PlayerManager.Instance.levelSystem;
 
-            if (_statSystem != null)
-            {
-                _statSystem.OnStatChanged += RefreshUI;
-            }
+            _statSystem.OnStatChanged += RefreshUI;
+
+            RefreshUI();
 
             ClosePanel();
         }
 
         private void Update()
         {
+            if (_isLocked) return;
+
             if (Input.GetKeyDown(KeyCode.P))
             {
                 if (_isOpened) ClosePanel();
@@ -73,10 +82,17 @@ namespace Game.Project.Scripts.Managers.UI.StatInfo
 
         private void RefreshUI()
         {
-            Debug.Log($"[Presenter] RefreshUI »£√‚µ . View: {_statView != null}, System: {_statSystem != null}");
-            if (_statView != null && _statSystem != null)
+            if (_statView != null && _statSystem != null && _levelSystem != null)
             {
-                _statView.UpdateAllStats(_statSystem.CurrentStat);
+                _statView.UpdateAllStats(_levelSystem.CurrentLevel, _statSystem.CurrentStat);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (_statSystem != null)
+            {
+                _statSystem.OnStatChanged -= RefreshUI;
             }
         }
     }
