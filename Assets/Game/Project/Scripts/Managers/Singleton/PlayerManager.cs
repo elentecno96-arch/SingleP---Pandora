@@ -16,6 +16,8 @@ namespace Game.Project.Scripts.Managers.Singleton
         public InventorySystem Inventory { get; private set; }
 
         public PlayerCombat Combat { get; private set; }
+        public LevelSystem levelSystem { get; private set; }
+        public AbilitySystem abilitySystem { get; private set; }
 
         public PlayerStatSource StatSource { get; private set; }
 
@@ -32,6 +34,8 @@ namespace Game.Project.Scripts.Managers.Singleton
             State = GetComponentInChildren<StateSystem>(true);
             skillEquip = GetComponentInChildren<SkillEquipSystem>(true);
             Inventory = GetComponentInChildren<InventorySystem>(true);
+            levelSystem = GetComponentInChildren<LevelSystem>(true);
+            abilitySystem = GetComponentInChildren<AbilitySystem>(true);
             StatSource = new PlayerStatSource(Stats);
 
             if (Stats == null || State == null || skillEquip == null)
@@ -42,6 +46,8 @@ namespace Game.Project.Scripts.Managers.Singleton
 
             Stats.Init();
             State.Init();
+            levelSystem.Init();
+            abilitySystem.Init();
             skillEquip.init();
             Inventory.Init();
 

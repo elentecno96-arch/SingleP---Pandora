@@ -1,5 +1,7 @@
 using Game.Project.Scripts.Enemy.EnemySO;
 using Game.Project.Scripts.Managers.Singleton;
+using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 namespace Game.Project.Scripts.Tutorial
@@ -9,12 +11,19 @@ namespace Game.Project.Scripts.Tutorial
     /// </summary>
     public class TutorialSpawnTrigger : MonoBehaviour
     {
-        [SerializeField] private EnemyData _enemyData;
-        [SerializeField] private Transform _spawnPoint;
-        [SerializeField] private LayerMask _playerLayer;
+        [System.Serializable]
+        public struct SpawnInfo
+        {
+            public List<EnemyData> enemy;
+            public Transform centerPoint; 
+            public float spawnRadius;     
+            public float delayBeforeSpawn;
+        }
 
-        [TextArea]
-        [SerializeField] private string _popupMessage = "적을 발견했습니다! 사거리 안에 들어가면 자동으로 공격합니다.";
+        [SerializeField] private List<SpawnInfo> _spawns = new List<SpawnInfo>();
+
+        [SerializeField] private LayerMask _playerLayer;
+        [SerializeField] private string _popupMessage = "주변에서 적들이 나타납니다!";
 
         private bool _hasTriggered = false;
 
@@ -25,36 +34,52 @@ namespace Game.Project.Scripts.Tutorial
             if (((1 << other.gameObject.layer) & _playerLayer) != 0)
             {
                 _hasTriggered = true;
-
-                SpawnEnemy();
-
-                if (UiManager.Instance != null)
-                {
-                    //UI를 통한 추가 팝업 예정
-                    Debug.Log($"[Tutorial Message] : {_popupMessage}");
-                }
-                gameObject.SetActive(false);
+                StartCoroutine(Co_SequentialSpawn());
+                Debug.Log($"[Tutorial] {_popupMessage}");
             }
         }
 
-        private void SpawnEnemy()
+        private IEnumerator Co_SequentialSpawn()
         {
-            if (_enemyData == null || _spawnPoint == null)
+            foreach (var info in _spawns)
             {
-                Debug.LogWarning($"{gameObject.name}: EnemyData 또는 SpawnPoint가 누락되었습니다.");
-                return;
+                if (info.enemy == null || info.enemy.Count == 0 || info.centerPoint == null) continue;
+
+                if (info.delayBeforeSpawn > 0f)
+                {
+                    yield return new WaitForSeconds(info.delayBeforeSpawn);
+                }
+
+                foreach (var enemyData in info.enemy)
+                {
+                    if (enemyData == null) continue;
+
+                    Vector2 randomCircle = Random.insideUnitCircle * info.spawnRadius;
+                    Vector3 randomPosition = info.centerPoint.position + new Vector3(randomCircle.x, 0, randomCircle.y);
+
+                    SpawnManager.Instance.RequestEnemySpawn(enemyData, randomPosition, 0f);
+                }
             }
-            SpawnManager.Instance.RequestEnemySpawn(_enemyData, _spawnPoint.position, 1.0f);
+            gameObject.SetActive(false); 
         }
 
         private void OnDrawGizmos()
         {
-            // 에디터 뷰에서 소환 위치 시각화
-            if (_spawnPoint != null)
+            if (_spawns == null) return;
+
+            foreach (var info in _spawns)
             {
-                Gizmos.color = Color.red;
-                Gizmos.DrawWireSphere(_spawnPoint.position, 0.5f);
-                Gizmos.DrawLine(transform.position, _spawnPoint.position);
+                if (info.centerPoint != null)
+                {
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawWireSphere(info.centerPoint.position, 0.3f);
+
+                    Gizmos.color = new Color(0, 1, 1, 0.3f);
+                    Gizmos.DrawWireSphere(info.centerPoint.position, info.spawnRadius);
+
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawLine(transform.position, info.centerPoint.position);
+                }
             }
         }
     }
