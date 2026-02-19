@@ -1,6 +1,6 @@
 using Game.Project.Scripts.Managers.Systems.PlayerSystems;
-using UnityEngine;
 using Game.Project.Scripts.Managers.UI.In.ComBatUI.View;
+using UnityEngine;
 
 public class CombatHUD : MonoBehaviour
 {
@@ -9,9 +9,11 @@ public class CombatHUD : MonoBehaviour
     /// </summary>
     [SerializeField] private PlayerHPUI playerHPView;
     [SerializeField] private SkillSlotUI[] skillSlotViews;
+    [SerializeField] private PlayerExpUI playerExpView;
 
     private StateSystem _stateModel;
     private SkillEquipSystem _skillModel;
+    private LevelSystem _levelModel;
 
     private void Update()
     {
@@ -30,20 +32,17 @@ public class CombatHUD : MonoBehaviour
 
     public void Bind(StateSystem model)
     {
-        if (_stateModel != null) Unbind();
+        if (_stateModel != null) _stateModel.OnHpChanged -= OnHpChanged; // 핸들러 해제
 
         _stateModel = model;
-        _stateModel.OnHpChanged += UpdateView;
+        _stateModel.OnHpChanged += OnHpChanged;
 
-        UpdateView(0f);
+        UpdateView(); 
     }
 
-    private void UpdateView(float currentHp)
+    private void OnHpChanged(float currentHp)
     {
-        if (playerHPView != null && _stateModel != null)
-        {
-            playerHPView.SetHealth(_stateModel.HpRatio);
-        }
+        UpdateView();
     }
 
     public void BindSkills(SkillEquipSystem model)
@@ -56,18 +55,63 @@ public class CombatHUD : MonoBehaviour
         RefreshSkillUI();
     }
 
+    public void BindLevel(LevelSystem model)
+    {
+        Debug.Log("[CombatHUD] BindLevel 호출됨! 모델 연결 시도");
+        if (_levelModel != null)
+        {
+            _levelModel.OnExpChanged -= OnExpChanged;
+            _levelModel.OnLevelUp -= OnLevelUp;
+        }
+
+        _levelModel = model;
+        _levelModel.OnExpChanged += OnExpChanged;
+        _levelModel.OnLevelUp += OnLevelUp;
+
+        UpdateLevelView();
+    }
+
+    private void UpdateView()
+    {
+        if (playerHPView != null && _stateModel != null)
+        {
+            playerHPView.SetHealth(_stateModel.HpRatio);
+        }
+    }
+
+    private void OnExpChanged(int level, float currentExp, float maxExp)
+    {
+        if (playerExpView != null)
+        {
+            float ratio = (maxExp > 0) ? currentExp / maxExp : 0;
+
+            Debug.Log($"[HUD] UI 갱신 데이터 - Cur: {currentExp}, Max: {maxExp}, Ratio: {ratio}");
+
+            playerExpView.SetExp(ratio, level);
+        }
+    }
+
+    private void OnLevelUp(int newLevel)
+    {
+        UpdateLevelView();
+        //레벨업 이펙트 추가 예정
+    }
+
+    private void UpdateLevelView()
+    {
+        if (playerExpView != null && _levelModel != null)
+        {
+            playerExpView.SetExp(_levelModel.ExpRatio, _levelModel.CurrentLevel);
+        }
+    }
+
     private void RefreshSkillUI()
     {
         if (_skillModel == null) return;
 
-
         var slots = _skillModel.GetSkillSlots();
         for (int i = 0; i < skillSlotViews.Length; i++)
         {
-            bool hasData = (i < slots.Count && slots[i].skillData != null);
-
-            Debug.Log($"[UI 갱신] 인덱스:{i} / UI이름:{skillSlotViews[i].name} / 데이터존재:{hasData}");
-
             if (i < slots.Count && slots[i].skillData != null)
             {
                 skillSlotViews[i].SetSkill(slots[i].skillData.Icon);
@@ -78,12 +122,20 @@ public class CombatHUD : MonoBehaviour
             }
         }
     }
+
     private void Unbind()
     {
         if (_stateModel != null)
-            _stateModel.OnHpChanged -= UpdateView;
-        if (_skillModel != null )
+            _stateModel.OnHpChanged -= OnHpChanged; 
+
+        if (_skillModel != null)
             _skillModel.OnSkillChanged -= RefreshSkillUI;
+
+        if (_levelModel != null)
+        {
+            _levelModel.OnExpChanged -= OnExpChanged;
+            _levelModel.OnLevelUp -= OnLevelUp;
+        }
     }
 
     private void OnDestroy()

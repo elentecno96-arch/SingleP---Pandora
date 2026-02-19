@@ -12,7 +12,7 @@ namespace Game.Project.Scripts.Player
         {
             if (GameManager.HasInstance)
             {
-                GameManager.Instance.HandlePlayerSpawn(transform.position);
+                GameManager.Instance.PlayerSpawn(transform.position);
             }
         }
 

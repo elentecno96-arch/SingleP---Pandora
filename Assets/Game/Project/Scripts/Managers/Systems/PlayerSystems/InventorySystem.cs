@@ -1,5 +1,6 @@
 using Game.Project.Scripts.Data.Items;
-using System.Collections.Generic;
+using System;
+using System.Linq;
 using UnityEngine;
 
 namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
@@ -13,92 +14,146 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
 
         [SerializeField] private ItemSlot[] itemSlots = new ItemSlot[MAX_SLOT];
 
+        public int Gold { get; private set; }
+        public event Action OnInventoryChanged;
+        public event Action<int> OnGoldChanged;
+
         public void Init()
         {
+            // 배열 크기 보장 및 초기화
             if (itemSlots == null || itemSlots.Length != MAX_SLOT)
             {
                 itemSlots = new ItemSlot[MAX_SLOT];
             }
-            else
-            {
-                for (int i = 0; i < itemSlots.Length; i++)
-                {
-                    itemSlots[i] = null;
-                }
-            }
+
+            ClearInventory();
             Debug.Log("인벤토리 시스템 초기화 완료");
         }
 
         public bool AddItem(ItemData data, int amount = 1)
         {
-            if (data == null) return false;
+            if (data == null || amount <= 0) return false;
 
+            // 골드 처리
+            if (data.type == ItemType.Gold)
+            {
+                Gold += (data.goldcAmount * amount);
+                OnGoldChanged?.Invoke(Gold);
+                return true;
+            }
+
+            int remainingAmount = amount;
+
+            // 중첩 가능한지 확인
             if (data.maxStack > 1)
             {
                 for (int i = 0; i < itemSlots.Length; i++)
                 {
-                    if (itemSlots[i] != null && itemSlots[i].itemData == data && itemSlots[i].count < data.maxStack)
+                    if (itemSlots[i] != null && itemSlots[i].itemData == data)
                     {
-                        itemSlots[i].count += amount;
-                        return true;
+                        int canAdd = data.maxStack - itemSlots[i].count;
+                        int addAmount = Mathf.Min(canAdd, remainingAmount);
+
+                        itemSlots[i].count += addAmount;
+                        remainingAmount -= addAmount;
+
+                        if (remainingAmount <= 0) break;
                     }
                 }
             }
 
-            for (int i = 0; i < itemSlots.Length; i++)
+            // 남은 아이템을 빈 슬롯에 추가
+            while (remainingAmount > 0)
             {
-                if (itemSlots[i] == null || itemSlots[i].itemData == null)
+                int emptySlotIndex = Array.FindIndex(itemSlots, slot => slot == null || slot.itemData == null);
+
+                if (emptySlotIndex == -1)
                 {
-                    itemSlots[i] = new ItemSlot(data, amount);
-                    return true;
+                    Debug.LogWarning("인벤토리가 가득 찼습니다.");
+                    OnInventoryChanged?.Invoke();
+                    return false;
                 }
+
+                int addAmount = Mathf.Min(data.maxStack, remainingAmount);
+                itemSlots[emptySlotIndex] = new ItemSlot(data, addAmount);
+                remainingAmount -= addAmount;
             }
 
-            Debug.LogWarning("인벤토리가 가득 찼습니다!");
-            return false;
+            OnInventoryChanged?.Invoke();
+            return true;
         }
 
+        /// 슬롯 간 아이템 이동 및 교체
         public void SwapSlots(int startIdx, int endIdx)
         {
             if (startIdx < 0 || startIdx >= itemSlots.Length || endIdx < 0 || endIdx >= itemSlots.Length) return;
+            if (startIdx == endIdx) return;
 
             ItemSlot startSlot = itemSlots[startIdx];
             ItemSlot endSlot = itemSlots[endIdx];
 
-            if (startSlot == null) return;
+            if (startSlot == null || startSlot.itemData == null) return;
 
-            if (endSlot != null && endSlot.itemData != null && startSlot.itemData == endSlot.itemData)
+            if (endSlot != null && endSlot.itemData == startSlot.itemData && startSlot.itemData.maxStack > 1)
             {
                 int maxStack = startSlot.itemData.maxStack;
-                if (endSlot.count < maxStack)
-                {
-                    int canAdd = maxStack - endSlot.count;
-                    int moveAmount = Mathf.Min(canAdd, startSlot.count);
+                int canAdd = maxStack - endSlot.count;
+                int moveAmount = Mathf.Min(canAdd, startSlot.count);
 
-                    endSlot.count += moveAmount;
-                    startSlot.count -= moveAmount;
+                endSlot.count += moveAmount;
+                startSlot.count -= moveAmount;
 
-                    if (startSlot.count <= 0)
-                        itemSlots[startIdx] = null;
-
-                    return;
-                }
+                if (startSlot.count <= 0)
+                    itemSlots[startIdx] = null;
             }
-            itemSlots[startIdx] = endSlot;
-            itemSlots[endIdx] = startSlot;
+            else
+            {
+                itemSlots[startIdx] = endSlot;
+                itemSlots[endIdx] = startSlot;
+            }
+
+            OnInventoryChanged?.Invoke();
         }
 
         /// <summary>
-        /// 인벤토리 초기화
+        /// 아이템 사용
         /// </summary>
+        public bool RemoveItem(ItemData data, int amount = 1)
+        {
+            int totalCount = itemSlots.Where(s => s != null && s.itemData == data).Sum(s => s.count);
+            if (totalCount < amount) return false;
+
+            int toRemove = amount;
+            for (int i = itemSlots.Length - 1; i >= 0; i--) 
+            {
+                if (itemSlots[i] != null && itemSlots[i].itemData == data)
+                {
+                    if (itemSlots[i].count > toRemove)
+                    {
+                        itemSlots[i].count -= toRemove;
+                        toRemove = 0;
+                        break;
+                    }
+                    else
+                    {
+                        toRemove -= itemSlots[i].count;
+                        itemSlots[i] = null;
+                    }
+                }
+                if (toRemove <= 0) break;
+            }
+
+            OnInventoryChanged?.Invoke();
+            return true;
+        }
+
         public void ClearInventory()
         {
-            if (itemSlots == null) return;
-
             for (int i = 0; i < itemSlots.Length; i++)
             {
                 itemSlots[i] = null;
             }
+            OnInventoryChanged?.Invoke();
         }
 
         public ItemSlot[] GetInventorySlots() => itemSlots;

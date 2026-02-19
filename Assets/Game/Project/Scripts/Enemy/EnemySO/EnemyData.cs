@@ -20,6 +20,10 @@ namespace Game.Project.Scripts.Enemy.EnemySO
         public float detectRange = 10f;
         public float attackRange = 2f;
 
+        public int expReward = 20;            //경험치 량
+        public GameObject[] lootTable;        //드랍 아이템 배열
+        [Range(0, 100)] public float dropChance = 30f; //드랍 확률
+
         [Header("Visual Effects")]
         public GameObject spawnEffect;
         public GameObject detectEffect;

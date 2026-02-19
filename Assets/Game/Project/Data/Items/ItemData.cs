@@ -1,12 +1,10 @@
 using Game.Project.Scripts.Core.Projectile.Rune;
 using Game.Project.Scripts.Core.Projectile.SO;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Project.Scripts.Data.Items
 {
-    public enum ItemType { SkillBook, Rune, EnhanceStone, Currency }
+    public enum ItemType { SkillBook, Rune, EnhanceStone, Gold }
 
     /// <summary>
     /// 아이템 SO
@@ -20,6 +18,9 @@ namespace Game.Project.Scripts.Data.Items
         public Sprite icon;         // 아이콘
         [TextArea] public string description;
         public int maxStack = 99;   // 최대 중첩수
+
+        public int goldcAmount;
+        public GameObject dropObj;
 
         public SkillData skillData;
         public RuneData runeData;

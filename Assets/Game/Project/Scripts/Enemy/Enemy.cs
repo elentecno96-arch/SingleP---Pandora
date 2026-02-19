@@ -133,7 +133,32 @@ namespace Game.Project.Scripts.Enemy
             if (rb != null) rb.isKinematic = true;
 
             animator?.SetTrigger(animDeadHash);
+
+            if (PlayerManager.Instance != null && PlayerManager.Instance.levelSystem != null)
+            {
+                PlayerManager.Instance.levelSystem.AddExp(Data.expReward);
+            }
+
+            DropItems();
+
             OnEnemyDead?.Invoke();
+        }
+
+        private void DropItems()
+        {
+            if (Data.lootTable == null || Data.lootTable.Length == 0) return;
+
+            float randomRoll = UnityEngine.Random.Range(0f, 100f);
+            if (randomRoll <= Data.dropChance)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, Data.lootTable.Length);
+                GameObject lootPrefab = Data.lootTable[randomIndex];
+
+                if (lootPrefab != null)
+                {
+                    Instantiate(lootPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+                }
+            }
         }
 
         /// <summary>
