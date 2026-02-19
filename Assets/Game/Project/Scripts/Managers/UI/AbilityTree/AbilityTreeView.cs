@@ -1,69 +1,73 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AbilityTreeView : MonoBehaviour
+namespace Game.Project.Scripts.Managers.UI.AbilityTree
 {
-    [SerializeField] private GameObject _nodePrefab;
-    [SerializeField] private GameObject _linePrefab;
-
-    [Header("Container")]
-    [SerializeField] private RectTransform _contentParent;
-
-    private List<AbilityNodeView> _nodeViews = new List<AbilityNodeView>();
-    private List<AbilityLineView> _lineViews = new List<AbilityLineView>();
-
-    public System.Action<AbilityNote> OnNodeEnter;
-    public System.Action OnNodeExit;
-
-    public void CreateTree(List<AbilityNote> nodes, System.Action<AbilityNote> onNodeClick)
+    /// <summary>
+    /// 스탯 트리 뷰
+    /// </summary>
+    public class AbilityTreeView : MonoBehaviour
     {
-        ClearTree();
+        [SerializeField] private GameObject _nodePrefab;
+        [SerializeField] private GameObject _linePrefab;
 
-        foreach (var node in nodes)
+        [SerializeField] private RectTransform _contentParent;
+
+        private List<AbilityNodeView> _nodeViews = new List<AbilityNodeView>();
+        private List<AbilityLineView> _lineViews = new List<AbilityLineView>();
+
+        public System.Action<AbilityNote> OnNodeEnter;
+        public System.Action OnNodeExit;
+
+        public void CreateTree(List<AbilityNote> nodes, System.Action<AbilityNote> onNodeClick)
         {
-            if (node == null) continue; 
+            ClearTree();
 
-            var nodeGo = Instantiate(_nodePrefab, _contentParent);
-            var view = nodeGo.GetComponent<AbilityNodeView>();
-            view.Setup(node, onNodeClick);
-
-            view.OnShowTooltip = (data, pos) => OnNodeEnter?.Invoke(data);
-            view.OnHideTooltip = () => OnNodeExit?.Invoke();
-
-            _nodeViews.Add(view);
-        }
-
-        // 2. 라인 생성
-        foreach (var view in _nodeViews)
-        {
-            if (view.nodeData.abilityNode != null)
+            foreach (var node in nodes)
             {
-                var parentView = _nodeViews.Find(v => v.nodeData == view.nodeData.abilityNode);
+                if (node == null) continue;
 
-                if (parentView != null)
+                var nodeGo = Instantiate(_nodePrefab, _contentParent);
+                var view = nodeGo.GetComponent<AbilityNodeView>();
+                view.Setup(node, onNodeClick);
+
+                view.OnShowTooltip = (data, pos) => OnNodeEnter?.Invoke(data);
+                view.OnHideTooltip = () => OnNodeExit?.Invoke();
+
+                _nodeViews.Add(view);
+            }
+
+            // 라인 생성
+            foreach (var view in _nodeViews)
+            {
+                if (view.nodeData.abilityNode != null)
                 {
-                    var lineGo = Instantiate(_linePrefab, _contentParent);
-                    lineGo.transform.SetAsFirstSibling();
+                    var parentView = _nodeViews.Find(v => v.nodeData == view.nodeData.abilityNode);
 
-                    var lineView = lineGo.GetComponent<AbilityLineView>();
-                    lineView.Connect(parentView.GetComponent<RectTransform>(), view.GetComponent<RectTransform>(), view.nodeData);
-                    _lineViews.Add(lineView);
+                    if (parentView != null)
+                    {
+                        var lineGo = Instantiate(_linePrefab, _contentParent);
+                        lineGo.transform.SetAsFirstSibling();
+
+                        var lineView = lineGo.GetComponent<AbilityLineView>();
+                        lineView.Connect(parentView.GetComponent<RectTransform>(), view.GetComponent<RectTransform>(), view.nodeData);
+                        _lineViews.Add(lineView);
+                    }
                 }
             }
         }
-    }
 
-    public void RefreshTree()
-    {
-        _nodeViews.ForEach(v => v.UpdateVisual());
-        _lineViews.ForEach(l => l.UpdateVisual());
-    }
+        public void RefreshTree()
+        {
+            _nodeViews.ForEach(v => v.UpdateVisual());
+            _lineViews.ForEach(l => l.UpdateVisual());
+        }
 
-    private void ClearTree()
-    {
-        foreach (Transform child in _contentParent) Destroy(child.gameObject);
-        _nodeViews.Clear();
-        _lineViews.Clear();
+        private void ClearTree()
+        {
+            foreach (Transform child in _contentParent) Destroy(child.gameObject);
+            _nodeViews.Clear();
+            _lineViews.Clear();
+        }
     }
 }
