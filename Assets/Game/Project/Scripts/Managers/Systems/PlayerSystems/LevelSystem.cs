@@ -1,80 +1,78 @@
 using Game.Project.Scripts.Managers.Singleton;
-using Game.Project.Scripts.Managers.Systems.PlayerSystems;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelSystem : MonoBehaviour
+namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
 {
-    int currentLevel;
-    float currentExp;
-    int abilityPoints;
-
-    StatSystem statSystem;
-
-    public event Action<int, float, float> OnExpChanged; 
-    public event Action<int> OnLevelUp;
-    public event Action<int> OnPointChanged;
-
-    public int CurrentLevel => currentLevel;
-    public int SkillPoint => abilityPoints;
-
-    public void Init()
+    /// <summary>
+    /// 플레이어 레벨 시스템
+    /// 아직 밸런스 고려 안함
+    /// </summary>
+    public class LevelSystem : MonoBehaviour
     {
-        statSystem = PlayerManager.Instance.Stats;
+        int currentLevel;
+        float currentExp;
+        int abilityPoints;
 
-        currentLevel = 1;
-        currentExp = 0;
-        abilityPoints = 10;
-    }
+        StatSystem statSystem;
 
-    public void AddExp(float amount)
-    {
-        if (currentLevel >= statSystem.GetMaxLevel()) return;
+        public event Action<int, float, float> OnExpChanged;
+        public event Action<int> OnLevelUp;
+        public event Action<int> OnPointChanged;
 
-        currentExp += amount;
+        public int CurrentLevel => currentLevel;
+        public int SkillPoint => abilityPoints;
 
-        float maxExp = statSystem.GetMaxExp();
-        while (currentExp >= maxExp)
+        public void Init()
         {
-            LevelUp();
-            currentExp -= maxExp;
-            // 레벨업에 따른 다음 필요 경험치 증가 로직이 필요하다면 여기서 조정
+            statSystem = PlayerManager.Instance.Stats;
+
+            currentLevel = 1;
+            currentExp = 0;
+            abilityPoints = 10;
         }
 
-        OnExpChanged?.Invoke(currentLevel, currentExp, maxExp);
-    }
+        public void AddExp(float amount)
+        {
+            if (currentLevel >= statSystem.GetMaxLevel()) return;
 
-    private void LevelUp()
-    {
-        currentLevel++;
-        abilityPoints++;
+            currentExp += amount;
 
-        // 스킬 슬롯 해금 체크 (기존 계획: 5렙, 10렙)
-        CheckSlotUnlock();
+            float maxExp = statSystem.GetMaxExp();
+            while (currentExp >= maxExp)
+            {
+                LevelUp();
+                currentExp -= maxExp;
+            }
 
-        OnLevelUp?.Invoke(currentLevel);
-        OnPointChanged?.Invoke(abilityPoints);
-        Debug.Log($"<color=yellow>LEVEL UP! 현재 레벨: {currentLevel}</color>");
-    }
+            OnExpChanged?.Invoke(currentLevel, currentExp, maxExp);
+        }
 
-    private void CheckSlotUnlock()
-    {
-        // PlayerManager 등을 통해 SkillEquipSystem에 해금 신호 전달
-    }
+        private void LevelUp()
+        {
+            currentLevel++;
+            abilityPoints++;
 
-    public bool UsePoint(int amount = 1)
-    {
-        if (abilityPoints < amount) return false;
-        abilityPoints -= amount;
-        OnPointChanged?.Invoke(abilityPoints);
-        return true;
-    }
+            //CheckSlotUnlock();
 
-    public void AddSkillPoint(int amount)
-    {
-        abilityPoints += amount;
-        OnPointChanged?.Invoke(abilityPoints);
+            OnLevelUp?.Invoke(currentLevel);
+            OnPointChanged?.Invoke(abilityPoints);
+        }
+
+        //private void CheckSlotUnlock() { }
+
+        public bool UsePoint(int amount = 1)
+        {
+            if (abilityPoints < amount) return false;
+            abilityPoints -= amount;
+            OnPointChanged?.Invoke(abilityPoints);
+            return true;
+        }
+
+        public void AddSkillPoint(int amount)
+        {
+            abilityPoints += amount;
+            OnPointChanged?.Invoke(abilityPoints);
+        }
     }
 }
