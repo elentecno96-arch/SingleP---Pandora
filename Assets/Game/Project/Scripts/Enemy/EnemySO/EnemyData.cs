@@ -1,4 +1,5 @@
 using Game.Project.Data.Stat;
+using Game.Project.Scripts.Data.Items;
 using Game.Project.Scripts.Core.Projectile.SO;
 using UnityEngine;
 
@@ -21,8 +22,9 @@ namespace Game.Project.Scripts.Enemy.EnemySO
         public float attackRange = 2f;
 
         public int expReward = 20;            //경험치 량
-        public GameObject[] lootTable;        //드랍 아이템 배열
+        public ItemData[] lootTable;      //드랍 아이템 배열
         [Range(0, 100)] public float dropChance = 30f; //드랍 확률
+        public ItemData goldItemData;
 
         [Header("Visual Effects")]
         public GameObject spawnEffect;

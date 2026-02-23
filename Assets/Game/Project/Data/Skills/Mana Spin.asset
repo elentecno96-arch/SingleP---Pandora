@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Icon: {fileID: 0}
   skillName: Mana Spin
-  projectilePrefab: {fileID: 923852718690510228, guid: cae6df2aadc771a49b13c4b43b160af9,
+  projectilePrefab: {fileID: 6384179242207448728, guid: 9c40ac7d99914ac47ba55afee32f4339,
     type: 3}
   movementType: 4
   rarity: 2
@@ -33,14 +33,10 @@ MonoBehaviour:
   acceleration: 0
   homingStrength: 0
   areaRadius: 1
-  spawnEffect: {fileID: 5387813989776268400, guid: 3620b28f06cc1e04082dc29fe4d43827,
-    type: 3}
-  chargeEffect: {fileID: 8277071434671841608, guid: b88eff7514dbb4c46ac094d69cab4242,
-    type: 3}
-  flyEffect: {fileID: 1469066814320342559, guid: cbd2912d0ceb9ee4e83ee98c95c1f4c5,
-    type: 3}
-  impactEffect: {fileID: 5607308886996917622, guid: 78f0c2141db762e45a1950ea9ed2f6dd,
-    type: 3}
+  spawnEffect: {fileID: 0}
+  chargeEffect: {fileID: 0}
+  flyEffect: {fileID: 0}
+  impactEffect: {fileID: 0}
   spawnSfx: {fileID: 0}
   chargeSfx: {fileID: 0}
   flySfx: {fileID: 0}

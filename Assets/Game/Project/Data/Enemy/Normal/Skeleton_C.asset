@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Skeleton_C
   m_EditorClassIdentifier: 
   enemyName: 
+  prefab: {fileID: 877221289441399620, guid: 6937b2ba1bac86d47977899913687a9d, type: 3}
   baseStat:
     maxLevel: 0
     maxExp: 0
@@ -24,15 +25,15 @@ MonoBehaviour:
     critDamage: 1.5
     critChance: 0.05
   skillData: {fileID: 11400000, guid: 675e0b1ffc42b284abda176fbfd67a59, type: 2}
-  prefab: {fileID: 3267137384003786887, guid: 5587409679de7d645b7a43310c9403fa, type: 3}
   detectRange: 12
   attackRange: 8
-  spawnEffect: {fileID: 4490281865908011428, guid: c1142d953cc598346963d128cac3fc69,
-    type: 3}
+  expReward: 20
+  lootTable: []
+  dropChance: 30
+  spawnEffect: {fileID: 0}
   detectEffect: {fileID: 0}
   attackEffect: {fileID: 0}
-  hitEffect: {fileID: 5032517864729475671, guid: 4f399ce46711e0b4d93c85e30d7fd75b,
-    type: 3}
+  hitEffect: {fileID: 0}
   deathEffect: {fileID: 0}
   spawnSfx: {fileID: 0}
   detectSfx: {fileID: 0}

@@ -116,9 +116,7 @@ namespace Game.Project.Scripts.Managers.Singleton
 
         private IEnumerator StartTutorialCo()
         {
-            yield return StartCoroutine(
-                AudioManager.Instance.FadeOutBgmCo(1f)
-            );
+            yield return StartCoroutine(AudioManager.Instance.FadeOutBgmCo(1f));
 
             _sceneManager.LoadScene("1. Tutorial");
         }

@@ -4,6 +4,7 @@ using Game.Project.Scripts.Core.Projectile.Rune;
 using Game.Project.Scripts.Player.Equip;
 using Game.Project.Scripts.Managers.Systems.PlayerSystems;
 using Game.Project.Scripts.Managers.Systems.SkillSystems;
+using Game.Project.Scripts.Data.Items;
 using Game.Project.Utility.Generic;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,10 +51,17 @@ namespace Game.Project.Scripts.Managers.Singleton
         {
             if (slot == null || slot.equippedRunes == null) return new List<RuneData>();
 
-            return slot.equippedRunes
-                .Where(item => item != null && item.runeData != null)
-                .Select(item => item.runeData)
-                .ToList();
+            List<RuneData> runeList = new List<RuneData>();
+
+            foreach (var item in slot.equippedRunes)
+            {
+                if (item != null && item.type == ItemType.Rune && item.runeData != null)
+                {
+                    runeList.Add(item.runeData);
+                }
+            }
+
+            return runeList;
         }
 
         public float GetCooldown(SkillSlot slot, IStatSourceable statSource)

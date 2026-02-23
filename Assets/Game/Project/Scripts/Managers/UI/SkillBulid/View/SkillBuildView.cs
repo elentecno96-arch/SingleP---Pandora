@@ -2,6 +2,7 @@ using Game.Project.Scripts.Managers.Singleton;
 using Game.Project.Scripts.Managers.UI.Inven;
 using Game.Project.Scripts.Player.Equip;  
 using UnityEngine;
+using System;
 using TMPro;
 
 namespace Game.Project.Scripts.Managers.UI.SkillBulid.View
@@ -16,6 +17,8 @@ namespace Game.Project.Scripts.Managers.UI.SkillBulid.View
         [SerializeField] private SkillBuildSlot[] skillSlotsUI;
         [SerializeField] private InventorySlot[] inventorySlotsUI;
         [SerializeField] private TextMeshProUGUI goldText;
+        [SerializeField] private ConfirmPopup equipConfirmPopup;
+        [SerializeField] private SkillTooltipUI skillTooltip;
 
         public bool IsOpen => panelRoot != null && panelRoot.activeSelf;
 
@@ -41,12 +44,19 @@ namespace Game.Project.Scripts.Managers.UI.SkillBulid.View
             if (panelRoot == null) return;
 
             panelRoot.SetActive(true);
+
+            if (PlayerManager.Instance?.Inventory != null)
+            {
+                UpdateGoldText(PlayerManager.Instance.Inventory.Gold);
+            }
+
             RefreshAll();
         }
 
         public void Hide()
         {
             if (panelRoot != null) panelRoot.SetActive(false);
+            HideTooltip();
         }
 
         // 전체 새로고침
@@ -99,6 +109,29 @@ namespace Game.Project.Scripts.Managers.UI.SkillBulid.View
                     inventorySlotsUI[i].ClearSlot();
                 }
             }
+        }
+
+        public void RequestEquip(Action onConfirm)
+        {
+            if (equipConfirmPopup != null)
+            {
+                equipConfirmPopup.Open(onConfirm);
+            }
+        }
+
+        public void ShowTooltip(SkillSlot data)
+        {
+            if (skillTooltip != null) skillTooltip.Show(data);
+        }
+
+        public void HideTooltip()
+        {
+            if (skillTooltip != null) skillTooltip.Hide();
+        }
+
+        private void OnDisable()
+        {
+            HideTooltip();
         }
     }
 }

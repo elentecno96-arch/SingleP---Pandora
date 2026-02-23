@@ -142,4 +142,14 @@ public class CombatHUD : MonoBehaviour
     {
         Unbind();
     }
+
+    public void Show()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
 }

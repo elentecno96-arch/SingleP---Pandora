@@ -1,4 +1,5 @@
 using Game.Project.Scripts.Data.Items;
+using Game.Project.Scripts.Managers.Singleton;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -39,6 +40,9 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
             {
                 Gold += (data.goldcAmount * amount);
                 OnGoldChanged?.Invoke(Gold);
+
+                UiManager.Instance.ShowAcquisitionPopup(data, amount);
+
                 return true;
             }
 
@@ -80,6 +84,9 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
             }
 
             OnInventoryChanged?.Invoke();
+
+            UiManager.Instance.ShowAcquisitionPopup(data, amount);
+
             return true;
         }
 
@@ -145,6 +152,15 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
 
             OnInventoryChanged?.Invoke();
             return true;
+        }
+
+        public void AddGold(int amount)
+        {
+            if (amount <= 0) return;
+
+            typeof(InventorySystem).GetProperty("Gold").SetValue(this, Gold + amount);
+
+            OnGoldChanged?.Invoke(Gold);
         }
 
         public void ClearInventory()

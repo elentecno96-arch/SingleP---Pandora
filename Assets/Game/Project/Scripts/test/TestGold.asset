@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 662e066c7c71ec84bb065fcd569c5700, type: 3}
-  m_Name: New Item Data
+  m_Name: TestGold
   m_EditorClassIdentifier: 
   id: 
   itemName: 
-  type: 1
+  type: 3
   icon: {fileID: 0}
   description: 
   maxStack: 99
+  goldcAmount: 1
   skillData: {fileID: 0}
   runeData: {fileID: 0}

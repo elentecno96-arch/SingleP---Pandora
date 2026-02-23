@@ -1,6 +1,7 @@
 using Game.Project.Data.Damage;
 using Game.Project.Scripts.Core.Projectile;
 using Game.Project.Scripts.Enemy.EnemySO;
+using Game.Project.Scripts.Data.Items;
 using Game.Project.Scripts.Enemy.Interface;
 using Game.Project.Scripts.Managers.Singleton;
 using System;
@@ -144,19 +145,34 @@ namespace Game.Project.Scripts.Enemy
             OnEnemyDead?.Invoke();
         }
 
+        /// <summary>
+        /// ¸ó½ºÅÍ µå¶ø
+        /// </summary>
         private void DropItems()
         {
-            if (Data.lootTable == null || Data.lootTable.Length == 0) return;
+            if (Data == null || PlayerManager.Instance?.Inventory == null) return;
+            var inven = PlayerManager.Instance.Inventory;
 
-            float randomRoll = UnityEngine.Random.Range(0f, 100f);
-            if (randomRoll <= Data.dropChance)
+            if (Data.goldItemData != null)
             {
-                int randomIndex = UnityEngine.Random.Range(0, Data.lootTable.Length);
-                GameObject lootPrefab = Data.lootTable[randomIndex];
+                int goldAmount = UnityEngine.Random.Range(10, 51);
+                inven.AddItem(Data.goldItemData, goldAmount);
+                //UiManager.Instance.ShowAcquisitionPopup(Data.goldItemData, goldAmount);
+            }
 
-                if (lootPrefab != null)
+            if (UnityEngine.Random.Range(0f, 100f) <= Data.dropChance)
+            {
+                if (Data.lootTable != null && Data.lootTable.Length > 0)
                 {
-                    Instantiate(lootPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+                    int randomIndex = UnityEngine.Random.Range(0, Data.lootTable.Length);
+                    ItemData selectedItem = Data.lootTable[randomIndex];
+
+                    if (selectedItem != null)
+                    {
+                        inven.AddItem(selectedItem, 1);
+                        // È¹µæ ÆË¾÷ ¶ç¿ì±â
+                        //UI_Manager.Instance.ShowAcquisitionPopup(selectedItem, 1);
+                    }
                 }
             }
         }

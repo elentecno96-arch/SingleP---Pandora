@@ -1,0 +1,181 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df20553058f2b294e8acdde0a54836a1, type: 3}
+  m_Name: NpcStory2
+  m_EditorClassIdentifier: 
+  lines:
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uC800\uAE30 \uC7A0\uAE50!"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uC7A0\uAE50 \uC774\uB9AC \uC640\uBCF4\uAC8C"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uD310\uB3C4\uB77C"
+    dialogue: "\uBB34\uC2A8 \uC77C\uC774\uC2E0\uAC00\uC694?"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uC790\uB124 \uD639\uC2DC \uD0D1\uC73C\uB85C \uAC00\uACE0 \uC788\uB294\uAC74\uAC00?"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uB9CC\uC57D \uADF8\uB807\uB2E4\uBA74 \uADF8\uB9CC\uB450\uAC8C"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uD310\uB3C4\uB77C"
+    dialogue: "\uBB34\uC2A8 \uC77C\uC774 \uC788\uB098\uC694?"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uD0D1\uC73C\uB85C \uAC00\uB294 \uAE38\uC5D0 \uBC14\uC704\uAC00 \uBB34\uB108\uC838
+      \uC785\uAD6C\uAC00 \uB9C9\uD614\uB2E4\uB124"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uADF8\uB798\uC11C \uC9C0\uAE08 \uACF5\uC0AC\uC911\uC774\uC9C0"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uC544\uC27D\uC9C0\uB9CC \uC870\uAE08 \uAE30\uB2E4\uB824\uC57C \uD560\uAC70\uC57C"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uD310\uB3C4\uB77C"
+    dialogue: "\uB2E4\uB978 \uAE38\uC740 \uC5C6\uB294\uAC74\uAC00\uC694?"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uC544\uC27D\uAC8C\uB3C4 \uD0D1\uC73C\uB85C \uD5A5\uD558\uB294 \uAE38\uC740
+      \uC774\uACF3 \uD558\uB098 \uBFD0\uC774\uB124"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uD639\uC2DC \uD0D1\uC5D0 \uB4F1\uBC18\uD558\uB824\uB294\uAC74\uAC00?"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uD310\uB3C4\uB77C"
+    dialogue: "\uD574\uC57C\uD55C\uB2E4\uBA74 \uADF8\uB7F4\uC218\uB3C4 \uC788\uC2B5\uB2C8\uB2E4"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uADF8\uB807\uB2E4\uBA74 \uC704\uCABD\uC5D0 \uAC00\uC0C1 \uB358\uC804\uC774
+      \uD558\uB098 \uC788\uC5B4"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uAE38\uC774 \uBCF5\uAD6C \uB420 \uB54C\uAE4C\uC9C0 \uADF8\uCABD\uC5D0\uC11C
+      \uC190\uC744 \uD480\uACE0 \uC788\uB294\uAC8C \uC5B4\uB5A4\uAC00?"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uD310\uB3C4\uB77C"
+    dialogue: "\uAC00\uC0C1 \uB358\uC804\uC774\uC694?"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uC790\uB124\uB3C4 \uC54C\uC9C0\uC54A\uC740\uAC00"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uD5C8\uAD6C\uD55C \uB0A0 \uD0D1\uC5D0 \uB3C4\uC804\uD574 \uBAA9\uC228\uC744
+      \uC783\uC740 \uBAA8\uD5D8\uAC00\uB4E4\uC744 \uC704\uD574\uC11C"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uB300 \uB9C8\uBC95\uC0AC \uD310\uB3C4\uB77C\uAC00 \uB9CC\uB4E4\uC5B4
+      \uB193\uC740 \uAC00\uC0C1 \uB358\uC804\uC774\uC9C0"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uD310\uB3C4\uB77C"
+    dialogue: "\uC608? \uC800\uC694?"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uC790\uB124\uAC00 \uC65C \uD310\uB3C4\uB77C\uC57C \uB300\uB9C8\uBC95\uC0AC
+      \uD310\uB3C4\uB77C\uB294 \uB3CC\uC544\uAC00\uC2E0\uC9C0 \uAF64 \uB418\uC5C8\uB2E4\uB124"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uC5B4\uC9F8\uB4E0 \uAC00\uC0C1 \uB358\uC804\uC740 \uBCF8 \uD0D1\uC744
+      \uACBD\uD5D8\uD558\uAE30 \uC804\uC5D0 \uC5F0\uC2B5\uC6A9\uC73C\uB85C \uC88B\uC9C0"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uD310\uB3C4\uB77C"
+    dialogue: "\uC77C\uB2E8 \uD55C\uBC88 \uAC00\uBCF4\uACA0\uC2B5\uB2C8\uB2E4"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uC77C\uD558\uB294 \uBAA9\uC218"
+    dialogue: "\uC6B0\uB9AC\uB3C4 \uCD5C\uB300\uD55C \uBE60\uB974\uAC8C \uBCF5\uAD6C\uD574\uBCF4\uC9C0"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uD310\uB3C4\uB77C"
+    dialogue: "( \uB0B4\uAC00 \uB358\uC804\uC744 \uB9CC\uB4E4\uC5C8\uB2E4\uACE0...?
+      )"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0
+  - background: {fileID: 0}
+    speakerName: "\uD310\uB3C4\uB77C"
+    dialogue: "( \uB354\uC6B1 \uB354 \uD0D1\uC5D0 \uAC00\uBD10\uC57C\uD560\uAC70
+      \uAC19\uAD70 )"
+    leftPortrait: {fileID: 0}
+    rightPortrait: {fileID: 0}
+    isLeftSpeaking: 0

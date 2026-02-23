@@ -20,9 +20,7 @@ namespace Game.Project.Scripts.Data.Items
         public int maxStack = 99;   // ÃÖ´ë ÁßÃ¸¼ö
 
         public int goldcAmount;
-        public GameObject dropObj;
-
-        public SkillData skillData;
+        public SkillData skillData; 
         public RuneData runeData;
     }
 }

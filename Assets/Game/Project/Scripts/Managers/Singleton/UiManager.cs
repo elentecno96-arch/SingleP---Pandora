@@ -3,6 +3,8 @@ using Game.Project.Scripts.Managers.UI.Intro;
 using Game.Project.Scripts.Managers.UI.SkillBulid;
 using Game.Project.Scripts.Managers.UI.StatInfo;
 using Game.Project.Utility.Generic;
+using Game.Project.Scripts.Data.Items;
+using Game.Project.Scripts.Managers.UI.ItemPopUp;
 using UnityEngine;
 
 namespace Game.Project.Scripts.Managers.Singleton
@@ -25,6 +27,7 @@ namespace Game.Project.Scripts.Managers.Singleton
         //===================================================== //위의 내용은 추후 분리될 예정
 
         [SerializeField] private CombatHUD combatHUD;
+        public CombatHUD GetCombatHUD() => combatHUD;
 
         [SerializeField] private SkillBuilderMediator skillBuildMediator;
         public SkillBuilderMediator SkillBuild => skillBuildMediator;
@@ -33,7 +36,8 @@ namespace Game.Project.Scripts.Managers.Singleton
         [SerializeField] public PlayerStatPresenter playerStatPresenter;
         public PlayerStatPresenter PlayerStat => playerStatPresenter;
 
-        public CombatHUD GetCombatHUD() => combatHUD;
+        [SerializeField] private GameObject duopItemsInfoPrefab;
+        [SerializeField] private Transform acquisitionParent;
 
 
         public void Init()
@@ -57,6 +61,19 @@ namespace Game.Project.Scripts.Managers.Singleton
             if (skillBuildMediator != null)
             {
                 skillBuildMediator.ToggleSkillBuild();
+            }
+        }
+
+        public void ShowAcquisitionPopup(ItemData item, int amount)
+        {
+            if (duopItemsInfoPrefab == null || acquisitionParent == null) return;
+
+            GameObject go = Instantiate(duopItemsInfoPrefab, acquisitionParent);
+
+            var popup = go.GetComponent<DuopItemsInfoPopup>();
+            if (popup != null)
+            {
+                popup.Setup(item, amount);
             }
         }
     }
