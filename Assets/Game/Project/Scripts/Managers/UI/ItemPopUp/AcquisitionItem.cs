@@ -11,39 +11,55 @@ namespace Game.Project.Scripts.Managers.UI.ItemPopUp
     /// </summary>
     public class DuopItemsInfoPopup : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI infoText; 
-        [SerializeField] private CanvasGroup canvasGroup;  
+        [SerializeField] private GameObject goldGroup;      
+        [SerializeField] private TextMeshProUGUI goldText;
+
+        [SerializeField] private GameObject itemGroup;     
+        [SerializeField] private TextMeshProUGUI itemText;
+
+        [SerializeField] private CanvasGroup canvasGroup;
+        [SerializeField] private float displayDuration = 1.5f;
+        [SerializeField] private float fadeDuration = 0.5f;
 
         public void Setup(Game.Project.Scripts.Data.Items.ItemData item, int amount)
         {
-            if (infoText != null)
+            if (goldGroup != null) goldGroup.SetActive(false);
+            if (itemGroup != null) itemGroup.SetActive(false);
+
+            if (item.type == Game.Project.Scripts.Data.Items.ItemType.Gold)
             {
-                if (item.type == Game.Project.Scripts.Data.Items.ItemType.Gold)
+                if (goldGroup != null && goldText != null)
                 {
-                    infoText.text = $"{item.goldcAmount * amount} ∞ÒµÂ »πµÊ!";
+                    goldText.text = $"{item.goldcAmount * amount:N0} ∞ÒµÂ »πµÊ!";
+                    goldGroup.SetActive(true);
                 }
-                else
+            }
+            else
+            {
+                if (itemGroup != null && itemText != null)
                 {
-                    infoText.text = $"{item.itemName} x{amount} »πµÊ!";
+                    itemText.text = $"{item.itemName} x{amount} »πµÊ!";
+                    itemGroup.SetActive(true);
                 }
             }
 
+            // 3. ø¨√‚ Ω√¿€
+            gameObject.SetActive(true);
+            StopAllCoroutines();
             StartCoroutine(FadeAndDestroy());
         }
 
         private IEnumerator FadeAndDestroy()
         {
-            yield return new WaitForSeconds(1.5f);
+            if (canvasGroup != null) canvasGroup.alpha = 1f;
+            yield return new WaitForSeconds(displayDuration);
 
-            float duration = 0.5f;
             float elapsed = 0f;
-            while (elapsed < duration)
+            while (elapsed < fadeDuration)
             {
                 elapsed += Time.deltaTime;
                 if (canvasGroup != null)
-                {
-                    canvasGroup.alpha = Mathf.Lerp(1f, 0f, elapsed / duration);
-                }
+                    canvasGroup.alpha = Mathf.Lerp(1f, 0f, elapsed / fadeDuration);
                 yield return null;
             }
 

@@ -17,7 +17,7 @@ public class IngameMenuUI : MonoBehaviour
     {
         string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
-        if (currentScene == "Intro" || currentScene == "Main")
+        if (currentScene == "0. Intro" || currentScene == "6. Main")
         {
             return;
         }
@@ -32,7 +32,6 @@ public class IngameMenuUI : MonoBehaviour
     public void Pause()
     {
         _isPaused = true;
-        Time.timeScale = 0f; 
         menuRoot.SetActive(true);
         ShowMainPanel();
     }
@@ -40,7 +39,6 @@ public class IngameMenuUI : MonoBehaviour
     public void Resume()
     {
         _isPaused = false;
-        Time.timeScale = 1f;
         menuRoot.SetActive(false);
     }
 
@@ -64,8 +62,13 @@ public class IngameMenuUI : MonoBehaviour
 
     public void ConfirmGoToMenu()
     {
-        Time.timeScale = 1f; 
-        SceneManager.Instance.LoadScene("MainMenu");
+         Time.timeScale = 1f;
+          _isPaused = false;
+
+         if (confirmPopup != null) confirmPopup.SetActive(false);
+         if (menuRoot != null) menuRoot.SetActive(false);
+
+         SceneManager.Instance.LoadScene("6. Main");
     }
 
     public void CloseSubPanel()
