@@ -24,6 +24,7 @@ namespace Game.Project.Scripts.Tutorial
             MeetNPC,
             SkillHelp,
             LevelUpTutorial,
+            MoveToDungeon,
             CombatEnemy
         }
 
@@ -97,6 +98,9 @@ namespace Game.Project.Scripts.Tutorial
             _phase = TutorialPhase.MeetNPC;
             yield return new WaitUntil(() => _onNpcTrigger);
             yield return new WaitUntil(() => _isNpcTalking);
+            
+            _onNpcTrigger = false;
+            _isNpcTalking = false;
 
             _phase = TutorialPhase.SkillHelp;
 
@@ -118,6 +122,11 @@ namespace Game.Project.Scripts.Tutorial
 
             yield return new WaitForSeconds(1.5f);
             introPopUpView.ShowPopup("(P)키로 정보창을, (U)키로 특성창을 열 수 있습니다.", 0f);
+
+            _phase = TutorialPhase.MoveToDungeon;
+            
+            yield return new WaitUntil(() => _onNpcTrigger); 
+            yield return new WaitUntil(() => _isNpcTalking);
 
             Debug.Log("TutorialController: 시퀀스 가이드 종료. 이제 트리거 기반으로 동작합니다.");
             _phase = TutorialPhase.None;
@@ -166,11 +175,11 @@ namespace Game.Project.Scripts.Tutorial
         // NPC가 상호작용 신호를 보냈을 때 실행될 함수
         private void HandleNPCInteraction(StoryData data, Cinemachine.CinemachineVirtualCamera cam)
         {
-            if (_phase == TutorialPhase.MeetNPC)
-            {
-                StartCoroutine(NPCInteractionSequence(data, cam));
-            }
-        }
+              if (_phase == TutorialPhase.MeetNPC || _phase == TutorialPhase.MoveToDungeon)
+                {
+                      StartCoroutine(NPCInteractionSequence(data, cam));
+                }
+         }
 
         private IEnumerator NPCInteractionSequence(StoryData data, Cinemachine.CinemachineVirtualCamera cam)
         {

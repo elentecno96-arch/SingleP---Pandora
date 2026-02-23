@@ -1,8 +1,8 @@
+using Game.Project.Scripts.Data.Items;
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine;
 
 namespace Game.Project.Scripts.Managers.UI.ItemPopUp
 {
@@ -21,12 +21,14 @@ namespace Game.Project.Scripts.Managers.UI.ItemPopUp
         [SerializeField] private float displayDuration = 1.5f;
         [SerializeField] private float fadeDuration = 0.5f;
 
-        public void Setup(Game.Project.Scripts.Data.Items.ItemData item, int amount)
+        public Action<DuopItemsInfoPopup> OnReturnToPool; //풀링 이벤트
+
+        public void Setup(ItemData item, int amount)
         {
             if (goldGroup != null) goldGroup.SetActive(false);
             if (itemGroup != null) itemGroup.SetActive(false);
 
-            if (item.type == Game.Project.Scripts.Data.Items.ItemType.Gold)
+            if (item.type == ItemType.Gold)
             {
                 if (goldGroup != null && goldText != null)
                 {
@@ -63,7 +65,8 @@ namespace Game.Project.Scripts.Managers.UI.ItemPopUp
                 yield return null;
             }
 
-            Destroy(gameObject); //추후 풀링 예정
+            OnReturnToPool?.Invoke(this);
+            //Destroy(gameObject); //추후 풀링 예정
         }
     }
 }

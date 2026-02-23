@@ -32,6 +32,11 @@ public class IngameMenuUI : MonoBehaviour
     public void Pause()
     {
         _isPaused = true;
+        Time.timeScale = 0f;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         menuRoot.SetActive(true);
         ShowMainPanel();
     }
@@ -39,7 +44,13 @@ public class IngameMenuUI : MonoBehaviour
     public void Resume()
     {
         _isPaused = false;
+        Time.timeScale = 1f;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
         menuRoot.SetActive(false);
+        CloseSubPanel();
     }
 
     private void ShowMainPanel()
@@ -57,7 +68,11 @@ public class IngameMenuUI : MonoBehaviour
 
     public void OnClickGoToMenu()
     {
-        confirmPopup.SetActive(true);
+        if (confirmPopup != null)
+        {
+            confirmPopup.SetActive(true);
+            confirmPopup.transform.SetAsLastSibling();
+        }
     }
 
     public void ConfirmGoToMenu()
@@ -65,7 +80,10 @@ public class IngameMenuUI : MonoBehaviour
          Time.timeScale = 1f;
           _isPaused = false;
 
-         if (confirmPopup != null) confirmPopup.SetActive(false);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        if (confirmPopup != null) confirmPopup.SetActive(false);
          if (menuRoot != null) menuRoot.SetActive(false);
 
          SceneManager.Instance.LoadScene("6. Main");
