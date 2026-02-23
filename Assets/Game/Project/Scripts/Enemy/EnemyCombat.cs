@@ -77,12 +77,10 @@ namespace Game.Project.Scripts.Enemy
             targetDir.y = 0;
             Quaternion rotation = Quaternion.LookRotation(targetDir);
 
-            GameObject indicator = Instantiate(_warningIndicatorPrefab, spawnPos, rotation);
+            GameObject indicator = PoolManager.Instance.GetWarningEffect(_warningIndicatorPrefab, spawnPos, rotation, duration);
 
             float width = 1.5f;
             indicator.transform.localScale = new Vector3(width, 1f, range);
-
-            Destroy(indicator, duration);
         }
 
         public void ShowDamageEffect(float damage, bool isCritical)

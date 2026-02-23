@@ -130,6 +130,7 @@ namespace Game.Project.Scripts.Enemy
             isDead = true;
 
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+
             StopMoving();
             if (rb != null) rb.isKinematic = true;
 

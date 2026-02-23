@@ -1,7 +1,9 @@
 using Game.Project.Data.Damage;
 using Game.Project.Scripts.Core.Projectile;
 using Game.Project.Scripts.Enemy.Interface;
+using Game.Project.Scripts.Managers.UI.ItemPopUp;
 using Game.Project.Utility.Generic;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,6 +19,7 @@ namespace Game.Project.Scripts.Managers.Singleton
         private Dictionary<string, CustomPoolT<Transform>> _effectPools = new();
         private Dictionary<string, CustomPoolT<Game.Project.Scripts.Enemy.Enemy>> _enemyPools = new();
         private Dictionary<string, CustomPoolT<DamageText>> _damageTextPools = new();
+        private Dictionary<string, CustomPoolT<DuopItemsInfoPopup>> _itemPopupPools = new();
 
         private Transform _projectileRoot;
         private Transform _effectRoot;
@@ -36,6 +39,7 @@ namespace Game.Project.Scripts.Managers.Singleton
             _effectPools.Clear();
             _enemyPools.Clear();
             _damageTextPools.Clear();
+            _itemPopupPools.Clear();
 
             _isInitialized = true;
         }
@@ -164,6 +168,41 @@ namespace Game.Project.Scripts.Managers.Singleton
             return dt;
         }
 
+        public DuopItemsInfoPopup GetItemPopup(GameObject prefab, Transform parent)
+        {
+            string key = prefab.name;
+            if (!_itemPopupPools.TryGetValue(key, out var pool))
+            {
+                pool = new CustomPoolT<DuopItemsInfoPopup>(
+                    createFunc: () => CreateNewInstance<DuopItemsInfoPopup>(prefab, _uiRoot),
+                    onGet: (item) => item.gameObject.SetActive(true),
+                    onRelease: (item) => {
+                        item.gameObject.SetActive(false);
+                        item.transform.SetParent(_uiRoot);
+                    },
+                    initialCount: 5
+                );
+                _itemPopupPools.Add(key, pool);
+            }
+
+            DuopItemsInfoPopup popup = pool.Get();
+
+            popup.transform.SetParent(parent, false);
+
+            popup.transform.localPosition = Vector3.zero;
+            popup.transform.localScale = Vector3.one;
+
+            RectTransform rect = popup.GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                rect.anchoredPosition = Vector2.zero; 
+            }
+
+            popup.OnReturnToPool = (item) => pool.Release(item);
+
+            return popup;
+        }
+
         public void ReturnDamageText(DamageText dt)
         {
             if (dt == null) return;
@@ -177,6 +216,28 @@ namespace Game.Project.Scripts.Managers.Singleton
             {
                 Destroy(dt.gameObject);
             }
+        }
+
+        public GameObject GetWarningEffect(GameObject prefab, Vector3 position, Quaternion rotation, float duration)
+        {
+            GameObject indicator = GetEffect(prefab, position, rotation);
+
+            if (indicator.TryGetComponent<WarningIndicator>(out var warning))
+            {
+                warning.InitAndRelease(duration);
+            }
+            else
+            {
+                StartCoroutine(AutoReturnRoutine(indicator, duration));
+            }
+
+            return indicator;
+        }
+
+        private IEnumerator AutoReturnRoutine(GameObject obj, float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            ReturnEffect(obj);
         }
 
         private T CreateNewInstance<T>(GameObject prefab, Transform root) where T : Component
