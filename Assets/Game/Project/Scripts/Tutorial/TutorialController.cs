@@ -55,60 +55,66 @@ namespace Game.Project.Scripts.Tutorial
 
         private IEnumerator RunTutorial()
         {
-            yield return new WaitUntil(() => PlayerManager.Instance.CurrentPlayer != null);
+            yield return null;
 
+            if (UiManager.HasInstance)
+            {
+                if (UiManager.Instance.SkillBuild != null) UiManager.Instance.SkillBuild.gameObject.SetActive(true);
+                if (UiManager.Instance.AbilityTree != null) UiManager.Instance.AbilityTree.gameObject.SetActive(true);
+                if (UiManager.Instance.PlayerStat != null) UiManager.Instance.PlayerStat.gameObject.SetActive(true);
+
+                UiManager.Instance.SkillBuild.IsLocked = true;
+                SetSystemsLocked(true);
+            }
+
+            if (PlayerManager.HasInstance)
+            {
+                PlayerManager.Instance.ResetForNewGame();
+            }
+
+            yield return new WaitUntil(() => PlayerManager.Instance.CurrentPlayer != null);
             Transform playerTransform = PlayerManager.Instance.CurrentPlayer.transform;
 
             if (focusCamera != null)
             {
                 focusCamera.Follow = playerTransform;
-
                 focusCamera.Priority = 10;
             }
+            if (npcCamera != null) npcCamera.Priority = 5;
 
-            if (npcCamera != null)
-            {
-                npcCamera.Priority = 5; 
-            }
-
-            //스킬 UI 잠금
-            if (UiManager.Instance.SkillBuild != null)
-                UiManager.Instance.SkillBuild.IsLocked = true;
-
+            EnablePlayerMovement(false);
+            EnablePlayerCombat(false);
             SetSystemsLocked(true);
 
             _phase = TutorialPhase.PlayerAwake;
-            EnablePlayerMovement(false);
-
             introView.Play(introViewData);
             yield return new WaitUntil(() => !introView.IsPlaying);
 
             yield return new WaitForSeconds(2f);
             selfDialogueView.Play(selfDialogueData);
-
             yield return new WaitUntil(() => !selfDialogueView.IsPlaying);
 
-            UiManager.Instance.GetCombatHUD().Show();
-
+            UiManager.Instance.GetCombatHUD()?.Show();
             _phase = TutorialPhase.MoveTutorial;
             introPopUpView.ShowPopup("WASD를 눌러 이동할 수 있습니다.", 0f);
+
             yield return new WaitForSeconds(1f);
             EnablePlayerMovement(true);
 
             _phase = TutorialPhase.MeetNPC;
             yield return new WaitUntil(() => _onNpcTrigger);
             yield return new WaitUntil(() => _isNpcTalking);
-            
+
             _onNpcTrigger = false;
             _isNpcTalking = false;
 
             _phase = TutorialPhase.SkillHelp;
-
             PlayerManager.Instance.Inventory.AddItem(StartSkillBookItem, 1);
-            UiManager.Instance.SkillBuild.IsLocked = false;
-            introPopUpView.ShowPopup("기초 마법서를 획득했습니다! (Tab 키를 눌러 장착)", 0f);
 
-            //yield return new WaitUntil(() => UiManager.Instance.SkillBuild.IsViewOpen()); // 플레이어가 스킬 빌드 UI를 열 때까지 대기
+            if (UiManager.Instance.SkillBuild != null)
+                UiManager.Instance.SkillBuild.IsLocked = false;
+
+            introPopUpView.ShowPopup("기초 마법서를 획득했습니다! (Tab 키를 눌러 장착)", 0f);
 
             selfDialogueView.Play(skillBookData);
             yield return new WaitUntil(() => !selfDialogueView.IsPlaying);
@@ -124,11 +130,10 @@ namespace Game.Project.Scripts.Tutorial
             introPopUpView.ShowPopup("(P)키로 정보창을, (U)키로 특성창을 열 수 있습니다.", 0f);
 
             _phase = TutorialPhase.MoveToDungeon;
-            
-            yield return new WaitUntil(() => _onNpcTrigger); 
+            yield return new WaitUntil(() => _onNpcTrigger);
             yield return new WaitUntil(() => _isNpcTalking);
 
-            Debug.Log("TutorialController: 시퀀스 가이드 종료. 이제 트리거 기반으로 동작합니다.");
+            Debug.Log("<color=green>TutorialController: 모든 시퀀스 종료.</color>");
             _phase = TutorialPhase.None;
         }
 

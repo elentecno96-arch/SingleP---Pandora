@@ -168,8 +168,8 @@ namespace Game.Project.Scripts.Core.Projectile
         }
         public void ImpactStateCall(GameObject target)
         {
-            Debug.Log($"<color=cyan>[ImpactCall]</color> 호출됨! 대상: {target.name}, 프레임: {Time.frameCount}");
             if (_isReturned || _context == null) return;
+            if (target == null) return;
 
             OnImpact?.Invoke(target);
 

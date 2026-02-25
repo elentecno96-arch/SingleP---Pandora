@@ -1,7 +1,8 @@
-using UnityEngine;
-using Game.Project.Utility.Generic;
-using Game.Project.Scripts.Managers.Systems.SpawnSystem;
 using Game.Project.Scripts.Enemy.EnemySO;
+using Game.Project.Scripts.Managers.Systems.SpawnSystem;
+using Game.Project.Utility.Generic;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Game.Project.Scripts.Managers.Singleton
 {
@@ -11,7 +12,7 @@ namespace Game.Project.Scripts.Managers.Singleton
     public class SpawnManager : Singleton<SpawnManager>
     {
         [SerializeField] private EnemySpawnSystem _enemySpawnSystem;
-        // [SerializeField] private MapSystem _mapSystem; // 추후 맵 관리 시스템
+        private List<GameObject> _activeEnemies = new List<GameObject>();
 
         private bool _isInitialized = false;
 
@@ -40,6 +41,22 @@ namespace Game.Project.Scripts.Managers.Singleton
                 _enemySpawnSystem = GetComponentInChildren<EnemySpawnSystem>();
 
             _enemySpawnSystem.SpawnAt(data, position, multiplier);
+        }
+
+        /// <summary>
+        /// 몬스터 제거 요청
+        /// </summary>
+        public void ClearAllEnemies()
+        {
+            foreach (var enemy in _activeEnemies)
+            {
+                if (enemy != null)
+                {
+                    Destroy(enemy);
+                }
+            }
+            _activeEnemies.Clear();
+            Debug.Log("모든 몬스터가 제거되었습니다.");
         }
     }
 }

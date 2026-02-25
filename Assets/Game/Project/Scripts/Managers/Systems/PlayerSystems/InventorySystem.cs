@@ -13,6 +13,8 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
     {
         private const int MAX_SLOT = 30;
 
+        [SerializeField] private AudioClip goldAcquisitionSfx;
+
         [SerializeField] private ItemSlot[] itemSlots = new ItemSlot[MAX_SLOT];
 
         public int Gold { get; private set; }
@@ -158,7 +160,10 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
         {
             if (amount <= 0) return;
 
-            typeof(InventorySystem).GetProperty("Gold").SetValue(this, Gold + amount);
+            Gold += amount;
+
+            if (AudioManager.HasInstance)
+                AudioManager.Instance.PlaySfx(goldAcquisitionSfx);
 
             OnGoldChanged?.Invoke(Gold);
         }
@@ -169,7 +174,10 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
             {
                 itemSlots[i] = null;
             }
+            Gold = 0;
+
             OnInventoryChanged?.Invoke();
+            OnGoldChanged?.Invoke(Gold);
         }
 
         public ItemSlot[] GetInventorySlots() => itemSlots;

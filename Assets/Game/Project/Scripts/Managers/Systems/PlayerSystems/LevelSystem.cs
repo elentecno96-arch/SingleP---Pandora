@@ -37,22 +37,18 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
 
         public void AddExp(float amount)
         {
-            Debug.Log($"[LevelSystem] 경험치 획득 시도: {amount}");
-
             if (statSystem == null)
             {
                 Debug.LogError("[LevelSystem] StatSystem이 null입니다!");
                 return;
             }
 
-            if (statSystem == null) return;
-
             float maxLevel = statSystem.GetMaxLevel();
             if (currentLevel >= maxLevel) return;
 
             currentExp += amount;
             float maxExp = statSystem.GetMaxExp();
-            //bool levelUpOccurred = false;
+
 
             while (currentExp >= maxExp)
             {
@@ -64,11 +60,10 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
 
                 currentExp -= maxExp;
                 LevelUp();
-                //levelUpOccurred = true; 
 
                 maxExp = statSystem.GetMaxExp();
             }
-            Debug.Log($"[LevelSystem] 현재 경험치: {currentExp} / {statSystem.GetMaxExp()}");
+
             RefreshUI();
         }
 
@@ -79,19 +74,26 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
 
             statSystem.ApplyLevelUp(currentLevel);
 
+            var playerState = PlayerManager.Instance.State;
+            if (playerState != null)
+            {
+                playerState.RecoverFullHP();
+            }
+
             OnLevelUp?.Invoke(currentLevel);
             OnPointChanged?.Invoke(abilityPoints);
-            Debug.Log($"<color=cyan>Level Up! Now: {currentLevel}</color>");
         }
 
         private void RefreshUI()
         {
-            OnExpChanged?.Invoke(currentLevel, currentExp, statSystem.GetMaxExp());
+            if (statSystem != null)
+                OnExpChanged?.Invoke(currentLevel, currentExp, statSystem.GetMaxExp());
         }
 
         public bool UsePoint(int amount = 1)
         {
             if (abilityPoints < amount) return false;
+
             abilityPoints -= amount;
             OnPointChanged?.Invoke(abilityPoints);
             return true;

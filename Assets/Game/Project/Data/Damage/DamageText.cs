@@ -39,15 +39,23 @@ namespace Game.Project.Data.Damage
         public void Setup(float damage, bool isCritical)
         {
             if (_textMesh == null) return;
+            if (Camera.main != null)
+            {
+                _camTransform = Camera.main.transform;
+            }
 
             _textMesh.text = Mathf.RoundToInt(damage).ToString();
             _textMesh.fontSize = isCritical ? _defaultFontSize * 1.4f : _defaultFontSize;
 
             _color = isCritical ? Color.yellow : Color.white;
-            _color.a = 1f; 
+            _color.a = 1f;
             _textMesh.color = _color;
 
             gameObject.SetActive(true);
+
+            if (_camTransform != null)
+                transform.rotation = _camTransform.rotation;
+
             StopAllCoroutines();
             StartCoroutine(ReturnDelay(_lifeTime));
         }

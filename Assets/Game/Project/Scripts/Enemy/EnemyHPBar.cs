@@ -16,9 +16,6 @@ namespace Game.Project.Scripts.Enemy
 
         private void Awake()
         {
-            if (Camera.main != null)
-                _camTransform = Camera.main.transform;
-
             if (_canvas != null) _canvas.enabled = false;
         }
 
@@ -29,10 +26,14 @@ namespace Game.Project.Scripts.Enemy
         {
             _owner = owner;
 
+            if (Camera.main != null)
+            {
+                _camTransform = Camera.main.transform;
+            }
+
             if (_owner == null || _owner.Context == null) return;
 
             float maxHp = _owner.Context.currentStat.maxHp;
-
             if (maxHp <= 0) return;
 
             _hpSlider.maxValue = maxHp;

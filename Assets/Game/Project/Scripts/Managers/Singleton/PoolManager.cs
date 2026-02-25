@@ -1,6 +1,6 @@
 using Game.Project.Data.Damage;
 using Game.Project.Scripts.Core.Projectile;
-using Game.Project.Scripts.Enemy.Interface;
+using Game.Project.Scripts.Enemy;
 using Game.Project.Scripts.Managers.UI.ItemPopUp;
 using Game.Project.Utility.Generic;
 using System.Collections;
