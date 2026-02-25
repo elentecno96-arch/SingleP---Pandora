@@ -12,10 +12,8 @@ namespace Game.Project.Scripts.Managers.Singleton
     {
         public StatSystem Stats { get; private set; }
         public StateSystem State { get; private set; }
-        public SkillEquipSystem skillEquip {  get; private set; }
+        public SkillEquipSystem skillEquip { get; private set; }
         public InventorySystem Inventory { get; private set; }
-
-        public PlayerCombat Combat { get; private set; }
         public LevelSystem levelSystem { get; private set; }
         public AbilitySystem abilitySystem { get; private set; }
 
@@ -36,13 +34,14 @@ namespace Game.Project.Scripts.Managers.Singleton
             Inventory = GetComponentInChildren<InventorySystem>(true);
             levelSystem = GetComponentInChildren<LevelSystem>(true);
             abilitySystem = GetComponentInChildren<AbilitySystem>(true);
-            StatSource = new PlayerStatSource(Stats);
 
             if (Stats == null || State == null || skillEquip == null)
             {
-                Debug.LogError("PlayerManager: 하위 시스템 누락");
+                Debug.LogError("PlayerManager: 필수 하위 시스템이 누락되었습니다.");
                 return;
             }
+
+            StatSource = new PlayerStatSource(Stats);
 
             Stats.Init();
             State.Init();
@@ -52,22 +51,38 @@ namespace Game.Project.Scripts.Managers.Singleton
             Inventory.Init();
 
             _isInitialized = true;
+            Debug.Log("PlayerManager: 모든 하위 시스템 초기화 완료");
+        }
 
-            Debug.Log("PlayerManager: 시스템 초기화 완료");
+        /// <summary>
+        /// 모든 데이터를 초기값(1레벨, 빈 가방 등)으로 리셋
+        /// </summary>
+        public void ResetForNewGame()
+        {
+            if (!_isInitialized) Init();
+
+            if (levelSystem != null) levelSystem.Init();
+            if (Stats != null) Stats.ResetStats();
+
+            if (State != null)
+            {
+                State.RecoverFullHP(); 
+                State.SetAlive();      
+            }
+
+            if (Inventory != null) Inventory.ClearInventory();
+            if (skillEquip != null) skillEquip.ClearAllSlots();
+            if (abilitySystem != null) abilitySystem.Init();
+
         }
 
         public GameObject SpawnPlayer(Vector3 position)
         {
-            if (!_isInitialized)
-            {
-                Debug.LogError("PlayerManager: Init 안됨");
-                return null;
-            }
+            if (!_isInitialized) Init();
 
-            DestroyPlayer(); 
+            DestroyPlayer();
 
             var player = Instantiate(playerPrefab, position, Quaternion.identity);
-
             RegisterPlayer(player);
 
             player.GetComponent<Game.Project.Scripts.Player.Player>()?.Init();
@@ -75,21 +90,9 @@ namespace Game.Project.Scripts.Managers.Singleton
             return player;
         }
 
-        public void ResetForNewGame()
-        {
-            if (!_isInitialized) Init();
-
-            Stats.ResetStats();
-            Inventory.ClearInventory();
-            skillEquip.ClearAllSlots();
-
-            Debug.Log("플레이어 데이터 초기화 완료");
-        }
-
         private void RegisterPlayer(GameObject player)
         {
             CurrentPlayer = player;
-
             Combat = player.GetComponent<PlayerCombat>();
             Combat?.Init(this);
         }
@@ -97,7 +100,6 @@ namespace Game.Project.Scripts.Managers.Singleton
         public void UnregisterPlayer(GameObject player)
         {
             if (CurrentPlayer != player) return;
-
             CurrentPlayer = null;
             Combat = null;
         }
@@ -106,8 +108,10 @@ namespace Game.Project.Scripts.Managers.Singleton
         {
             if (CurrentPlayer == null) return;
 
-            Destroy(CurrentPlayer);
-            UnregisterPlayer(CurrentPlayer);
+            var target = CurrentPlayer;
+            UnregisterPlayer(target);
+            Destroy(target);
         }
+        public PlayerCombat Combat { get; private set; }
     }
 }

@@ -37,6 +37,8 @@ namespace Game.Project.Scripts.Managers.Systems.SpawnSystem
             float totalMultiplier = stageMultiplier * (isElite ? ELITE_STAT_MULTIPLIER : 1.0f);
             float bonusDefense = isElite ? ELITE_BONUS_DEFENSE : 0f;
 
+            float finalExp = data.expReward * totalMultiplier;
+
             EnemyContext ctx = new EnemyContext(data, enemy.gameObject);
             EnemyStatSource statSource = new EnemyStatSource(data, totalMultiplier, bonusDefense);
 

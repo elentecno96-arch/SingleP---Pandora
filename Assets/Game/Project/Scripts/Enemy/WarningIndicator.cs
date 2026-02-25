@@ -4,20 +4,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-/// <summary>
-/// 풀링을 위한 별도의 위험 표시 클래스
-/// </summary>
-public class WarningIndicator : MonoBehaviour
+namespace Game.Project.Scripts.Enemy
 {
-    public void InitAndRelease(float duration)
+    /// <summary>
+    /// 풀링을 위한 별도의 위험 표시 클래스
+    /// </summary>
+    public class WarningIndicator : MonoBehaviour
     {
-        StopAllCoroutines();
-        StartCoroutine(ReleaseRoutine(duration));
-    }
+        public void InitAndRelease(float duration)
+        {
+            StopAllCoroutines();
+            StartCoroutine(ReleaseRoutine(duration));
+        }
 
-    private IEnumerator ReleaseRoutine(float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        PoolManager.Instance.ReturnEffect(this.gameObject);
+        private IEnumerator ReleaseRoutine(float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            PoolManager.Instance.ReturnEffect(this.gameObject);
+        }
     }
 }

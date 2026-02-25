@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Game/Project/Scenes/1. Tutorial.unity
     guid: 37a786e7dae2c5a478db60a65d66a6f6
+  - enabled: 1
+    path: Assets/Game/Project/Scenes/3. Dungeon.unity
+    guid: f491bba272863cf41a92cea0551cf77f
   m_configObjects: {}

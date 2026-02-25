@@ -1,3 +1,4 @@
+using Game.Project.Scripts.Managers.Singleton;
 using Game.Project.Scripts.Managers.UI.SkillBulid.View;
 using UnityEngine;
 
@@ -9,6 +10,9 @@ namespace Game.Project.Scripts.Managers.UI.SkillBulid
     public class SkillBuilderMediator : MonoBehaviour
     {
         [SerializeField] private SkillBuildView view;
+
+        [SerializeField] private AudioClip openSfx;  
+        [SerializeField] private AudioClip closeSfx; 
 
         public bool IsLocked { get; set; } = true;
 
@@ -39,12 +43,22 @@ namespace Game.Project.Scripts.Managers.UI.SkillBulid
         {
             view.Show();
             SetCursor(true);
+
+            if (AudioManager.HasInstance && openSfx != null)
+            {
+                AudioManager.Instance.PlaySfx(openSfx);
+            }
         }
 
         private void Close()
         {
             view.Hide();
             SetCursor(false);
+
+            if (AudioManager.HasInstance && closeSfx != null)
+            {
+                AudioManager.Instance.PlaySfx(closeSfx);
+            }
         }
 
         // 마우스 상태 설정

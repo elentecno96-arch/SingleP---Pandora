@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3815218979798424246}
   - component: {fileID: 6269764649423379608}
   - component: {fileID: 5003649124635527532}
+  - component: {fileID: 3791712828378692350}
   m_Layer: 5
   m_Name: AbilityNode_Prefab
   m_TagString: Untagged
@@ -136,6 +137,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _iconImage: {fileID: 3815218979798424246}
   _btn: {fileID: 6269764649423379608}
+--- !u!114 &3791712828378692350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 553016762627826578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3461f3dde9dc2a343ac97376aacc0337, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickSound: {fileID: 8300000, guid: ffb159a21c8a04135a5616979c828fab, type: 3}
 --- !u!1 &879699978013496634
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,68 +2,77 @@ using Game.Project.Scripts.Enemy.EnemySO;
 using Game.Project.Scripts.Managers.Singleton;
 using System.Collections;
 using System.Collections.Generic;
+using Game.Project.Scripts.Dungeon.Manager;
 using UnityEngine;
 
 namespace Game.Project.Data.Spawn
 {
     /// <summary>
-    /// 스폰 트리거
+    /// 플레이어 진입 시 적을 스폰하는 트리거
     /// </summary>
     public class SpawnTrigger : MonoBehaviour
     {
         [SerializeField] private LayerMask _playerLayer;
+        [SerializeField] private bool _isOneTime = true;
+        [SerializeField] private bool _isExitTrigger = false;
 
         [SerializeField] private List<EnemyData> _spawnList;
         [SerializeField] private Transform[] _spawnPoints;
         [SerializeField] private float _stageMultiplier = 1.0f;
-        [SerializeField] private bool _isOneTime = true;
 
         [SerializeField] private int _minSpawnCount = 3;
         [SerializeField] private int _maxSpawnCount = 5;
-
         [SerializeField] private float _spawnRadius = 3.0f;
         [SerializeField] private float _spawnInterval = 0.5f;
 
         private bool _hasTriggered = false;
+        private Collider _triggerCollider;
+
         private void Awake()
         {
-            if (TryGetComponent(out BoxCollider box))
+            _triggerCollider = GetComponent<Collider>();
+            if (_triggerCollider != null)
             {
-                box.isTrigger = true;
+                _triggerCollider.isTrigger = true;
             }
         }
-        private void OnTriggerEnter(Collider foreign)
+
+        private void OnTriggerEnter(Collider other)
         {
             if (_hasTriggered && _isOneTime) return;
-            if (((1 << foreign.gameObject.layer) & _playerLayer) != 0)
+            if (((1 << other.gameObject.layer) & _playerLayer) == 0) return;
+
+            _hasTriggered = true;
+
+            StartCoroutine(SpawnRoutineCo());
+
+            if (_isExitTrigger)
             {
-                _hasTriggered = true;
+                var manager = FindFirstObjectByType<DungeonStageManager>();
+                manager?.ProceedToNextFloor();
+            }
 
-                StartCoroutine(SpawnRoutineCo());
-
-                if (_isOneTime)
-                {
-                    if (TryGetComponent(out Collider c)) c.enabled = false;
-                }
+            if (_isOneTime && _triggerCollider != null)
+            {
+                _triggerCollider.enabled = false;
             }
         }
 
-        /// <summary>
-        /// 점진적으로 적을 소환하는 루틴
-        /// </summary>
         private IEnumerator SpawnRoutineCo()
         {
-            if (_spawnPoints == null || _spawnPoints.Length == 0) yield break;
             if (_spawnList == null || _spawnList.Count == 0) yield break;
 
             int spawnCount = Random.Range(_minSpawnCount, _maxSpawnCount + 1);
+            bool hasPoints = _spawnPoints != null && _spawnPoints.Length > 0;
 
             for (int i = 0; i < spawnCount; i++)
             {
-                Transform basePoint = _spawnPoints[i % _spawnPoints.Length];
+                Vector3 basePos = hasPoints
+                    ? _spawnPoints[i % _spawnPoints.Length].position
+                    : transform.position;
+
                 Vector2 randomCircle = Random.insideUnitCircle * _spawnRadius;
-                Vector3 spawnOffset = new Vector3(randomCircle.x, 0, randomCircle.y);
-                Vector3 finalPos = basePoint.position + spawnOffset;
+                Vector3 finalPos = basePos + new Vector3(randomCircle.x, 0, randomCircle.y);
 
                 var data = _spawnList[Random.Range(0, _spawnList.Count)];
 
@@ -74,16 +83,24 @@ namespace Game.Project.Data.Spawn
 
                 if (_spawnInterval > 0)
                     yield return new WaitForSeconds(_spawnInterval);
-                else
-                    yield return null;
             }
 
             if (_isOneTime) gameObject.SetActive(false);
         }
 
         /// <summary>
-        /// 시각화
+        /// 던전 매니저가 매 층마다 새로운 데이터로 트리거를 초기화할 때 호출
         /// </summary>
+        public void SetSpawnData(List<EnemyData> newList, float multiplier)
+        {
+            _spawnList = newList;
+            _stageMultiplier = multiplier;
+            _hasTriggered = false;
+
+            if (_triggerCollider != null) _triggerCollider.enabled = true;
+        }
+
+        #region Debug (Gizmos)
         private void OnDrawGizmos()
         {
             BoxCollider box = GetComponent<BoxCollider>();
@@ -92,24 +109,20 @@ namespace Game.Project.Data.Spawn
                 Gizmos.color = new Color(0, 1, 0, 0.2f);
                 Gizmos.matrix = transform.localToWorldMatrix;
                 Gizmos.DrawCube(box.center, box.size);
-
                 Gizmos.color = Color.green;
                 Gizmos.DrawWireCube(box.center, box.size);
             }
 
-            if (_spawnPoints == null) return;
+            if (_spawnPoints == null || _spawnPoints.Length == 0) return;
 
             Gizmos.matrix = Matrix4x4.identity;
             foreach (var point in _spawnPoints)
             {
-                if (point != null)
-                {
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawSphere(point.position, 0.3f);
-                    Gizmos.color = Color.yellow;
-                    Gizmos.DrawLine(transform.position, point.position);
-                }
+                if (point == null) continue;
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(point.position, 0.3f);
             }
         }
+        #endregion
     }
 }

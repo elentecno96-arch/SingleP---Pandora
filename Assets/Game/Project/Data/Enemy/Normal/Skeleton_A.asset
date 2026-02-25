@@ -17,27 +17,41 @@ MonoBehaviour:
   baseStat:
     maxLevel: 0
     maxExp: 0
-    maxHp: 20
+    maxHp: 30
     maxMoveSpeed: 3
     defense: 1
     damage: 7
     castingSpeed: 0
     critDamage: 1.5
     critChance: 0.05
-  skillData: {fileID: 11400000, guid: a629d224a2c175348a13463821863b73, type: 2}
+  skillData: {fileID: 11400000, guid: d44e47c84c8ba3c4dbd7f82aa7bb2464, type: 2}
   detectRange: 10
   attackRange: 8
   expReward: 20
-  lootTable: []
-  dropChance: 30
-  spawnEffect: {fileID: 0}
+  lootTable:
+  - {fileID: 11400000, guid: 35e8d80916777ac47948bb3efe5671e5, type: 2}
+  - {fileID: 11400000, guid: b5bea362f91b8fc43b7e9b6bb26e6b4f, type: 2}
+  - {fileID: 11400000, guid: 3f1a8cee3e1164542aff64798a61be12, type: 2}
+  - {fileID: 11400000, guid: 561750b37d6199f4daabdc818dc837b5, type: 2}
+  - {fileID: 11400000, guid: a25242ef31e1b6d4f82ddeadd0bcb953, type: 2}
+  - {fileID: 11400000, guid: 8636e67840bf60f4fa9b4bd9601108bd, type: 2}
+  - {fileID: 11400000, guid: c840e7498e7492a4bb9d60bd60f7bd8d, type: 2}
+  - {fileID: 11400000, guid: bd9099222f493ef41bd631f6e9ef16c6, type: 2}
+  - {fileID: 11400000, guid: cfee051b2e04bb847a4a100eff1c2694, type: 2}
+  - {fileID: 11400000, guid: e88278e5a9bf97240b205e797d8ae371, type: 2}
+  - {fileID: 11400000, guid: 1d3227234a1a3364db616b2f5fa0e4d5, type: 2}
+  dropChance: 20
+  goldItemData: {fileID: 11400000, guid: 24ba98822c553d24195b1fd5a8c91df0, type: 2}
+  spawnEffect: {fileID: 4766937189608725823, guid: 36e3269845d04f04587fce1ac1b090c8,
+    type: 3}
   detectEffect: {fileID: 0}
   attackEffect: {fileID: 0}
   hitEffect: {fileID: 0}
-  deathEffect: {fileID: 0}
+  deathEffect: {fileID: 4766937189608725823, guid: 36e3269845d04f04587fce1ac1b090c8,
+    type: 3}
   spawnSfx: {fileID: 0}
   detectSfx: {fileID: 0}
   moveSfx: {fileID: 0}
-  attackSfx: {fileID: 0}
+  attackSfx: {fileID: 8300000, guid: 29bde6326b4c34ad8a12da475f79b50a, type: 3}
   hitSfx: {fileID: 0}
   deathSfx: {fileID: 0}

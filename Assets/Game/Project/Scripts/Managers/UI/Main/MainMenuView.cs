@@ -20,14 +20,14 @@ namespace Game.Project.Scripts.Managers.UI.Main
 
         public event Action OnNewGameClicked;
         public event Action OnExitClicked;
+        public event Action OnLoadGameClicked;
         public event Action OnSettingsClicked;
         private void Awake()
         {
             btnNewGame.onClick.AddListener(() => OnNewGameClicked?.Invoke());
             btnExit.onClick.AddListener(() => OnExitClicked?.Invoke());
+            btnLoad.onClick.AddListener(() => OnLoadGameClicked?.Invoke());
             btnSettings.onClick.AddListener(() => OnSettingsClicked?.Invoke());
-
-            if (btnLoad != null) btnLoad.interactable = false;
         }
         public void SetAlpha(float alpha)
         {
@@ -41,6 +41,15 @@ namespace Game.Project.Scripts.Managers.UI.Main
             SetAlpha(0f);
             SetInteractable(false);
         }
+
+        public void SetLoadButtonActive(bool isActive)
+        {
+            if (btnLoad != null)
+            {
+                btnLoad.gameObject.SetActive(isActive);
+            }
+        }
+
         public void SetInteractable(bool state)
         {
             if (canvasGroup != null)

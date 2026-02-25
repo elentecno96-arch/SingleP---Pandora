@@ -96,6 +96,22 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
         }
 
         /// <summary>
+        /// 특정 레벨에 맞춰 기본 스탯을 처음부터 다시 계산 (로드용)
+        /// </summary>
+        public void SetStatsForLevel(int targetLevel)
+        {
+            baseStat = _originBaseStat;
+
+            for (int i = 1; i < targetLevel; i++)
+            {
+                baseStat.damage += 2;
+                baseStat.maxHp += 10;
+                baseStat.maxExp = Mathf.FloorToInt(100f * Mathf.Pow(i + 1, 1.8f));
+            }
+            RefreshStat();
+        }
+
+        /// <summary>
         /// 모든 스탯 필드를 합산
         /// </summary>
         private Stat AddStats(Stat a, Stat b)

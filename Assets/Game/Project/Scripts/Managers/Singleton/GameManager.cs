@@ -1,6 +1,8 @@
+using Game.Project.Scripts.Managers.UI.Dungeon;
 using Game.Project.Utility.Generic;
-using UnityEngine;
+using Game.Project.Scripts.Dungeon.Manager;
 using System.Collections;
+using UnityEngine;
 
 namespace Game.Project.Scripts.Managers.Singleton
 {
@@ -15,7 +17,8 @@ namespace Game.Project.Scripts.Managers.Singleton
             Intro,
             Main,
             Lobby,
-            Tutorial
+            Tutorial,
+            Dungeon
         }
         //[SerializeField] private bool _isInitialized = false;
 
@@ -30,6 +33,11 @@ namespace Game.Project.Scripts.Managers.Singleton
         private GameState _currentState = GameState.None;
 
         private Coroutine _bgmCo;
+
+        private DungeonStageManager _currentStageManager;
+        private DungeonMediator _currentDungeonMediator;
+        public void RegisterStageManager(DungeonStageManager sm) => _currentStageManager = sm;
+        public void RegisterDungeonMediator(DungeonMediator dm) => _currentDungeonMediator = dm;
 
         protected override void Awake()
         {
@@ -110,6 +118,7 @@ namespace Game.Project.Scripts.Managers.Singleton
 
         public void StartTutorial()
         {
+            PlayerManager.Instance.ResetForNewGame();
             ChangeState(GameState.Tutorial);
             StartCoroutine(StartTutorialCo());
         }
@@ -117,6 +126,8 @@ namespace Game.Project.Scripts.Managers.Singleton
         private IEnumerator StartTutorialCo()
         {
             yield return StartCoroutine(AudioManager.Instance.FadeOutBgmCo(1f));
+
+            AudioManager.Instance.PlayTutorialBgm();
 
             _sceneManager.LoadScene("1. Tutorial");
         }
@@ -128,6 +139,45 @@ namespace Game.Project.Scripts.Managers.Singleton
             _player.SpawnPlayer(position);
 
             BindHUD();
+        }
+
+        public void StartDungeon()
+        {
+            ChangeState(GameState.Dungeon);
+            StartCoroutine(StartDungeonCo());
+        }
+
+        private IEnumerator StartDungeonCo()
+        {
+            yield return StartCoroutine(AudioManager.Instance.FadeOutBgmCo(1f));
+
+            AudioManager.Instance.PlayDungeonBgm();
+
+            _sceneManager.LoadScene("3. Dungeon");
+
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0.1f);
+
+            DungeonStageManager stageManager = null;
+            int retryCount = 0;
+            while (stageManager == null && retryCount < 5)
+            {
+                stageManager = FindFirstObjectByType<DungeonStageManager>();
+                if (stageManager == null)
+                {
+                    retryCount++;
+                    yield return new WaitForSeconds(0.1f);
+                }
+            }
+
+            if (stageManager != null)
+            {
+                stageManager.LoadAndStart();
+            }
+            else
+            {
+                Debug.LogError("GameManager: 씬 로드 후에도 DungeonStageManager를 찾을 수 없습니다!");
+            }
         }
 
         private void BindHUD()
@@ -146,6 +196,61 @@ namespace Game.Project.Scripts.Managers.Singleton
                 {
                     hud.BindLevel(pm.levelSystem);
                 }
+            }
+        }
+
+        /// <summary>
+        /// 플레이어 죽음 처리
+        /// </summary>
+        public void PlayerDeath()
+        {
+            if (PlayerManager.Instance.Combat != null)
+                PlayerManager.Instance.Combat.enabled = false;
+
+            if (_currentState == GameState.Tutorial)
+            {
+                StartCoroutine(ReturnToMainCo());
+            }
+            else if (_currentState == GameState.Dungeon)
+            {
+                ShowDungeonResult();
+            }
+        }
+
+        /// <summary>
+        /// 메뉴로 돌아갔을 때 초기화
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator ReturnToMainCo()
+        {
+            yield return new WaitForSeconds(2.0f);
+
+            if (UiManager.HasInstance)
+            {
+                UiManager.Instance.CloseAllSystemUI();
+            }
+
+            StartGame();
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+        /// <summary>
+        /// 던전 내 죽음 처리 결과 UI 오픈
+        /// </summary>
+        private void ShowDungeonResult()
+        {
+            Time.timeScale = 0f;
+
+            if (_currentDungeonMediator != null)
+            {
+                int floor = (_currentStageManager != null) ? _currentStageManager.CurrentFloor : 0;
+                _currentDungeonMediator.OpenResultUI(floor);
+            }
+            else
+            {
+                Debug.LogError("GameManager: 등록된 DungeonMediator가 없습니다!");
             }
         }
     }

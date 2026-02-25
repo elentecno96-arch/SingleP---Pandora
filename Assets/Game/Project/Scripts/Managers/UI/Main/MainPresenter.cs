@@ -1,5 +1,6 @@
 using Game.Project.Scripts.Managers.Singleton;
 using System.Collections;
+using Game.Project.Scripts.Data.Items;
 using UnityEngine;
 using Game.Project.Utility.Extension;
 
@@ -27,11 +28,13 @@ namespace Game.Project.Scripts.Managers.UI.Main
         {
             menuView.OnNewGameClicked += NewGame;
             menuView.OnExitClicked += ExitGame;
+            menuView.OnLoadGameClicked += LoadGame;
             menuView.OnSettingsClicked += OnSettingsOpen;
 
             settingsView.OnCloseClicked += OnSettingsClose;
             settingsView.OnVolumeChanged += VolumeChanged;
 
+            bool hasSaveData = PlayerPrefs.HasKey("PlayerSaveData");
             if (_hasPlayedIntro) return;
             _hasPlayedIntro = true;
 
@@ -42,6 +45,7 @@ namespace Game.Project.Scripts.Managers.UI.Main
         {
             menuView.OnNewGameClicked -= NewGame;
             menuView.OnExitClicked -= ExitGame;
+            menuView.OnLoadGameClicked -= LoadGame;
             menuView.OnSettingsClicked -= OnSettingsOpen;
 
             settingsView.OnCloseClicked -= OnSettingsClose;
@@ -124,6 +128,25 @@ namespace Game.Project.Scripts.Managers.UI.Main
 
         private void OnSettingsOpen() => settingsView.Show(true);
         private void OnSettingsClose() => settingsView.Show(false);
+
+        private void LoadGame()
+        {
+            Time.timeScale = 1f;
+            menuView.SetInteractable(false);
+
+            if (!PlayerManager.HasInstance || !UiManager.HasInstance) return;
+
+            PlayerManager.Instance.ResetForNewGame();
+
+            UiManager.Instance.UnlockFullSystem();
+
+            if (GameManager.HasInstance)
+            {
+                GameManager.Instance.StartDungeon();
+            }
+
+            gameObject.SetActive(false);
+        }
 
         private void ExitGame()
         {

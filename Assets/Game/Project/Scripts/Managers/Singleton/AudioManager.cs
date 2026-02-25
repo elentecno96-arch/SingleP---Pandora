@@ -21,6 +21,7 @@ namespace Game.Project.Scripts.Managers.Singleton
         [SerializeField] private AudioClip introBgm;
         [SerializeField] private AudioClip mainMenuBgm;
         [SerializeField] private AudioClip tutorialBgm;
+        [SerializeField] private AudioClip dungeonBgm;
 
         private Coroutine _bgmFadeCoroutine;
         private bool _bgmLocked = false;
@@ -66,15 +67,24 @@ namespace Game.Project.Scripts.Managers.Singleton
         public void PlayIntroBgm() => PlayBgm(introBgm);
         public void PlayMainBgm() => PlayBgm(mainMenuBgm);
         public void PlayTutorialBgm() => PlayBgm(tutorialBgm);
+        public void PlayDungeonBgm() => PlayBgm(dungeonBgm);    
 
         private void PlayBgm(AudioClip clip)
         {
-            if (_bgmLocked) return;
-            if (!_isInitialized || clip == null) return;
+            _bgmLocked = false;
+
+            if (!_isInitialized) Init();
+
+            if (clip == null) return;
+
             if (_bgmSource.clip == clip && _bgmSource.isPlaying) return;
 
             _bgmSource.clip = clip;
+            _bgmSource.loop = true;
+            _bgmSource.volume = 1f;
             _bgmSource.Play();
+
+            Debug.Log($"<color=green>BGM º¯°æµÊ: {clip.name}</color>");
         }
         public void PlaySfx(AudioClip clip)
         {

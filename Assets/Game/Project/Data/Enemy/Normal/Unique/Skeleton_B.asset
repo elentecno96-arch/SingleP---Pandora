@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08719e0c272611a4ab610a81844044a3, type: 3}
+  m_Name: Skeleton_B
+  m_EditorClassIdentifier: 
+  enemyName: 
+  prefab: {fileID: 5439225483905299692, guid: 379ac1b3b2ce1f745962a84c8db40958, type: 3}
+  baseStat:
+    maxLevel: 0
+    maxExp: 0
+    maxHp: 60
+    maxMoveSpeed: 3
+    defense: 1
+    damage: 13
+    castingSpeed: 0
+    critDamage: 1.5
+    critChance: 0.05
+  skillData: {fileID: 11400000, guid: 51725e6feafb1ac49acdd4684b86410e, type: 2}
+  detectRange: 14
+  attackRange: 12
+  expReward: 40
+  lootTable:
+  - {fileID: 11400000, guid: 4361112750af5e443a75bc26bef29d8a, type: 2}
+  - {fileID: 11400000, guid: a97d765f6970f9e48b61917b3825b194, type: 2}
+  - {fileID: 11400000, guid: 635a2a9cd920f304dbea41e8ad987874, type: 2}
+  - {fileID: 11400000, guid: 561750b37d6199f4daabdc818dc837b5, type: 2}
+  - {fileID: 11400000, guid: a25242ef31e1b6d4f82ddeadd0bcb953, type: 2}
+  - {fileID: 11400000, guid: 8636e67840bf60f4fa9b4bd9601108bd, type: 2}
+  - {fileID: 11400000, guid: c840e7498e7492a4bb9d60bd60f7bd8d, type: 2}
+  - {fileID: 11400000, guid: bd9099222f493ef41bd631f6e9ef16c6, type: 2}
+  - {fileID: 11400000, guid: cfee051b2e04bb847a4a100eff1c2694, type: 2}
+  - {fileID: 11400000, guid: e88278e5a9bf97240b205e797d8ae371, type: 2}
+  - {fileID: 11400000, guid: 04a418b1de1811f41b5ec5ef2417799f, type: 2}
+  dropChance: 10
+  goldItemData: {fileID: 11400000, guid: 24ba98822c553d24195b1fd5a8c91df0, type: 2}
+  spawnEffect: {fileID: 4766937189608725823, guid: 36e3269845d04f04587fce1ac1b090c8,
+    type: 3}
+  detectEffect: {fileID: 0}
+  attackEffect: {fileID: 0}
+  hitEffect: {fileID: 0}
+  deathEffect: {fileID: 0}
+  spawnSfx: {fileID: 0}
+  detectSfx: {fileID: 0}
+  moveSfx: {fileID: 0}
+  attackSfx: {fileID: 8300000, guid: 29bde6326b4c34ad8a12da475f79b50a, type: 3}
+  hitSfx: {fileID: 0}
+  deathSfx: {fileID: 0}
