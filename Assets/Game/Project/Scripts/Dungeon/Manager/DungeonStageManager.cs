@@ -66,6 +66,8 @@ namespace Game.Project.Scripts.Dungeon.Manager
 
         private IEnumerator TransitionRoutineCo()
         {
+            HoldPlayer(false);
+
             if (fadeManager != null)
                 yield return StartCoroutine(fadeManager.FadeOutCo(2.5f));
 
@@ -75,6 +77,11 @@ namespace Game.Project.Scripts.Dungeon.Manager
             }
 
             _currentFloor++;
+
+            if (_currentFloor == 1 && dungeonMediator != null)
+            {
+                dungeonMediator.ResetDungeonStats();
+            }
 
             if (dungeonMediator != null)
             {
@@ -93,13 +100,13 @@ namespace Game.Project.Scripts.Dungeon.Manager
                 PlayerManager.Instance.CurrentPlayer.GetComponent<PlayerCombat>().enabled = true;
             }
 
-            FloorGradeConfig currentConfig = DetermineFloorGrade();
+            FloorGradeConfig currentConfig = FloorGrade();
             float finalMultiplier = currentConfig.baseMultiplier + ((_currentFloor - 1) * 0.1f);
 
             if (lobbyGroup != null) lobbyGroup.SetActive(false);
             if (dungeonGroup != null) dungeonGroup.SetActive(true);
 
-            SetupSpawnPositions();
+            SetupSpawnPos();
 
             if (infoUI != null)
             {
@@ -119,8 +126,11 @@ namespace Game.Project.Scripts.Dungeon.Manager
 
             if (fadeManager != null)
                 yield return StartCoroutine(fadeManager.FadeInCo(1f));
-        }
 
+            HoldPlayer(true);
+        }
+        
+        //현재 사용하지않음 
         private void SaveDungeonEntryFlag()
         {
             PlayerPrefs.SetInt("HasEnteredDungeon", 1);
@@ -162,7 +172,7 @@ namespace Game.Project.Scripts.Dungeon.Manager
             StartCoroutine(TransitionRoutineCo());
         }
 
-        private void SetupSpawnPositions()
+        private void SetupSpawnPos()
         {
             if (spawnPoints == null || spawnPoints.Count < 2) return;
 
@@ -193,7 +203,7 @@ namespace Game.Project.Scripts.Dungeon.Manager
             }
         }
 
-        private FloorGradeConfig DetermineFloorGrade()
+        private FloorGradeConfig FloorGrade()
         {
             float totalWeight = 0;
             foreach (var config in gradeConfigs) totalWeight += config.weight;
@@ -207,6 +217,31 @@ namespace Game.Project.Scripts.Dungeon.Manager
                 if (pivot <= currentWeight) return config;
             }
             return gradeConfigs[0];
+        }
+
+        /// <summary>
+        /// 플레이어 이동 제어
+        /// </summary>
+        /// <param name="enable"></param>
+        private void HoldPlayer(bool enable)
+        {
+            if (!PlayerManager.HasInstance || PlayerManager.Instance.CurrentPlayer == null) return;
+
+            var player = PlayerManager.Instance.CurrentPlayer;
+
+            if (player.TryGetComponent<PlayerMovement>(out var movement))
+            {
+                movement.enabled = enable;
+                if (!enable && player.TryGetComponent<Rigidbody>(out var rb))
+                {
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                }
+            }
+            if (PlayerManager.Instance.Combat != null)
+            {
+                PlayerManager.Instance.Combat.enabled = enable;
+            }
         }
     }
 }

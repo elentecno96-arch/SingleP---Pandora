@@ -169,6 +169,10 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
 
             OnGoldChanged?.Invoke(Gold);
 
+            if (GameManager.HasInstance)
+            {
+                GameManager.Instance.AddGainedGold(amount);
+            }
             Debug.Log($"[Inventory] °ñµå º¯µ¿: {amount}, ÇöÀç ÀÜ¾×: {Gold}");
         }
 

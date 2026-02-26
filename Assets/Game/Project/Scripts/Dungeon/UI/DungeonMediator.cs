@@ -18,6 +18,13 @@ namespace Game.Project.Scripts.Managers.UI.Dungeon
         private int _currentPageIndex = 0;
         private bool _isShopOpen = false;
 
+        private int _totalKills;
+        private int _totalGold;
+        private float _startTime;
+
+        public void AddKill() => _totalKills++;
+        public void AddGold(int amount) => _totalGold += amount;
+
         private void Awake()
         {
             if (GameManager.HasInstance)
@@ -39,6 +46,14 @@ namespace Game.Project.Scripts.Managers.UI.Dungeon
 
             resultView.Show(false);
             entranceView.Show(false);
+        }
+
+        public void ResetDungeonStats()
+        {
+            _totalKills = 0;
+            _totalGold = 0;
+            _startTime = Time.time;
+            Debug.Log("<color=orange>던전 통계 기록 시작!</color>");
         }
 
         public void OpenUI()
@@ -85,13 +100,14 @@ namespace Game.Project.Scripts.Managers.UI.Dungeon
             SetPlayerControl(false);
             CloseUI();
 
+            ResetDungeonStats();
+
             UiManager.Instance.UnlockFullSystem();
 
             if (stageManager != null)
             {
                 PlayerPrefs.SetInt("HasEnteredDungeon", 1);
                 PlayerPrefs.Save();
-
                 stageManager.ProceedToNextFloor();
             }
         }
@@ -106,8 +122,10 @@ namespace Game.Project.Scripts.Managers.UI.Dungeon
 
             if (resultView != null)
             {
+                float playTime = Time.time - _startTime;
                 resultView.gameObject.SetActive(true);
-                resultView.UpdateResult(lastFloor);
+
+                resultView.UpdateResult(lastFloor, _totalKills, _totalGold, playTime);
                 resultView.Show(true);
             }
 

@@ -151,6 +151,11 @@ namespace Game.Project.Scripts.Enemy
             DropItems();
 
             OnEnemyDead?.Invoke();
+
+            if (GameManager.HasInstance)
+            {
+                GameManager.Instance.AddKillCount();
+            }
         }
 
         /// <summary>
