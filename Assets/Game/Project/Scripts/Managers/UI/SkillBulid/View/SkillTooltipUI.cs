@@ -61,14 +61,22 @@ namespace Game.Project.Scripts.Managers.UI.SkillBulid.View
         {
             if (slot == null || slot.IsEmpty) return;
 
-            skillNameText.text = slot.skillData.skillName;
+            skillNameText.text = $"{slot.skillData.skillName}";
             skillDescText.text = slot.skillData.description;
 
             var ctx = slot.context;
             StringBuilder statSb = new StringBuilder();
-            statSb.AppendLine($"데미지: {ctx.finalDamage}");
-            statSb.AppendLine($"쿨타임: {ctx.finalCooldown}s");
-            statSb.AppendLine($"치명타: {ctx.finalCritChance * 100}%");
+
+            statSb.AppendLine($"데미지: {(int)ctx.finalDamage}");
+
+            statSb.AppendLine($"쿨타임: {ctx.finalCooldown:F1}");
+
+            statSb.AppendLine($"치명타: {(int)(ctx.finalCritChance * 100)}");
+
+            statSb.AppendLine($"발사 수: {ctx.finalProjectileCount}개");
+            statSb.AppendLine($"사거리: {(int)ctx.finalRange}m"); 
+            statSb.AppendLine($"탄속: {(int)ctx.finalSpeed}");   
+
             skillStatText.text = statSb.ToString();
 
             if (slot.equippedRunes != null && slot.equippedRunes.Count > 0)
@@ -77,8 +85,8 @@ namespace Game.Project.Scripts.Managers.UI.SkillBulid.View
                 StringBuilder runeSb = new StringBuilder();
                 foreach (var rune in slot.equippedRunes)
                 {
-                    runeSb.AppendLine($"<color=#FFD700>• {rune.itemName}</color>");
-                    runeSb.AppendLine($"{rune.description}\n");
+                    runeSb.AppendLine($"{rune.itemName}");
+                    runeSb.AppendLine($"<size=80%>{rune.description}</size>\n");
                 }
                 runeListText.text = runeSb.ToString();
             }
