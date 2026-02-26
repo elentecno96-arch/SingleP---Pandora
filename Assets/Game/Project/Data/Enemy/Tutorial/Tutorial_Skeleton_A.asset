@@ -48,9 +48,12 @@ MonoBehaviour:
   attackEffect: {fileID: 0}
   hitEffect: {fileID: 0}
   deathEffect: {fileID: 0}
-  spawnSfx: {fileID: 0}
+  spawnSfx: {fileID: 7225327464659877013, guid: e8a3537adc069254e81e888d8cf81d46,
+    type: 3}
   detectSfx: {fileID: 0}
   moveSfx: {fileID: 0}
-  attackSfx: {fileID: 0}
-  hitSfx: {fileID: 0}
-  deathSfx: {fileID: 0}
+  attackSfx: {fileID: 2531728344460105759, guid: b4a9d4428d81b6e438643bd62edc69a8,
+    type: 3}
+  hitSfx: {fileID: 4609121951119284501, guid: 890d257659cf95d4f8df1912a1b33c08, type: 3}
+  deathSfx: {fileID: 4807108318847778371, guid: f824c0406d860e6409c61cb8929eac57,
+    type: 3}

@@ -32,25 +32,23 @@ namespace Game.Project.Scripts.Core.Projectile
             _projectile.OnFly -= PlayFlySfx;
             _projectile.OnImpact -= PlayImpactSfx;
         }
-        private void PlaySpawnSfx() => Play(_projectile.Context.data.spawnSfx);
-        private void PlayChargeSfx() => Play(_projectile.Context.data.chargeSfx);
-        private void PlayFlySfx() => Play(_projectile.Context.data.flySfx);
+        private void PlaySpawnSfx() => PlayFromPrefab(_projectile.Context.data.spawnSfxPrefab);
+        private void PlayChargeSfx() => PlayFromPrefab(_projectile.Context.data.chargeSfxPrefab);
+        private void PlayFlySfx() => PlayFromPrefab(_projectile.Context.data.flySfxPrefab);
+
         private void PlayImpactSfx(GameObject target)
         {
-            if (!_projectile.Context.data.impactSfx) return;
-            if (!AudioManager.HasInstance) return;
+            var prefab = _projectile.Context.data.impactSfxPrefab;
+            if (prefab == null || !AudioManager.HasInstance) return;
 
-            AudioManager.Instance.PlaySfxAtPoint(
-                _projectile.Context.data.impactSfx,
-                transform.position
-            );
+            AudioManager.Instance.PlaySfxFromPool(prefab, transform.position);
         }
-        private void Play(AudioClip clip)
-        {
-            if (_projectile.Context == null || clip == null) return;
 
-            if (AudioManager.HasInstance)
-                AudioManager.Instance.PlaySfx(clip);
+        private void PlayFromPrefab(GameObject prefab)
+        {
+            if (prefab == null || !AudioManager.HasInstance) return;
+
+            AudioManager.Instance.PlaySfxFromPool(prefab, transform.position);
         }
     }
 }

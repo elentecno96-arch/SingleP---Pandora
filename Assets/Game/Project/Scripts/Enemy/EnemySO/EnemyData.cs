@@ -26,19 +26,17 @@ namespace Game.Project.Scripts.Enemy.EnemySO
         [Range(0, 100)] public float dropChance = 30f; //µå¶ø È®·ü
         public ItemData goldItemData;
 
-        [Header("Visual Effects")]
         public GameObject spawnEffect;
         public GameObject detectEffect;
         public GameObject attackEffect;
         public GameObject hitEffect;
         public GameObject deathEffect;
 
-        [Header("Audio Clips")]
-        public AudioClip spawnSfx;
-        public AudioClip detectSfx;
-        public AudioClip moveSfx;
-        public AudioClip attackSfx;
-        public AudioClip hitSfx;
-        public AudioClip deathSfx;
+        public GameObject spawnSfx;
+        public GameObject detectSfx;
+        public GameObject moveSfx;
+        public GameObject attackSfx;
+        public GameObject hitSfx;
+        public GameObject deathSfx;
     }
 }

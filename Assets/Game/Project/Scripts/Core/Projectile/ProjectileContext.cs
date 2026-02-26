@@ -27,7 +27,7 @@ namespace Game.Project.Scripts.Core.Projectile
 
         public GameObject flyEffect;
         public GameObject impactEffect;
-        public AudioClip impactSfx;
+        public GameObject impactSfx;
 
         public Vector3 firePosition;
         public Vector3 direction;

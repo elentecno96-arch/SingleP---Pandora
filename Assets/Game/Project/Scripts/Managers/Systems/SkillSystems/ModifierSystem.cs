@@ -91,7 +91,7 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
 
             context.flyEffect = so.flyEffect;
             context.impactEffect = so.impactEffect;
-            context.impactSfx = so.impactSfx;
+            context.impactSfx = so.impactSfxPrefab;
         }
     }
 }

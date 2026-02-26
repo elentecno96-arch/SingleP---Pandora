@@ -57,7 +57,7 @@ namespace Game.Project.Scripts.Enemy
             SkillManager.Instance.ApplySkill(context, new List<RuneData>(), statSource);
 
             if (data.attackSfx != null)
-                AudioManager.Instance.PlaySfxAtPoint(data.attackSfx, _owner.transform.position);
+                AudioManager.Instance.PlaySfxFromPool(data.attackSfx, _owner.transform.position);
         }
 
         /// <summary>

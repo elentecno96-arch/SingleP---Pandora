@@ -37,9 +37,9 @@ namespace Game.Project.Scripts.Core.Projectile.SO
         public GameObject flyEffect;
         public GameObject impactEffect;
 
-        public AudioClip spawnSfx;
-        public AudioClip chargeSfx;
-        public AudioClip flySfx;
-        public AudioClip impactSfx;
+        public GameObject spawnSfxPrefab;
+        public GameObject chargeSfxPrefab;
+        public GameObject flySfxPrefab;
+        public GameObject impactSfxPrefab;
     }
 }
