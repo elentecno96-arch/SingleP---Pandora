@@ -102,6 +102,9 @@ namespace Game.Project.Scripts.Managers.Systems.SkillSystems
                 if (moverFactory == null) moverFactory = new MoverFactory();
 
                 proj.Init(individualContext, moverFactory.Create(prototype.data.movementType));
+
+                proj.Launch();
+
                 list?.Add(proj);
             }
         }

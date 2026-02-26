@@ -92,7 +92,7 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
                     .Select(item => item.runeData)
                     .ToList();
 
-                SkillManager.Instance.ApplySkill(slot.context, extractedRunes, player.StatSource);
+                SkillManager.Instance.UpdateSkillStats(slot.context, extractedRunes, player.StatSource);
             }
 
             CallUpdate();

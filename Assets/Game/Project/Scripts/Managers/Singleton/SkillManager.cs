@@ -79,16 +79,29 @@ namespace Game.Project.Scripts.Managers.Singleton
             return tempContext.finalCooldown;
         }
 
-        public void ApplySkill(ProjectileContext prototype, List<RuneData> runes, IStatSourceable stat)
+        /// <summary>
+        /// 수치 계산만 적용
+        /// </summary>
+        /// <param name="prototype"></param>
+        /// <param name="runes"></param>
+        /// <param name="stat"></param>
+        public void UpdateSkillStats(ProjectileContext prototype, List<RuneData> runes, IStatSourceable stat)
         {
-            if (!_isInitialized || prototype == null || stat == null)
-                return;
+            if (!_isInitialized || prototype == null || stat == null) return;
+            _modifierSystem.ApplyModifiers(prototype, runes, stat);
+        }
 
-            _modifierSystem.ApplyModifiers(
-                prototype,
-                runes,
-                stat);
+        /// <summary>
+        /// 수치 계산 및 발사
+        /// </summary>
+        /// <param name="prototype"></param>
+        /// <param name="runes"></param>
+        /// <param name="stat"></param>
+        public void ApplySkill(ProjectileContext prototype, List<RuneData> runes, IStatSourceable stat) 
+        {
+            if (!_isInitialized || prototype == null || stat == null) return;
 
+            _modifierSystem.ApplyModifiers(prototype, runes, stat);
             _spawnSystem.CreateProjectiles(prototype);
         }
     }

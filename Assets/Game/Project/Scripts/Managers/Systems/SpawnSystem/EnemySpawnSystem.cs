@@ -10,11 +10,13 @@ namespace Game.Project.Scripts.Managers.Systems.SpawnSystem
     {
         [SerializeField] private EnemyFactory _factory;
 
-        public void SpawnAt(EnemyData data, Vector3 position, float multiplier)
+        public GameObject SpawnAt(EnemyData data, Vector3 position, float multiplier)
         {
             if (_factory == null) _factory = GetComponentInChildren<EnemyFactory>();
 
             Game.Project.Scripts.Enemy.Enemy newEnemy = _factory.CreateEnemy(data, position, multiplier);
+
+            return newEnemy != null ? newEnemy.gameObject : null;
         }
     }
 }

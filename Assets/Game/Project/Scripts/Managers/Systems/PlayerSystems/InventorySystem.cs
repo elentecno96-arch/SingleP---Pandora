@@ -158,14 +158,18 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
 
         public void AddGold(int amount)
         {
-            if (amount <= 0) return;
+            if (amount == 0) return;
 
             Gold += amount;
 
-            if (AudioManager.HasInstance)
+            if (Gold < 0) Gold = 0;
+
+            if (amount > 0 && AudioManager.HasInstance)
                 AudioManager.Instance.PlaySfx(goldAcquisitionSfx);
 
             OnGoldChanged?.Invoke(Gold);
+
+            Debug.Log($"[Inventory] °ñµå º¯µ¿: {amount}, ÇöÀç ÀÜ¾×: {Gold}");
         }
 
         public void ClearInventory()

@@ -40,7 +40,24 @@ namespace Game.Project.Scripts.Managers.Singleton
             if (_enemySpawnSystem == null)
                 _enemySpawnSystem = GetComponentInChildren<EnemySpawnSystem>();
 
-            _enemySpawnSystem.SpawnAt(data, position, multiplier);
+            GameObject spawnedEnemy = _enemySpawnSystem.SpawnAt(data, position, multiplier);
+
+            if (spawnedEnemy != null)
+            {
+                _activeEnemies.Add(spawnedEnemy);
+            }
+        }
+
+        /// <summary>
+        /// 寇狼 利 力芭 贸府
+        /// </summary>
+        /// <param name="enemy"></param>
+        public void RemoveActiveEnemy(GameObject enemy)
+        {
+            if (_activeEnemies.Contains(enemy))
+            {
+                _activeEnemies.Remove(enemy);
+            }
         }
 
         /// <summary>
