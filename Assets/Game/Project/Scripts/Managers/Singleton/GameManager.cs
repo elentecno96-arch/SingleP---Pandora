@@ -31,6 +31,7 @@ namespace Game.Project.Scripts.Managers.Singleton
         private PlayerManager _player;
 
         private GameState _currentState = GameState.None;
+        public GameState CurrentState => _currentState;
 
         private Coroutine _bgmCo;
 
@@ -38,6 +39,8 @@ namespace Game.Project.Scripts.Managers.Singleton
         private DungeonMediator _currentDungeonMediator;
         public void RegisterStageManager(DungeonStageManager sm) => _currentStageManager = sm;
         public void RegisterDungeonMediator(DungeonMediator dm) => _currentDungeonMediator = dm;
+        public void AddKillCount() => _currentDungeonMediator?.AddKill();
+        public void AddGainedGold(int amount) => _currentDungeonMediator?.AddGold(amount);
 
         protected override void Awake()
         {
@@ -76,6 +79,7 @@ namespace Game.Project.Scripts.Managers.Singleton
 
             Debug.Log("=== 모든 매니저 초기화 완료 ===");
 
+            //_ui.CloseAllSystemUI();
             ChangeState(GameState.Intro);
         }
 

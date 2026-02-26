@@ -25,6 +25,7 @@ namespace Game.Project.Scripts.Managers.UI.AbilityTree
         public void SetLocked(bool lockState) => _isLocked = lockState;
 
         [SerializeField] private AbilityTooltip _tooltip;
+        private bool _isInitialized = false;
 
         //플레이어 매니저가 초기화 될 때 까지 한턴 기다림
         private IEnumerator Start()
@@ -54,6 +55,7 @@ namespace Game.Project.Scripts.Managers.UI.AbilityTree
                 UpdatePointUI(_levelSystem.SkillPoint);
                 _levelSystem.OnPointChanged += UpdatePointUI;
 
+                _isInitialized = true;
                 ClosePanel();
             }
             else
@@ -64,7 +66,13 @@ namespace Game.Project.Scripts.Managers.UI.AbilityTree
 
         private void Update()
         {
-            if (_isLocked) return;
+            if (!_isInitialized || _isLocked) return;
+
+            if (GameManager.Instance != null)
+            {
+                var state = GameManager.Instance.CurrentState; 
+                if (state == GameManager.GameState.Intro || state == GameManager.GameState.None) return;
+            }
 
             if (Input.GetKeyDown(KeyCode.U))
             {
@@ -80,10 +88,17 @@ namespace Game.Project.Scripts.Managers.UI.AbilityTree
 
         private void OpenPanel()
         {
+            if (_levelSystem == null || _abilityPanel == null)
+            {
+                Debug.LogWarning("AbilityPresenter: 시스템이 아직 초기화되지 않았습니다.");
+                return;
+            }
+
             _isOpened = true;
             _abilityPanel.SetActive(true);
 
             _treeView.RefreshTree();
+
             UpdatePointUI(_levelSystem.SkillPoint);
 
             Cursor.visible = true;
@@ -93,7 +108,10 @@ namespace Game.Project.Scripts.Managers.UI.AbilityTree
         private void ClosePanel()
         {
             _isOpened = false;
-            _abilityPanel.SetActive(false);
+            if (_abilityPanel != null)
+            {
+                _abilityPanel.SetActive(false);
+            }
             HideTooltip();
         }
 

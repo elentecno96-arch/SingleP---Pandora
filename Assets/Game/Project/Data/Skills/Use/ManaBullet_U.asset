@@ -17,7 +17,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 1295557351171634948, guid: 817774a1ec9098b419e1fc55d6cc0450,
     type: 3}
   movementType: 5
-  rarity: 2
+  rarity: 4
   description: "\uB9C8\uB098\uB97C \uCD1D\uC54C\uCC98\uB7FC \uBE60\uB974\uAC8C \uBC1C\uC0AC\uD558\uBA70
     \uD0C4\uB3C4\uD6A8\uACFC\uB97C \uBD80\uC5EC\uD55C\uB2E4"
   damage: 16
