@@ -51,6 +51,7 @@ namespace Game.Project.Scripts.Managers.UI.Main
         }
         public void Show(bool state)
         {
+            gameObject.SetActive(true);
             canvasGroup.alpha = state ? 1f : 0f;
             canvasGroup.interactable = state;
             canvasGroup.blocksRaycasts = state;
