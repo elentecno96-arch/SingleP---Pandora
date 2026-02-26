@@ -156,5 +156,37 @@ namespace Game.Project.Scripts.Managers.Singleton
             _bgmSource.volume = startVolume;
         }
 
+        /// <summary>
+        /// 사운드 풀링 사용
+        /// </summary>
+        /// <param name="prefab"></param>
+        /// <param name="position"></param>
+        public void PlaySfxFromPool(GameObject prefab, Vector3 position)
+        {
+            if (prefab == null || !PoolManager.HasInstance) return;
+
+            GameObject sfxObj = PoolManager.Instance.GetEffect(prefab, position, Quaternion.identity);
+
+            if (sfxObj.TryGetComponent<AudioSource>(out var source))
+            {
+                source.Play();
+                StartCoroutine(ReturnSfxToPool(sfxObj, source.clip.length));
+            }
+        }
+
+        /// <summary>
+        /// 사운드 풀링 리턴
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="delay"></param>
+        /// <returns></returns>
+        private IEnumerator ReturnSfxToPool(GameObject obj, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            if (PoolManager.HasInstance)
+            {
+                PoolManager.Instance.ReturnEffect(obj);
+            }
+        }
     }
 }
