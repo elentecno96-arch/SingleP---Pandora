@@ -1,10 +1,7 @@
-using Game.Project.Scripts.Managers.Singleton;
-using Game.Project.Scripts.Managers.UI.AbilityTree;
-using Game.Project.Scripts.Managers.UI.StatInfo;
-using Game.Project.Scripts.Player;
-using Game.Project.Scripts.Player.Combat;
-using Game.Project.Scripts.Tutorial.View;
 using Game.Project.Scripts.Data.Items;
+using Game.Project.Scripts.Managers.Singleton;
+using Game.Project.Scripts.Player;
+using Game.Project.Scripts.Tutorial.View;
 using System.Collections;
 using UnityEngine;
 

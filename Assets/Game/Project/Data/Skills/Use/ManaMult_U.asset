@@ -41,6 +41,6 @@ MonoBehaviour:
   impactEffect: {fileID: 8973262206474772769, guid: dce4b5a0565fe1a44907982fc1aa8258,
     type: 3}
   spawnSfx: {fileID: 0}
-  chargeSfx: {fileID: 0}
-  flySfx: {fileID: 0}
-  impactSfx: {fileID: 0}
+  chargeSfx: {fileID: 8300000, guid: d14d31e00388ccc479fa4deae26ccd37, type: 3}
+  flySfx: {fileID: 8300000, guid: 2d47f6977036321418eb05a7f1dfa228, type: 3}
+  impactSfx: {fileID: 8300000, guid: 9857d163506410544bf5ac0aa808ddea, type: 3}

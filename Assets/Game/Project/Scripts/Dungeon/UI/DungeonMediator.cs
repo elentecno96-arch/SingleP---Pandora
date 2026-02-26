@@ -74,10 +74,15 @@ namespace Game.Project.Scripts.Managers.UI.Dungeon
             }
         }
 
+        /// <summary>
+        /// 던전 로비에서 던전 입장
+        /// </summary>
         private void EnterDungeon()
         {
             SetPlayerControl(false);
             CloseUI();
+
+            UiManager.Instance.UnlockFullSystem();
 
             if (stageManager != null)
             {
@@ -102,6 +107,8 @@ namespace Game.Project.Scripts.Managers.UI.Dungeon
                 resultView.UpdateResult(lastFloor);
                 resultView.Show(true);
             }
+
+            UiManager.Instance.CloseAllSystemUI();
 
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;

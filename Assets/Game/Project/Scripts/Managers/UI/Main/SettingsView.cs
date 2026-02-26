@@ -1,6 +1,5 @@
+using Game.Project.Scripts.Managers.Singleton;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,12 +23,25 @@ namespace Game.Project.Scripts.Managers.UI.Main
         {
             btnClose.onClick.AddListener(() => OnCloseClicked?.Invoke());
 
-            masterSlider.onValueChanged.AddListener(v => OnVolumeChanged?.Invoke("MasterVol", v));
-            bgmSlider.onValueChanged.AddListener(v => OnVolumeChanged?.Invoke("BGMVol", v));
-            sfxSlider.onValueChanged.AddListener(v => OnVolumeChanged?.Invoke("SFXVol", v));
+            masterSlider.onValueChanged.AddListener(v => {
+                OnVolumeChanged?.Invoke("MasterVol", v);
+                if (AudioManager.HasInstance)
+                    AudioManager.Instance.SetMixerVol("MasterVol", v);
+            });
+
+            bgmSlider.onValueChanged.AddListener(v => {
+                OnVolumeChanged?.Invoke("BGMVol", v);
+                if (AudioManager.HasInstance)
+                    AudioManager.Instance.SetMixerVol("BGMVol", v);
+            });
+
+            sfxSlider.onValueChanged.AddListener(v => {
+                OnVolumeChanged?.Invoke("SFXVol", v);
+                if (AudioManager.HasInstance)
+                    AudioManager.Instance.SetMixerVol("SFXVol", v);
+            });
 
             LoadSavedVolume();
-            Show(false);
         }
         private void LoadSavedVolume()
         {
