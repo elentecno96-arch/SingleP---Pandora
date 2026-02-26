@@ -48,15 +48,25 @@ namespace Game.Project.Scripts.Managers.Singleton
         /// </summary>
         public void ClearAllEnemies()
         {
-            foreach (var enemy in _activeEnemies)
+            for (int i = _activeEnemies.Count - 1; i >= 0; i--)
             {
-                if (enemy != null)
+                GameObject enemyObj = _activeEnemies[i];
+
+                if (enemyObj != null)
                 {
-                    Destroy(enemy);
+                    var enemyComponent = enemyObj.GetComponent<Game.Project.Scripts.Enemy.Enemy>();
+
+                    if (enemyComponent != null)
+                    {
+                        PoolManager.Instance.ReturnEnemy(enemyComponent);
+                    }
+                    else
+                    {
+                        enemyObj.SetActive(false);
+                    }
                 }
             }
             _activeEnemies.Clear();
-            Debug.Log("모든 몬스터가 제거되었습니다.");
         }
     }
 }

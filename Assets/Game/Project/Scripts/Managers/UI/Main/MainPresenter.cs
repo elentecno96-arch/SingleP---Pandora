@@ -1,8 +1,7 @@
 using Game.Project.Scripts.Managers.Singleton;
-using System.Collections;
-using Game.Project.Scripts.Data.Items;
-using UnityEngine;
 using Game.Project.Utility.Extension;
+using System.Collections;
+using UnityEngine;
 
 namespace Game.Project.Scripts.Managers.UI.Main
 {

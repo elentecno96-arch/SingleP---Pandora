@@ -30,6 +30,7 @@ namespace Game.Project.Scripts.Enemy
 
         protected float currentHp;
         protected bool isDead;
+        public bool IsDead => isDead;
         private bool _canRotate = true;                  // 공격 중 회전 잠금을 위한 플래그
 
         protected Animator animator;

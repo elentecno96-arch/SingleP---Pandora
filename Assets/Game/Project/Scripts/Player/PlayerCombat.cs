@@ -57,7 +57,7 @@ namespace Game.Project.Scripts.Player
 
             if (UiManager.Instance.SkillBuild.IsViewOpen()) return;
 
-            if (!_scanner.IsTargetValid(_currentTarget))
+            if (!_scanner.IsTargetValid(_currentTarget) || IsTargetDead(_currentTarget))
             {
                 _currentTarget = _scanner.GetClosestTarget();
             }
@@ -65,8 +65,7 @@ namespace Game.Project.Scripts.Player
             if (_currentTarget != null)
             {
                 float distance = Vector3.Distance(transform.position, _currentTarget.position);
-
-                if (distance <= SKILL_ACTIVATION_RANGE) 
+                if (distance <= SKILL_ACTIVATION_RANGE)
                 {
                     CheckSkills();
                 }
@@ -107,6 +106,12 @@ namespace Game.Project.Scripts.Player
             //UI가 열릴 때 공격 방지
             if (UiManager.Instance.SkillBuild.IsViewOpen()) return;
 
+            if (IsTargetDead(_currentTarget))
+            {
+                _currentTarget = null;
+                return;
+            }
+
             foreach (var slot in playerManager.skillEquip.GetSkillSlots())
             {
                 if (slot.IsEmpty || !_cachedIntervals.ContainsKey(slot)) continue;
@@ -120,6 +125,10 @@ namespace Game.Project.Scripts.Player
                 }
             }
         }
+
+        /// <summary>
+        /// 스킬 갱신 (장착)
+        /// </summary>
         public void RefreshAllSkill()
         {
             if (playerManager?.skillEquip == null) return;
@@ -128,15 +137,23 @@ namespace Game.Project.Scripts.Player
 
             foreach (var slot in playerManager.skillEquip.GetSkillSlots())
             {
-                if (slot.IsEmpty) continue;
+                if (slot.IsEmpty)
+                {
+                    if (_skillTimers.ContainsKey(slot)) _skillTimers.Remove(slot);
+                    continue;
+                }
 
                 float interval = SkillManager.Instance.GetCooldown(slot, _statSource);
                 _cachedIntervals[slot] = interval;
 
-                if (!_skillTimers.ContainsKey(slot))
-                    _skillTimers[slot] = 0f;
+                _skillTimers[slot] = 0f;
             }
         }
+
+        /// <summary>
+        /// 자동 공격
+        /// </summary>
+        /// <param name="slot"></param>
         private void AutoAttack(SkillSlot slot)
         {
             if (_currentTarget == null || slot.IsEmpty) return;
@@ -162,6 +179,23 @@ namespace Game.Project.Scripts.Player
                 }
             }
             SkillManager.Instance.ApplySkill(context, extractedRunes, _statSource);
+        }
+
+        /// <summary>
+        /// 타겟 죽음 체크
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        private bool IsTargetDead(Transform target)
+        {
+            if (target == null) return true;
+            var enemy = target.GetComponent<Game.Project.Scripts.Enemy.Enemy>();
+            if (enemy != null)
+            {
+                return enemy.IsDead;
+            }
+
+            return false;
         }
 
         /// <summary>
