@@ -47,7 +47,10 @@ namespace Game.Project.Scripts.Core.Projectile
         }
         private void Play(AudioClip clip)
         {
-            if (clip) AudioManager.Instance.PlaySfx(clip);
+            if (_projectile.Context == null || clip == null) return;
+
+            if (AudioManager.HasInstance)
+                AudioManager.Instance.PlaySfx(clip);
         }
     }
 }

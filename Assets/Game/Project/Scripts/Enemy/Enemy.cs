@@ -130,6 +130,12 @@ namespace Game.Project.Scripts.Enemy
             if (isDead) return;
             isDead = true;
 
+            //몬스터가 죽을 때 SpawnManager의 관리 리스트에서 자신을 제거
+            if (SpawnManager.HasInstance)
+            {
+                SpawnManager.Instance.RemoveActiveEnemy(this.gameObject);
+            }
+
             gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
 
             StopMoving();

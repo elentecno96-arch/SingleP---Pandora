@@ -113,14 +113,35 @@ namespace Game.Project.Data.Spawn
                 Gizmos.DrawWireCube(box.center, box.size);
             }
 
-            if (_spawnPoints == null || _spawnPoints.Length == 0) return;
-
             Gizmos.matrix = Matrix4x4.identity;
-            foreach (var point in _spawnPoints)
+            Gizmos.color = Color.red;
+
+            if (_spawnPoints != null && _spawnPoints.Length > 0)
             {
-                if (point == null) continue;
-                Gizmos.color = Color.red;
-                Gizmos.DrawSphere(point.position, 0.3f);
+                foreach (var point in _spawnPoints)
+                {
+                    if (point == null) continue;
+                    DrawCircleGizmo(point.position, _spawnRadius);
+                }
+            }
+            else
+            {
+                DrawCircleGizmo(transform.position, _spawnRadius);
+            }
+        }
+
+        private void DrawCircleGizmo(Vector3 center, float radius)
+        {
+            float angle = 0f;
+            float step = (2f * Mathf.PI) / 20f; 
+            Vector3 prevPos = center + new Vector3(radius, 0, 0);
+
+            for (int i = 0; i <= 20; i++)
+            {
+                angle += step;
+                Vector3 nextPos = center + new Vector3(Mathf.Cos(angle) * radius, 0, Mathf.Sin(angle) * radius);
+                Gizmos.DrawLine(prevPos, nextPos);
+                prevPos = nextPos;
             }
         }
         #endregion

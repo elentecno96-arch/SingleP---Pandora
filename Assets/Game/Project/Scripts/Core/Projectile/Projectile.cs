@@ -54,11 +54,21 @@ namespace Game.Project.Scripts.Core.Projectile
                 transform.rotation = Quaternion.LookRotation(_context.direction);
 
             if (TryGetComponent(out ProjectileVisual visual)) visual.Bind();
-            if (TryGetComponent(out ProjectileAudio audio)) audio.Bind();
+            //if (TryGetComponent(out ProjectileAudio audio)) audio.Bind();
 
             _mover.Init(_context, this);
 
             transform.localScale = Vector3.one * _context.finalScale;
+
+            //ChangeState(ProjectileStates.Spawn);
+        }
+
+        /// <summary>
+        /// 실제로 투사체가 월드에 발사될 때 호출
+        /// </summary>
+        public void Launch()
+        {
+            if (TryGetComponent(out ProjectileAudio audio)) audio.Bind();
 
             ChangeState(ProjectileStates.Spawn);
         }

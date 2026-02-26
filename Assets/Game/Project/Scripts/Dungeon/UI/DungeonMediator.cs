@@ -13,8 +13,11 @@ namespace Game.Project.Scripts.Managers.UI.Dungeon
         [SerializeField] private DungeonEntranceView entranceView;
         [SerializeField] private DungeonStageManager stageManager;
         [SerializeField] private DungeonResultView resultView;
+        [SerializeField] private BlessingShopView blessingShopView;
 
         private int _currentPageIndex = 0;
+        private bool _isShopOpen = false;
+
         private void Awake()
         {
             if (GameManager.HasInstance)
@@ -172,6 +175,36 @@ namespace Game.Project.Scripts.Managers.UI.Dungeon
             if (PlayerManager.Instance.Combat != null)
             {
                 PlayerManager.Instance.Combat.enabled = enable;
+            }
+        }
+
+        public void OpenBlessingShop()
+        {
+            if (_isShopOpen) return;
+            _isShopOpen = true;
+
+            SetPlayerControl(false);
+            blessingShopView.Show(true); 
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+        public void CloseBlessingShop()
+        {
+            _isShopOpen = false;
+            blessingShopView.Show(false);
+            SetPlayerControl(true);
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        public void InitializeBlessingForFloor()
+        {
+            if (blessingShopView != null)
+            {
+                blessingShopView.RefreshShop();
             }
         }
     }

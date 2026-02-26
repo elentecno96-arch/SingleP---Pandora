@@ -199,6 +199,37 @@ namespace Game.Project.Scripts.Player
         }
 
         /// <summary>
+        /// 쿨타임 남은 시간 반환용
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
+        public float GetCooldownRatio(SkillSlot slot)
+        {
+            if (slot == null || slot.IsEmpty || !_skillTimers.ContainsKey(slot)) return 0f;
+
+            float current = _skillTimers[slot];
+            float max = _cachedIntervals.ContainsKey(slot) ? _cachedIntervals[slot] : 1.0f;
+
+            return current / max;
+        }
+
+
+        /// <summary>
+        /// 쿨타임 남은 시간 게터
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
+        public float GetRemainingTime(SkillSlot slot)
+        {
+            if (slot == null || slot.IsEmpty || !_skillTimers.ContainsKey(slot)) return 0f;
+
+            float max = _cachedIntervals.ContainsKey(slot) ? _cachedIntervals[slot] : 0f;
+            float remaining = max - _skillTimers[slot];
+
+            return remaining > 0 ? remaining : 0f;
+        }
+
+        /// <summary>
         /// 에디터 전용 콜백
         /// </summary>
 #if UNITY_EDITOR

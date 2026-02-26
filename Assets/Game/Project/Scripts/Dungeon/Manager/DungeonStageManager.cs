@@ -1,6 +1,7 @@
 using Game.Project.Data.Spawn;
 using Game.Project.Scripts.Data.Items;
 using Game.Project.Scripts.Managers.Singleton;
+using Game.Project.Scripts.Managers.UI.Dungeon;
 using Game.Project.Scripts.Player;
 using System.Collections;
 using System.Collections.Generic;
@@ -42,6 +43,8 @@ namespace Game.Project.Scripts.Dungeon.Manager
         [SerializeField] private List<SpawnTrigger> _allExitTriggers;
         [SerializeField] private ItemData startSkillBookItem;
 
+        [SerializeField] private DungeonMediator dungeonMediator;
+
         private int _currentFloor = 0;
         private GameObject _activeExitStairs;
 
@@ -72,6 +75,11 @@ namespace Game.Project.Scripts.Dungeon.Manager
             }
 
             _currentFloor++;
+
+            if (dungeonMediator != null)
+            {
+                dungeonMediator.InitializeBlessingForFloor();
+            }
 
             if (_currentFloor == 1)
             {

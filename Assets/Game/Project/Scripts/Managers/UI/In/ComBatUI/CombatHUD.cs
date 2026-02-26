@@ -1,3 +1,4 @@
+using Game.Project.Scripts.Managers.Singleton;
 using Game.Project.Scripts.Managers.Systems.PlayerSystems;
 using Game.Project.Scripts.Managers.UI.In.ComBatUI.View;
 using UnityEngine;
@@ -19,13 +20,21 @@ public class CombatHUD : MonoBehaviour
     {
         if (_skillModel == null) return;
 
+        var combat = PlayerManager.Instance.Combat;
         var slots = _skillModel.GetSkillSlots();
+
         for (int i = 0; i < skillSlotViews.Length; i++)
         {
-            if (i < slots.Count && !slots[i].IsEmpty && slots[i].context != null)
+            if (i < slots.Count && !slots[i].IsEmpty)
             {
-                slots[i].UpdateCooldown(Time.deltaTime);
-                skillSlotViews[i].UpdateCooldown(slots[i].currentCooldown, slots[i].context.finalCooldown);
+                float remaining = combat.GetRemainingTime(slots[i]);
+                float ratio = combat.GetCooldownRatio(slots[i]);
+
+                skillSlotViews[i].UpdateCooldown(remaining, ratio);
+            }
+            else
+            {
+                skillSlotViews[i].UpdateCooldown(0, 1); 
             }
         }
     }
