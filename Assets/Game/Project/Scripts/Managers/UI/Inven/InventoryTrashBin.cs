@@ -4,25 +4,31 @@ using Game.Project.Scripts.Managers.UI.SkillBulid.View;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class InventoryTrashBin : MonoBehaviour, IDropHandler
+namespace Game.Project.Scripts.Managers.UI.Inven
 {
-    [SerializeField] private SkillBuildView ownerView;
-    private const int SellPrice = 50;
-
-    public void OnDrop(PointerEventData eventData)
+    /// <summary>
+    /// 인벤토리 아이템 제거 UI
+    /// </summary>
+    public class InventoryTrashBin : MonoBehaviour, IDropHandler
     {
-        InventorySlot fromSlot = eventData.pointerDrag?.GetComponent<InventorySlot>();
+        [SerializeField] private SkillBuildView ownerView;
+        private const int SellPrice = 50;
 
-        if (fromSlot != null)
+        public void OnDrop(PointerEventData eventData)
         {
-            bool success = PlayerManager.Instance.Inventory.SellItem(fromSlot.slotIndex, SellPrice);
+            InventorySlot fromSlot = eventData.pointerDrag?.GetComponent<InventorySlot>();
 
-            if (success)
+            if (fromSlot != null)
             {
-                if (ownerView != null)
+                bool success = PlayerManager.Instance.Inventory.SellItem(fromSlot.slotIndex, SellPrice);
+
+                if (success)
                 {
-                    ownerView.RefreshAll();
-                    ownerView.HideItemTooltip(); 
+                    if (ownerView != null)
+                    {
+                        ownerView.RefreshAll();
+                        ownerView.HideItemTooltip();
+                    }
                 }
             }
         }

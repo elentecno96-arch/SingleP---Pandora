@@ -1,7 +1,5 @@
 using Game.Project.Scripts.Managers.Singleton;
-using Game.Project.Scripts.Managers.Systems.PlayerSystems;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
