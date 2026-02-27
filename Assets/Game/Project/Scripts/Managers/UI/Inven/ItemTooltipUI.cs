@@ -29,17 +29,18 @@ namespace Game.Project.Scripts.Managers.UI.Inven
         private void FollowMouse()
         {
             Vector2 mousePos = Input.mousePosition;
+            float pivotX = 0f;
 
-            float pivotX = mousePos.x > Screen.width * 0.5f ? 1f : 0f;
-            float pivotY = mousePos.y > Screen.height * 0.5f ? 1f : 0f;
-            _rectTransform.pivot = new Vector2(pivotX, pivotY);
+            if (mousePos.x > Screen.width * 0.85f)
+            {
+                pivotX = 1f;
+            }
 
-            Vector2 dynamicOffset = new Vector2(
-                pivotX == 1f ? -25f : 25f,
-                pivotY == 1f ? -25f : 25f
-            );
+            _rectTransform.pivot = new Vector2(pivotX, 0.5f);
 
-            Vector2 targetPos = mousePos + dynamicOffset;
+            float finalOffsetX = (pivotX == 0f) ? 30f : -30f;
+            Vector2 targetPos = mousePos + new Vector2(finalOffsetX, 0f);
+
             _rectTransform.position = Vector2.Lerp(_rectTransform.position, targetPos, Time.unscaledDeltaTime * smoothing);
         }
 
