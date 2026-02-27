@@ -42,12 +42,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 04a418b1de1811f41b5ec5ef2417799f, type: 2}
   dropChance: 10
   goldItemData: {fileID: 11400000, guid: 24ba98822c553d24195b1fd5a8c91df0, type: 2}
-  spawnEffect: {fileID: 4766937189608725823, guid: 36e3269845d04f04587fce1ac1b090c8,
+  spawnEffect: {fileID: 5873257677397955764, guid: dad43825ea7de7441a19995573d303ef,
     type: 3}
   detectEffect: {fileID: 0}
   attackEffect: {fileID: 0}
   hitEffect: {fileID: 0}
-  deathEffect: {fileID: 0}
+  deathEffect: {fileID: 5873257677397955764, guid: dad43825ea7de7441a19995573d303ef,
+    type: 3}
   spawnSfx: {fileID: 7225327464659877013, guid: e8a3537adc069254e81e888d8cf81d46,
     type: 3}
   detectSfx: {fileID: 0}

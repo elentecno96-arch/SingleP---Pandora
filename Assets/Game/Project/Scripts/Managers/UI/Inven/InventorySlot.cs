@@ -11,16 +11,23 @@ namespace Game.Project.Scripts.Managers.UI.Inven
     /// <summary>
     /// 인벤토리 슬롯 UI
     /// </summary>
-    public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
+    public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private Image itemIcon;
         [SerializeField] private TextMeshProUGUI countText;
 
         private Transform _originalParent;
+        private SkillBuildView _ownerView;
 
         public int slotIndex;
         private ItemData _currentItem;
         private int _currentCount;
+
+        public void Init(SkillBuildView view, int index)
+        {
+            _ownerView = view;
+            slotIndex = index;
+        }
 
         public void SetItem(ItemData data, int count)
         {
@@ -87,6 +94,22 @@ namespace Game.Project.Scripts.Managers.UI.Inven
 
                 var view = GetComponentInParent<SkillBuildView>();
                 if (view != null) view.RefreshAll();
+            }
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (_currentItem != null && _ownerView != null)
+            {
+                _ownerView.ShowItemTooltip(_currentItem.itemName);
+            }
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (_ownerView != null)
+            {
+                _ownerView.HideItemTooltip();
             }
         }
     }

@@ -176,6 +176,18 @@ namespace Game.Project.Scripts.Managers.Systems.PlayerSystems
             Debug.Log($"[Inventory] °ñµå º¯µ¿: {amount}, ÇöÀç ÀÜ¾×: {Gold}");
         }
 
+        public bool SellItem(int slotIndex, int price)
+        {
+            if (slotIndex < 0 || slotIndex >= itemSlots.Length || itemSlots[slotIndex] == null || itemSlots[slotIndex].itemData == null)
+                return false;
+
+            itemSlots[slotIndex] = null;
+            AddGold(price);
+            OnInventoryChanged?.Invoke();
+
+            return true;
+        }
+
         public void ClearInventory()
         {
             for (int i = 0; i < itemSlots.Length; i++)

@@ -21,7 +21,7 @@ MonoBehaviour:
   description: "\uB9C8\uB098\uB97C \uC791\uAC8C \uC6C5\uCD95 \uC2DC\uCF1C \uC5EC\uB7EC\uBC1C\uC744
     \uBC1C\uC0AC\uD55C\uB2E4"
   damage: 1
-  speed: 15
+  speed: 30
   range: 20
   lifeTime: 3
   cooldown: 1
@@ -29,7 +29,7 @@ MonoBehaviour:
   critChance: 0.3
   critDamage: 1.5
   chargeTime: 0.2
-  projectileCount: 6
+  projectileCount: 4
   acceleration: 0
   homingStrength: 0
   areaRadius: 1

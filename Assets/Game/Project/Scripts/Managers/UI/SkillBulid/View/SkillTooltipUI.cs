@@ -68,34 +68,45 @@ namespace Game.Project.Scripts.Managers.UI.SkillBulid.View
             StringBuilder statSb = new StringBuilder();
 
             statSb.AppendLine($"데미지: {(int)ctx.finalDamage}");
+            statSb.AppendLine($"쿨타임: {ctx.finalCooldown:F2}초");
 
-            statSb.AppendLine($"쿨타임: {ctx.finalCooldown:F1}");
-
-            statSb.AppendLine($"치명타: {(int)(ctx.finalCritChance * 100)}");
+            statSb.AppendLine($"치명타: {(ctx.finalCritChance * 100):F0}");
+            statSb.AppendLine($"치명피해: {(ctx.finalCritDamage * 100):F0}");
 
             statSb.AppendLine($"발사 수: {ctx.finalProjectileCount}개");
-            statSb.AppendLine($"사거리: {(int)ctx.finalRange}m"); 
-            statSb.AppendLine($"탄속: {(int)ctx.finalSpeed}");   
+            statSb.AppendLine($"사거리: {(int)ctx.finalRange}m");
+            statSb.AppendLine($"탄속: {(int)ctx.finalSpeed}");
 
             skillStatText.text = statSb.ToString();
 
-            if (slot.equippedRunes != null && slot.equippedRunes.Count > 0)
+            if (runeSection != null)
             {
-                runeSection.SetActive(true);
-                StringBuilder runeSb = new StringBuilder();
-                foreach (var rune in slot.equippedRunes)
+                if (slot.equippedRunes != null && slot.equippedRunes.Count > 0)
                 {
-                    runeSb.AppendLine($"{rune.itemName}");
-                    runeSb.AppendLine($"<size=80%>{rune.description}</size>\n");
+                    runeSection.SetActive(true);
+                    StringBuilder runeSb = new StringBuilder();
+                    runeSb.AppendLine("[장착된 룬]");
+
+                    foreach (var rune in slot.equippedRunes)
+                    {
+
+                        runeSb.AppendLine($"{rune.itemName}");
+                        runeSb.AppendLine($"{rune.description}");
+                    }
+                    runeListText.text = runeSb.ToString();
                 }
-                runeListText.text = runeSb.ToString();
+                else
+                {
+                    runeSection.SetActive(false);
+                }
             }
             else
             {
-                runeSection.SetActive(false);
+                Debug.LogWarning("SkillTooltipUI: runeSection이 인스펙터에서 할당되지 않았습니다.");
             }
 
             gameObject.SetActive(true);
+            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(_rectTransform);
             FollowMouse();
         }
 
