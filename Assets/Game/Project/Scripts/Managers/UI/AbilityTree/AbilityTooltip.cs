@@ -1,3 +1,4 @@
+using Game.Project.Scripts.Core.Projectile.Rune;
 using TMPro;
 using UnityEngine;
 
@@ -55,6 +56,38 @@ namespace Game.Project.Scripts.Managers.UI.AbilityTree
 
             gameObject.SetActive(true);
             FollowMouse();
+        }
+
+        /// <summary>
+        /// 룬 정보
+        /// </summary>
+        /// <param name="rune"></param>
+        public void ShowRune(RuneData rune)
+        {
+            if (rune == null) return;
+
+            _nameText.text = $"{rune.runeName}";
+
+            string modifierName = GetModifierName(rune.modifier);
+            string valueText = (rune.specialValue * 100f).ToString("F0");
+
+            _descText.text = $"{modifierName} {valueText} 증가\n" +
+                             $"{rune.description}";
+
+            gameObject.SetActive(true);
+            FollowMouse();
+        }
+
+        private string GetModifierName(ModifierType type)
+        {
+            return type switch
+            {
+                ModifierType.Damage => "공격력",
+                ModifierType.CritChance => "치명타 확률",
+                ModifierType.CritDamage => "치명타 피해",
+                ModifierType.Cooldown => "재사용 대기시간 감소",
+                _ => type.ToString()
+            };
         }
 
         public void Hide() => gameObject.SetActive(false);

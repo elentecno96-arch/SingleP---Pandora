@@ -28,8 +28,16 @@ namespace Game.Project.Scripts.Managers.UI.StatInfo
             if (_damageText != null) _damageText.text = stat.damage.ToString();
             if (_defenseText != null) _defenseText.text = stat.defense.ToString();
             if (_moveSpeedText != null) _moveSpeedText.text = stat.maxMoveSpeed.ToString();
-            if (_critChanceText != null) _critChanceText.text = $"{stat.critChance}%";
-            if (_critDamageText != null) _critDamageText.text = $"{stat.critDamage}%";
+
+            if (_critChanceText != null)
+            {
+                _critChanceText.text = $"{(stat.critChance * 100f):F0}%";
+            }
+
+            if (_critDamageText != null)
+            {
+                _critDamageText.text = $"{(stat.critDamage * 100f):F0}%";
+            }
         }
     }
 }

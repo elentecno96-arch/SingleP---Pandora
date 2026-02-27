@@ -19,6 +19,7 @@ namespace Game.Project.Scripts.Managers.UI.SkillBulid.View
         [SerializeField] private TextMeshProUGUI goldText;
         [SerializeField] private ConfirmPopup equipConfirmPopup;
         [SerializeField] private SkillTooltipUI skillTooltip;
+        [SerializeField] private ItemTooltipUI itemTooltip;
 
         public bool IsOpen => panelRoot != null && panelRoot.activeSelf;
 
@@ -56,7 +57,8 @@ namespace Game.Project.Scripts.Managers.UI.SkillBulid.View
         public void Hide()
         {
             if (panelRoot != null) panelRoot.SetActive(false);
-            HideTooltip();
+            HideTooltip();         
+            HideItemTooltip();     
         }
 
         // 전체 새로고침
@@ -100,6 +102,9 @@ namespace Game.Project.Scripts.Managers.UI.SkillBulid.View
             for (int i = 0; i < inventorySlotsUI.Length; i++)
             {
                 if (inventorySlotsUI[i] == null) continue;
+
+                inventorySlotsUI[i].Init(this, i);
+
                 if (i < inventoryData.Length && inventoryData[i] != null && inventoryData[i].itemData != null)
                 {
                     inventorySlotsUI[i].SetItem(inventoryData[i].itemData, inventoryData[i].count);
@@ -132,6 +137,16 @@ namespace Game.Project.Scripts.Managers.UI.SkillBulid.View
         private void OnDisable()
         {
             HideTooltip();
+        }
+
+        public void ShowItemTooltip(string itemName)
+        {
+            if (itemTooltip != null) itemTooltip.Show(itemName);
+        }
+
+        public void HideItemTooltip()
+        {
+            if (itemTooltip != null) itemTooltip.Hide();
         }
     }
 }

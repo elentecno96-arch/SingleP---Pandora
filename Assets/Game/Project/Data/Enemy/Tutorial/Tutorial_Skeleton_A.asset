@@ -38,16 +38,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8636e67840bf60f4fa9b4bd9601108bd, type: 2}
   - {fileID: 11400000, guid: c840e7498e7492a4bb9d60bd60f7bd8d, type: 2}
   - {fileID: 11400000, guid: bd9099222f493ef41bd631f6e9ef16c6, type: 2}
-  - {fileID: 11400000, guid: 1d79cc7b20e844d458b73c6bb6ca9a2e, type: 2}
   - {fileID: 11400000, guid: cfee051b2e04bb847a4a100eff1c2694, type: 2}
   - {fileID: 11400000, guid: e88278e5a9bf97240b205e797d8ae371, type: 2}
   dropChance: 50
   goldItemData: {fileID: 11400000, guid: 24ba98822c553d24195b1fd5a8c91df0, type: 2}
-  spawnEffect: {fileID: 0}
+  spawnEffect: {fileID: 5873257677397955764, guid: dad43825ea7de7441a19995573d303ef,
+    type: 3}
   detectEffect: {fileID: 0}
   attackEffect: {fileID: 0}
   hitEffect: {fileID: 0}
-  deathEffect: {fileID: 0}
+  deathEffect: {fileID: 5873257677397955764, guid: dad43825ea7de7441a19995573d303ef,
+    type: 3}
   spawnSfx: {fileID: 7225327464659877013, guid: e8a3537adc069254e81e888d8cf81d46,
     type: 3}
   detectSfx: {fileID: 0}

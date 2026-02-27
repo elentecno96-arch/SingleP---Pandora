@@ -101,7 +101,17 @@ namespace Game.Project.Scripts.Dungeon.Manager
             }
 
             FloorGradeConfig currentConfig = FloorGrade();
-            float finalMultiplier = currentConfig.baseMultiplier + ((_currentFloor - 1) * 0.1f);
+            float finalMultiplier = currentConfig.baseMultiplier + ((_currentFloor - 1) * 0.3f);
+
+            int spawnBonus = _currentFloor / 5;
+
+            foreach (var trigger in _allExitTriggers)
+            {
+                if (trigger == null) continue;
+
+                trigger.SetSpawnData(currentConfig.enemyList, finalMultiplier, spawnBonus);
+                trigger.gameObject.SetActive(true);
+            }
 
             if (lobbyGroup != null) lobbyGroup.SetActive(false);
             if (dungeonGroup != null) dungeonGroup.SetActive(true);
@@ -116,7 +126,7 @@ namespace Game.Project.Scripts.Dungeon.Manager
             foreach (var trigger in _allExitTriggers)
             {
                 if (trigger == null) continue;
-                trigger.SetSpawnData(currentConfig.enemyList, finalMultiplier);
+                trigger.SetSpawnData(currentConfig.enemyList, finalMultiplier, spawnBonus);
                 trigger.gameObject.SetActive(true);
             }
 

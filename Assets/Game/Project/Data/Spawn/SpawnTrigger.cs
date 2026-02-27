@@ -27,6 +27,7 @@ namespace Game.Project.Data.Spawn
 
         private bool _hasTriggered = false;
         private Collider _triggerCollider;
+        private int _currentSpawnBonus = 0;
 
         private void Awake()
         {
@@ -62,7 +63,7 @@ namespace Game.Project.Data.Spawn
         {
             if (_spawnList == null || _spawnList.Count == 0) yield break;
 
-            int spawnCount = Random.Range(_minSpawnCount, _maxSpawnCount + 1);
+            int spawnCount = Random.Range(_minSpawnCount, _maxSpawnCount + 1) + _currentSpawnBonus;
             bool hasPoints = _spawnPoints != null && _spawnPoints.Length > 0;
 
             for (int i = 0; i < spawnCount; i++)
@@ -91,10 +92,11 @@ namespace Game.Project.Data.Spawn
         /// <summary>
         /// 던전 매니저가 매 층마다 새로운 데이터로 트리거를 초기화할 때 호출
         /// </summary>
-        public void SetSpawnData(List<EnemyData> newList, float multiplier)
+        public void SetSpawnData(List<EnemyData> newList, float multiplier, int spawnBonus)
         {
             _spawnList = newList;
             _stageMultiplier = multiplier;
+            _currentSpawnBonus = spawnBonus;
             _hasTriggered = false;
 
             if (_triggerCollider != null) _triggerCollider.enabled = true;
